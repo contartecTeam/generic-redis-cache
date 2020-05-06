@@ -3,14 +3,6 @@
   "version": "1.0.0",
   "description": "Generic service for operations on redis keys",
   "main": "lib/GenericRedisCache.js",
-  "_moduleAliases": {
-    "lib": "./lib",
-    "enums": "./lib/enums",
-    "types": "./lib/services/types",
-    "doc": "./docs",
-    "tests": "./tests",
-    "mocks": "./tests/mocks"
-  },
   "scripts": {
     "lint": "cross-env NODE_ENV=test eslint -c ./.eslintrc.json \"lib/**/*.js\" \"tests/**/*.js\"",
     "docs": "documentation build lib/** -f html -o docs",
@@ -22,8 +14,26 @@
     "update:docs": "npm run docs && git add docs/. && git diff-index --quiet HEAD || git commit -m 'Updating `docs`'",
     "postinstall": "link-module-alias"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://contartecTeam@github.com/contartecTeam/generic-redis-cache.git"
+  },
+  "keywords": [
+    "node",
+    "js",
+    "redis",
+    "cache"
+  ],
   "author": "contartec",
   "license": "MIT",
+  "_moduleAliases": {
+    "lib": "./lib",
+    "enums": "./lib/enums",
+    "types": "./lib/services/types",
+    "doc": "./docs",
+    "tests": "./tests",
+    "mocks": "./tests/mocks"
+  },
   "dependencies": {
     "dotenv": "^1.2.0",
     "chai-shallow-deep-equal": "^1.4.6",
