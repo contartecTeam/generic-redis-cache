@@ -4,7 +4,7 @@ const GenericHASHCache = require('types/GenericHASHCache')
 const HASHKeySingleID = require('tests/cache/HASH/HASHKeySingleID')
 const GenericRedisCacheMock = require('mocks/GenericRedisCacheMock')
 
-describe.only('GenericHASHCache', () => {
+describe('GenericHASHCache', () => {
   describe('.getCache', () => {
     context('and a `keyName` is passed', () => {
       const VALUE = 1

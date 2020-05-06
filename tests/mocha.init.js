@@ -26,8 +26,6 @@ global.redis = bluebird.promisifyAll(require('./config/socket').redis)
 
 require('lib/services/redisInstanceService')(global.redis)
 
-console.warn('global.redisInstance', global.redisInstance)
-
 global.clear_database = function*() {
   yield redis.flushallAsync()
 }

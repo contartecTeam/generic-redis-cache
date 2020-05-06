@@ -17,9 +17,9 @@
     "sinon": true,
     "getStub": true,
     "getSpy": true,
+    "clear_database": true,
     "redis": true,
-    "redisInstance" : true,
-    "clear_database": true
+    "redisInstance" : true
   },
   "rules": {
     "eqeqeq": "off",
