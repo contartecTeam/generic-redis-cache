@@ -1,6 +1,6 @@
 {
   "name": "generic-redis-cache",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Generic service for operations on redis keys",
   "main": "lib/GenericRedisCache.js",
   "scripts": {
