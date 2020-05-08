@@ -138,7 +138,7 @@ describe('GenericJSONCache', () => {
 
       context('and a `value` is passed', () => {
         context('and it`s an `Object`', () => {
-          const CACHE_VALUE = { teste: ID}
+          const CACHE_VALUE = { teste: ID, attr1: 'teste'}
           let result
 
           before(async () => {
