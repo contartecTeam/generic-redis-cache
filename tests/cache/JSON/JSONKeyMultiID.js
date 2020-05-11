@@ -1,7 +1,7 @@
 'use strict'
 
-const GenericRedisCache = require('lib/GenericRedisCache')
-const RedisKeyTypeEnum = require('enums/RedisKeyTypeEnum')
+const GenericRedisCache = require('generic-redis-cache-lib/GenericRedisCache')
+const RedisKeyTypeEnum = require('generic-redis-cache-enums/RedisKeyTypeEnum')
 
 const KEY_NAME = 'test:{?}:second:{?}:third:{?}'
 const TYPE = RedisKeyTypeEnum.JSON

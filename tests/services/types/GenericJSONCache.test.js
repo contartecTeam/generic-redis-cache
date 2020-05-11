@@ -1,9 +1,9 @@
 'use strict'
 
-const GenericJSONCache = require('types/GenericJSONCache')
-const GenericJSONCacheMock = require('mocks/GenericJSONCacheMock')
-const GenericRedisCacheMock = require('mocks/GenericRedisCacheMock')
-const JSONKeySingleID = require('tests/cache/JSON/JSONKeySingleID')
+const GenericJSONCache = require('generic-redis-cache-types/GenericJSONCache')
+const GenericJSONCacheMock = require('generic-redis-cache-mocks/GenericJSONCacheMock')
+const GenericRedisCacheMock = require('generic-redis-cache-mocks/GenericRedisCacheMock')
+const JSONKeySingleID = require('generic-redis-cache-tests/cache/JSON/JSONKeySingleID')
 
 describe('GenericJSONCache', () => {
   describe('.getCache', () => {
@@ -19,7 +19,7 @@ describe('GenericJSONCache', () => {
         await GenericJSONCacheMock.delete(JSONKeySingleID.getKeyName(VALUE))
       })
 
-      context('when `params.attrs` has multiple itens', () => {
+      context('when `params` has multiple itens', () => {
         let attrs, cachedValue
 
         before(async () => {
@@ -29,7 +29,7 @@ describe('GenericJSONCache', () => {
             .slice(1)
 
           cachedValue = await GenericJSONCache
-            .getCache(JSONKeySingleID.getKeyName(VALUE), { attrs })
+            .getCache(JSONKeySingleID.getKeyName(VALUE), attrs )
         })
 
         it('should return the cached object with the specified `attrs`', () => {
@@ -42,14 +42,14 @@ describe('GenericJSONCache', () => {
         })
       })
 
-      context('when `params.attrs` has one item', () => {
+      context('when `params` has one item', () => {
         let attrs, cachedValue
 
         before(async () => {
           attrs = [ Object.keys(CACHE_VALUE)[0] ]
 
           cachedValue = await GenericJSONCache
-            .getCache(JSONKeySingleID.getKeyName(VALUE), { attrs })
+            .getCache(JSONKeySingleID.getKeyName(VALUE), attrs )
         })
 
         it('should return the cached object with the specified `attrs`', () => {

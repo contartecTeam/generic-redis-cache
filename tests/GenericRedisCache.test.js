@@ -1,29 +1,29 @@
 'use strict'
 
-const GenericRedisCache = rewire('lib/GenericRedisCache')
-const RedisKeyTypeEnum = require('enums/RedisKeyTypeEnum')
+const GenericRedisCache = rewire('generic-redis-cache-lib/GenericRedisCache')
+const RedisKeyTypeEnum = require('generic-redis-cache-enums/RedisKeyTypeEnum')
 
-const GenericRedisCacheMock = require('mocks/GenericRedisCacheMock')
+const GenericRedisCacheMock = require('generic-redis-cache-mocks/GenericRedisCacheMock')
 
-const GenericJSONCache = require('types/GenericJSONCache')
-const GenericJSONCacheMock = require('mocks/GenericJSONCacheMock')
-const GenericHASHCache = require('types/GenericHASHCache')
-const GenericSTRINGCache = require('types/GenericSTRINGCache')
+const GenericJSONCache = require('generic-redis-cache-types/GenericJSONCache')
+const GenericJSONCacheMock = require('generic-redis-cache-mocks/GenericJSONCacheMock')
+const GenericHASHCache = require('generic-redis-cache-types/GenericHASHCache')
+const GenericSTRINGCache = require('generic-redis-cache-types/GenericSTRINGCache')
 
-const JSONKeySingleID = require('tests/cache/JSON/JSONKeySingleID')
-const JSONKeySingleIDWithUndefined = require('tests/cache/JSON/JSONKeySingleIDWithUndefined')
-const JSONKeySingleIDWithNull = require('tests/cache/JSON/JSONKeySingleIDWithNull')
-const JSONKeyNoID = require('tests/cache/JSON/JSONKeyNoID')
+const JSONKeySingleID = require('generic-redis-cache-tests/cache/JSON/JSONKeySingleID')
+const JSONKeySingleIDWithUndefined = require('generic-redis-cache-tests/cache/JSON/JSONKeySingleIDWithUndefined')
+const JSONKeySingleIDWithNull = require('generic-redis-cache-tests/cache/JSON/JSONKeySingleIDWithNull')
+const JSONKeyNoID = require('generic-redis-cache-tests/cache/JSON/JSONKeyNoID')
 
-const JSONKeyMultiID = require('tests/cache/JSON/JSONKeyMultiID')
-const JSONKeyMultiIDWithUndefined = require('tests/cache/JSON/JSONKeyMultiIDWithUndefined')
-const JSONKeyMultiIDWithNull = require('tests/cache/JSON/JSONKeyMultiIDWithNull')
+const JSONKeyMultiID = require('generic-redis-cache-tests/cache/JSON/JSONKeyMultiID')
+const JSONKeyMultiIDWithUndefined = require('generic-redis-cache-tests/cache/JSON/JSONKeyMultiIDWithUndefined')
+const JSONKeyMultiIDWithNull = require('generic-redis-cache-tests/cache/JSON/JSONKeyMultiIDWithNull')
 
-const HASHKeySingleID = require('tests/cache/HASH/HASHKeySingleID')
+const HASHKeySingleID = require('generic-redis-cache-tests/cache/HASH/HASHKeySingleID')
 
-const STRINGKeySingleID = require('tests/cache/STRING/STRINGKeySingleID')
+const STRINGKeySingleID = require('generic-redis-cache-tests/cache/STRING/STRINGKeySingleID')
 
-const SpyMock = require('mocks/SpyMock')
+const SpyMock = require('generic-redis-cache-mocks/SpyMock')
 
 describe('GenericRedisCache', () => {
   before(function*() {
@@ -45,17 +45,17 @@ describe('GenericRedisCache', () => {
     })
 
     it('should set "_keyName"', () => {
-      expect(genericRedisCache._keyName).to.eql(KEY_NAME)
+      expect(genericRedisCache.keyAttrs._keyName).to.eql(KEY_NAME)
       expect(genericRedisCache.KEY_NAME).to.eql(KEY_NAME)
     })
 
     it('should set "_id"', () => {
-      expect(genericRedisCache._id).to.eql(IDS)
+      expect(genericRedisCache.keyAttrs._id).to.eql(IDS)
       expect(genericRedisCache.ID).to.eql(IDS)
     })
 
     it('should set "_type"', () => {
-      expect(genericRedisCache._type).to.eql(TYPE)
+      expect(genericRedisCache.keyAttrs._type).to.eql(TYPE)
       expect(genericRedisCache.TYPE).to.eql(TYPE)
     })
   })
@@ -921,13 +921,13 @@ describe('GenericRedisCache', () => {
       }
       const KEY_NAME = JSONKeySingleID.getKeyName(VALUE)
 
-      context('and `getObjectfromDB` returns an object', () => {
+      context('and `onGet` returns an object', () => {
         before(async () => {
           spies = {
             getCache  :  SpyMock
               .addReturnSpy(JSONKeySingleID, 'getCache', null),
-            getObjectfromDB : SpyMock
-              .addReturnSpy(JSONKeySingleID, 'getObjectfromDB', OBJECT)
+            onGet : SpyMock
+              .addReturnSpy(JSONKeySingleID, 'onGet', OBJECT)
           }
 
           response = await JSONKeySingleID.get(VALUE)
@@ -939,8 +939,8 @@ describe('GenericRedisCache', () => {
           SpyMock.restoreAll()
         })
 
-        it('should call `getObjectfromDB`', () => {
-          expect(spies.getObjectfromDB).have.been.calledOnce
+        it('should call `onGet`', () => {
+          expect(spies.onGet).have.been.calledOnce
         })
 
         it('should return the object', () => {
@@ -954,13 +954,13 @@ describe('GenericRedisCache', () => {
         })
       })
 
-      context('and `getObjectfromDB` returns null', () => {
+      context('and `onGet` returns null', () => {
         before(async () => {
           spies = {
             getCache  : SpyMock
               .addReturnSpy(JSONKeySingleID, 'getCache', null),
-            getObjectfromDB : SpyMock
-              .addReturnSpy(JSONKeySingleID, 'getObjectfromDB', null),
+            onGet : SpyMock
+              .addReturnSpy(JSONKeySingleID, 'onGet', null),
           }
 
           response = await JSONKeySingleID.get(VALUE)
@@ -968,8 +968,8 @@ describe('GenericRedisCache', () => {
 
         after(() => { SpyMock.restoreAll() })
 
-        it('should call `getObjectfromDB`', () => {
-          expect(spies.getObjectfromDB).have.been.calledOnce
+        it('should call `onGet`', () => {
+          expect(spies.onGet).have.been.calledOnce
         })
 
         it('should return null', () => {
@@ -2333,7 +2333,7 @@ describe('GenericRedisCache', () => {
           it('should return `0`', async () => {
             const response = await JSONKeySingleID.delete()
 
-            expect(response).to.eql(0)
+            expect(response).to.be.null
           })
         })
 
@@ -2341,7 +2341,7 @@ describe('GenericRedisCache', () => {
           it('should return the number of deletes keys', async () => {
             const response = await JSONKeySingleID.delete(ID_ATTRS)
 
-            expect(response).to.eql(OBJECTS.length)
+            expect(response).to.eql(OBJECTS)
           })
 
           it('should delete the keys from cache', async () => {
@@ -2354,7 +2354,7 @@ describe('GenericRedisCache', () => {
     })
 
     context('when the key is `HASH`', () => {
-      context('and the are cached values', () => {
+      context('and there are cached values', () => {
         const OBJECTS = GenericRedisCacheMock.getObjectMocks()
         const ID_ATTRS = HASHKeySingleID.getIdAttrs(OBJECTS)
         let keyNames
@@ -2366,18 +2366,21 @@ describe('GenericRedisCache', () => {
         })
 
         context('and `keys` is not passed', () => {
-          it('should return `0`', async () => {
+          it('should return `null`', async () => {
             const response = await HASHKeySingleID.delete()
 
-            expect(response).to.eql(0)
+            expect(response).to.be.null
           })
         })
 
         context('and `keys` is passed', () => {
           it('should return the number of deletes keys', async () => {
-            const response = await HASHKeySingleID.delete(ID_ATTRS)
+            const keys = ID_ATTRS.map((value) => {
+              return value.id
+            })
+            const response = await HASHKeySingleID.delete(keys)
 
-            expect(response).to.eql(OBJECTS.length)
+            expect(response).to.eql(OBJECTS)
           })
 
           it('should delete the keys from cache', async () => {
@@ -2394,14 +2397,14 @@ describe('GenericRedisCache', () => {
         const OBJECTS = GenericRedisCacheMock.getObjectMocks()
         const ID_ATTRS = STRINGKeySingleID.getIdAttrs(OBJECTS)
 
-        let values, keyNames
+        let values, keyNames, stringValues
 
         before(async () => {
           keyNames = await STRINGKeySingleID.getKeyNames(ID_ATTRS)
 
           values = GenericRedisCacheMock.getRandomStrings(3)
 
-          const stringValues = OBJECTS.map((object, index) =>{
+          stringValues = OBJECTS.map((object, index) =>{
             return {
               key: object.id,
               value: values[index]
@@ -2415,15 +2418,15 @@ describe('GenericRedisCache', () => {
           it('should return `0`', async () => {
             const response = await STRINGKeySingleID.delete()
 
-            expect(response).to.eql(0)
+            expect(response).to.be.null
           })
         })
 
         context('and `keys` is passed', () => {
-          it('should return the number of deletes keys', async () => {
+          it('should return the  deletes values', async () => {
             const response = await STRINGKeySingleID.delete(ID_ATTRS)
 
-            expect(response).to.eql(OBJECTS.length)
+            expect(response).to.eql(values)
           })
 
           it('should delete the keys from cache', async () => {

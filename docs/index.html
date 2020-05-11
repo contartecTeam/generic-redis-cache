@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset='utf-8'>
-  <title>generic-redis-cache 0.1.2 | Documentation</title>
+  <title>generic-redis-cache 0.1.3 | Documentation</title>
   <meta name='description' content='Generic service for operations on redis keys'>
   <meta name='viewport' content='width=device-width,initial-scale=1'>
   <link href='assets/bass.css' rel='stylesheet'>
@@ -15,7 +15,7 @@
       <div id='split-left' class='overflow-auto fs0 height-viewport-100'>
         <div class='py1 px2'>
           <h3 class='mb0 no-anchor'>generic-redis-cache</h3>
-          <div class='mb1'><code>0.1.2</code></div>
+          <div class='mb1'><code>0.1.3</code></div>
           <input
             placeholder='Filter'
             id='filter-input'
@@ -652,8 +652,7 @@ returns
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>params</span> <code class='quiet'>(any
-            = <code>{}</code>)</code>
+            <span class='code bold'>params</span> <code class='quiet'>(any)</code>
 	    
           </div>
           
@@ -1556,7 +1555,7 @@ returns
 
   <p>Delete the keys from cache</p>
 
-    <div class='pre p1 fill-light mt0'>delete(keys: (<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a> | <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>)): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a></div>
+    <div class='pre p1 fill-light mt0'>delete(keys: (<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a> | <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a> | <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></div>
   
   
 
@@ -1573,8 +1572,8 @@ returns
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>keys</span> <code class='quiet'>((<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a> | <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>))</code>
-	    The keys to remove from cache
+            <span class='code bold'>keys</span> <code class='quiet'>((<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a> | <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a> | <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>))</code>
+	    The keys or key to remove from cache
 
           </div>
           
@@ -1588,8 +1587,8 @@ returns
   
     
       <div class='py1 quiet mt1 prose-big'>Returns</div>
-      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a></code>:
-        The number of deleted keys
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></code>:
+        The values deleted from cache
 
       
     
