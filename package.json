@@ -1,12 +1,11 @@
 {
   "name": "generic-redis-cache",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Generic service for operations on redis keys",
   "main": "lib/GenericRedisCache.js",
   "scripts": {
     "lint": "cross-env NODE_ENV=test eslint -c ./.eslintrc.json \"lib/**/*.js\" \"tests/**/*.js\"",
     "docs": "documentation build lib/** -f html -o docs",
-    "docs:readme": "documentation readme --section API",
     "mocha": "cross-env NODE_ENV=test _mocha --opts mocha.opts",
     "test": "cross-env TZ=UTC NODE_ENV=test npm run lint && npm run test:coverage",
     "test:watch": "cross-env TZ=UTC NODE_ENV=test npm run lint && npm run mocha -- --watch",
@@ -27,12 +26,12 @@
   "author": "contartec",
   "license": "MIT",
   "_moduleAliases": {
-    "lib": "./lib",
-    "enums": "./lib/enums",
-    "types": "./lib/services/types",
-    "doc": "./docs",
-    "tests": "./tests",
-    "mocks": "./tests/mocks"
+    "generic-redis-cache-lib": "./lib",
+    "generic-redis-cache-enums": "./lib/enums",
+    "generic-redis-cache-types": "./lib/services/types",
+    "generic-redis-cache-doc": "./docs",
+    "generic-redis-cache-tests": "./tests",
+    "generic-redis-cache-mocks": "./tests/mocks"
   },
   "dependencies": {
     "dotenv": "^1.2.0",
