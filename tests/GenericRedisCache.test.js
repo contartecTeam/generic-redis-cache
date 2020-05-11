@@ -1,6 +1,6 @@
 'use strict'
 
-const GenericRedisCache = rewire('generic-redis-cache-lib/GenericRedisCache')
+const GenericRedisCache = rewire('generic-redis-cache-services/GenericRedisCache')
 const RedisKeyTypeEnum = require('generic-redis-cache-enums/RedisKeyTypeEnum')
 
 const GenericRedisCacheMock = require('generic-redis-cache-mocks/GenericRedisCacheMock')
@@ -643,7 +643,7 @@ describe('GenericRedisCache', () => {
             let keyNames
 
             before(async () => {
-              const values = Array.from({length: KEYS_SIZE}, () => Math.floor(Math.random() * 99))
+              const values = Array.from({length: KEYS_SIZE}, () => Math.floor(Math.random() * 999))
               const objectValues = values.map((value) => {
                 const object = {}
                 object[JSONKeySingleIDWithUndefined.ID[0].id] = value

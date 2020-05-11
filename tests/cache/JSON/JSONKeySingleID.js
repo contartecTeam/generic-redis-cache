@@ -1,6 +1,6 @@
 'use strict'
 
-const GenericRedisCache = require('generic-redis-cache-lib/GenericRedisCache')
+const GenericRedisCache = require('generic-redis-cache-services/GenericRedisCache')
 const RedisKeyTypeEnum = require('generic-redis-cache-enums/RedisKeyTypeEnum')
 const GenericJSONCache = require('generic-redis-cache-types/GenericJSONCache')
 
