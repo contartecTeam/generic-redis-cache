@@ -1,6 +1,6 @@
 'use strict'
 
-const GenericRedisCache = rewire('generic-redis-cache-lib/GenericRedisCache')
+const GenericRedisCache = rewire('generic-redis-cache-services/GenericRedisCache')
 const RedisKeyTypeEnum = require('generic-redis-cache-enums/RedisKeyTypeEnum')
 
 const GenericRedisCacheMock = require('generic-redis-cache-mocks/GenericRedisCacheMock')
