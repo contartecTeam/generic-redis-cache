@@ -90,16 +90,12 @@ jobs:
           key: test-coverage-cache-{{ .Environment.CIRCLE_SHA1 }}
 
       - run:
-          name:  Downloading cc-test-reporter
-          command: |
-            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./coverage/cc-test-reporter
-            chmod +x ./coverage/cc-test-reporter
+          name    : Moving coverage badge to coverage/lcov-report
+          command : mv coverage/badge.svg coverage/lcov-report
 
-      - run:
-          name    : Uploading test coverage
-          command : |
-            ./coverage/cc-test-reporter format-coverage -t lcov -o coverage/codeclimate.coverage.json coverage/lcov.info
-            ./coverage/cc-test-reporter upload-coverage -i coverage/codeclimate.coverage.json
+      # - run:
+      #     name    : Uploading test coverage
+      #     command : bash .circleci/aws-s3-upload.sh -b coverage.docs.contartec.com.br/dashboard -f coverage/lcov-report -d
 
   npm_publish:
     working_directory: /home/circleci/generic-redis-cache
