@@ -113,8 +113,9 @@ jobs:
       - run:
           name    : Authenticating with registry
           command : |
-            echo "@contartecTeam:registry=https://npm.pkg.github.com/" > .npmrc
-            echo "//npm.pkg.github.com/:_authToken=$NPM_TOKEN" >> .npmrc
+            echo ""@contartecTeam:registry=https://npm.pkg.github.com/" > ~/.npmrc
+            echo "//npm.pkg.github.com/:_authToken=$NPM_TOKEN" >> ~/.npmrc
+            npm set @contartecTeam:registry https://npm.pkg.github.com
 
       - run:
           name: Publishing package
