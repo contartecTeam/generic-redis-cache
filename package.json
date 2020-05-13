@@ -1,6 +1,6 @@
 {
   "name": "generic-redis-cache",
-  "version": "0.1.5",
+  "version": "0.1.0",
   "description": "Generic service for operations on redis keys",
   "main": "lib/services/GenericRedisCache.js",
   "scripts": {
@@ -14,6 +14,9 @@
     "coverageBadge": "istanbul-cobertura-badger -f -v -b badge",
     "update:docs": "npm run docs && git add docs/. && git diff-index --quiet HEAD || git commit -m 'Updating `docs`'",
     "postinstall": "link-module-alias"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
   },
   "repository": {
     "type": "git",
