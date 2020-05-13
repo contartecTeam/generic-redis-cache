@@ -374,4 +374,70 @@ describe('GenericHASHCache', () => {
       })
     })
   })
+
+  describe('.isCached', () => {
+    context('when `keyName` is cached', () => {
+      const VALUE = 1
+      const CACHE_VALUE = { teste: VALUE, randomProperty: Math.floor((Math.random() * 50) + 1), randomProperty2: Math.floor((Math.random() * 50) + 1) }
+
+      before(async () => {
+        await  GenericHASHCache.setCache(HASHKeySingleID.getKeyName(VALUE),VALUE, CACHE_VALUE)
+      })
+
+      after(async () => {
+        await GenericHASHCache.delete(HASHKeySingleID.getKeyName(VALUE))
+      })
+
+      context('when `keyName` is passed', () => {
+        context('and `field` is passed', () => {
+          let  isCached
+
+          before(async () => {
+            isCached = await GenericHASHCache
+              .isCached(HASHKeySingleID.getKeyName(VALUE), VALUE)
+          })
+
+          it('should return `true`', () => {
+            expect(isCached).to.equal(true)
+          })
+        })
+
+        context('and `field` is not passed', () => {
+          let  isCached
+
+          before(async () => {
+            isCached = await GenericHASHCache
+              .isCached(HASHKeySingleID.getKeyName(VALUE))
+          })
+
+          it('should return `false`', () => {
+            expect(isCached).to.equal(false)
+          })
+        })
+
+      })
+
+      context('when `keyName` is not passed', () => {
+        let isCached
+
+        before(async () => {
+          isCached = await GenericHASHCache
+            .isCached()
+        })
+
+        it('should return `false`', () => {
+          expect(isCached).to.equal(false)
+        })
+      })
+    })
+
+    context('when `keyName` is not cached', () => {
+      it('should return false', async () => {
+        const isCached = await GenericHASHCache
+          .isCached(HASHKeySingleID.getKeyName(9999))
+
+        expect(isCached).to.equal(false)
+      })
+    })
+  })
 })

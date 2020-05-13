@@ -284,4 +284,54 @@ describe('GenericJSONCache', () => {
       })
     })
   })
+
+  describe('.isCached', () => {
+    context('when `keyName` is cached', () => {
+      const VALUE = 1
+      const CACHE_VALUE = { teste: VALUE, randomProperty: Math.floor((Math.random() * 50) + 1), randomProperty2: Math.floor((Math.random() * 50) + 1) }
+
+      before(async () => {
+        await GenericJSONCacheMock.add(JSONKeySingleID.getKeyName(VALUE), CACHE_VALUE)
+      })
+
+      after(async () => {
+        await GenericJSONCacheMock.delete(JSONKeySingleID.getKeyName(VALUE))
+      })
+
+      context('when `keyName` is passed', () => {
+        let  isCached
+
+        before(async () => {
+          isCached = await GenericJSONCache
+            .isCached(JSONKeySingleID.getKeyName(VALUE))
+        })
+
+        it('should return `true`', () => {
+          expect(isCached).to.equal(true)
+        })
+      })
+
+      context('when `keyName` is not passed', () => {
+        let isCached
+
+        before(async () => {
+          isCached = await GenericJSONCache
+            .isCached()
+        })
+
+        it('should return `false`', () => {
+          expect(isCached).to.equal(false)
+        })
+      })
+    })
+
+    context('when `keyName` is not cached', () => {
+      it('should return false', async () => {
+        const isCached = await GenericJSONCache
+          .isCached(JSONKeySingleID.getKeyName(9999))
+
+        expect(isCached).to.equal(false)
+      })
+    })
+  })
 })
