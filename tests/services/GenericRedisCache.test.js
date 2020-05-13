@@ -771,7 +771,7 @@ describe('GenericRedisCache', () => {
             await GenericJSONCacheMock.delete(JSONKeySingleID.getKeyName(VALUE))
           })
 
-          context('and a `keyName` is passed', () => {
+          context('and a `key` is passed', () => {
             it('should return the cached object', async () => {
               const result = await JSONKeySingleID.getCache(VALUE)
 
@@ -779,8 +779,8 @@ describe('GenericRedisCache', () => {
             })
           })
 
-          context('and a `keyName` is not passed', () => {
-            it('should return the cached object', async () => {
+          context('and a `key` is not passed', () => {
+            it('should not return the cached object', async () => {
               const result = await JSONKeySingleID.getCache()
 
               expect(result).to.be.null
@@ -1779,7 +1779,7 @@ describe('GenericRedisCache', () => {
           })
 
           it('should call `getIds`', () => {
-            expect(spies.getIds).have.been.calledOnce
+            expect(spies.getIds).have.been.called
           })
 
           it('should return the cached values', async () => {
@@ -1814,7 +1814,7 @@ describe('GenericRedisCache', () => {
             })
 
             it('should call `getIds`', () => {
-              expect(spies.getIds).have.been.calledOnce
+              expect(spies.getIds).have.been.called
             })
 
             it('should call `getListFromDB`', () => {
@@ -1849,7 +1849,7 @@ describe('GenericRedisCache', () => {
             })
 
             it('should call `getIds`', () => {
-              expect(spies.getIds).have.been.calledOnce
+              expect(spies.getIds).have.been.called
             })
 
             it('should call `getListFromDB`', () => {
@@ -1888,7 +1888,7 @@ describe('GenericRedisCache', () => {
           })
 
           it('should call `getIds`', () => {
-            expect(spies.getIds).have.been.calledOnce
+            expect(spies.getIds).have.been.called
           })
 
           it('should call `getListFromDB`', () => {
@@ -1921,7 +1921,7 @@ describe('GenericRedisCache', () => {
           })
 
           it('should call `getIds`', () => {
-            expect(spies.getIds).have.been.calledOnce
+            expect(spies.getIds).have.been.called
           })
 
           it('should call `getListFromDB`', () => {
@@ -1963,7 +1963,7 @@ describe('GenericRedisCache', () => {
           })
 
           it('should call `getIds`', () => {
-            expect(spies.getIds).have.been.calledOnce
+            expect(spies.getIds).have.been.called
           })
 
           it('should return the cached values', async () => {
@@ -1998,7 +1998,7 @@ describe('GenericRedisCache', () => {
             })
 
             it('should call `getIds`', () => {
-              expect(spies.getIds).have.been.calledOnce
+              expect(spies.getIds).have.been.called
             })
 
             it('should call `getListFromDB`', () => {
@@ -2033,7 +2033,7 @@ describe('GenericRedisCache', () => {
             })
 
             it('should call `getIds`', () => {
-              expect(spies.getIds).have.been.calledOnce
+              expect(spies.getIds).have.been.called
             })
 
             it('should call `getListFromDB`', () => {
@@ -2072,7 +2072,7 @@ describe('GenericRedisCache', () => {
           })
 
           it('should call `getIds`', () => {
-            expect(spies.getIds).have.been.calledOnce
+            expect(spies.getIds).have.been.called
           })
 
           it('should call `getListFromDB`', () => {
@@ -2105,7 +2105,7 @@ describe('GenericRedisCache', () => {
           })
 
           it('should call `getIds`', () => {
-            expect(spies.getIds).have.been.calledOnce
+            expect(spies.getIds).have.been.called
           })
 
           it('should call `getListFromDB`', () => {
@@ -2158,7 +2158,7 @@ describe('GenericRedisCache', () => {
           })
 
           it('should call `getIds`', () => {
-            expect(spies.getIds).have.been.calledOnce
+            expect(spies.getIds).have.been.called
           })
 
           it('should return the cached values', async () => {
@@ -2193,7 +2193,7 @@ describe('GenericRedisCache', () => {
             })
 
             it('should call `getIds`', () => {
-              expect(spies.getIds).have.been.calledOnce
+              expect(spies.getIds).have.been.called
             })
 
             it('should call `getListFromDB`', () => {
@@ -2228,7 +2228,7 @@ describe('GenericRedisCache', () => {
           //   })
 
           //   it('should call `getIds`', () => {
-          //     expect(spies.getIds).have.been.calledOnce
+          //     expect(spies.getIds).have.been.called
           //   })
 
           //   it('should call `getListFromDB`', () => {
@@ -2267,7 +2267,7 @@ describe('GenericRedisCache', () => {
           })
 
           it('should call `getIds`', () => {
-            expect(spies.getIds).have.been.calledOnce
+            expect(spies.getIds).have.been.called
           })
 
           it('should call `getListFromDB`', () => {
@@ -2300,7 +2300,7 @@ describe('GenericRedisCache', () => {
           })
 
           it('should call `getIds`', () => {
-            expect(spies.getIds).have.been.calledOnce
+            expect(spies.getIds).have.been.called
           })
 
           it('should call `getListFromDB`', () => {
@@ -2434,6 +2434,142 @@ describe('GenericRedisCache', () => {
 
             expect(response).to.eql([])
           })
+        })
+      })
+    })
+  })
+
+  describe('.isCached', () => {
+    context('when the key is `JSON`', () => {
+      context('and the key has one `ID`', () => {
+        const VALUE = 1
+        const CACHE_VALUE = { teste: VALUE }
+
+        context('when there is value cached', () => {
+          before(async () => {
+            await GenericJSONCacheMock.add(JSONKeySingleID.getKeyName(VALUE), CACHE_VALUE)
+          })
+
+          after(async () => {
+            await GenericJSONCacheMock.delete(JSONKeySingleID.getKeyName(VALUE))
+          })
+
+          context('and a `key` is passed', () => {
+            it('should return `true`', async () => {
+              const result = await JSONKeySingleID.isCached(VALUE)
+
+              expect(result).to.eql(true)
+            })
+          })
+
+          context('and a `key` is not passed', () => {
+            it('should return `false`', async () => {
+              const result = await JSONKeySingleID.isCached()
+
+              expect(result).to.eql(false)
+            })
+          })
+
+        })
+
+        context('when there is no value cached', () => {
+          it('should return null', async () => {
+            const result = await JSONKeySingleID.isCached(VALUE)
+
+            expect(result).to.eql(false)
+          })
+        })
+      })
+
+      context('and the key has more than one `ID`', () => {
+        const VALUES = {
+          object_id: Math.floor((Math.random() * 50) + 1),
+          second_id: Math.floor((Math.random() * 50) + 1),
+          third_id: Math.floor((Math.random() * 50) + 1)
+        }
+
+        const CACHE_VALUE = { x: 1 }
+
+        context('when there value cached', () => {
+          before(async () => {
+            await GenericJSONCacheMock.add(JSONKeyMultiID.getKeyName(VALUES), CACHE_VALUE)
+          })
+
+          after(async () => {
+            await GenericJSONCacheMock.delete(JSONKeyMultiID.getKeyName(VALUES))
+          })
+
+
+          it('should return `true`', async () => {
+            const result = await JSONKeyMultiID.isCached(VALUES)
+
+            expect(result).to.eql(true)
+          })
+        })
+
+        context('when there is no value cached', () => {
+          it('should return false', async () => {
+            const result = await JSONKeyMultiID.isCached(VALUES)
+
+            expect(result).to.eql(false)
+          })
+        })
+      })
+    })
+
+    context('when the key is `HASH`', () => {
+      const VALUE = 1
+
+      context('and there is value cached', () => {
+        before(async () => {
+          await GenericHASHCache.setCache(HASHKeySingleID.getKeyName(VALUE), VALUE, VALUE)
+        })
+
+        after(async () => {
+          await GenericHASHCache.delete(HASHKeySingleID.getKeyName(VALUE), VALUE)
+        })
+
+
+        it('should return `true`', async () => {
+          const result = await HASHKeySingleID.isCached(VALUE)
+
+          expect(result).to.eql(true)
+        })
+      })
+
+      context('and there is no value cached', () => {
+        it('should return `false`', async () => {
+          const result = await HASHKeySingleID.isCached(VALUE)
+
+          expect(result).to.eql(false)
+        })
+      })
+    })
+
+    context('when the key is `STRING`', () => {
+      const VALUE = 'string_value'
+
+      context('and there is value cached', () => {
+        before(async () => {
+          await GenericSTRINGCache.setCache(STRINGKeySingleID.getKeyName(VALUE), VALUE)
+        })
+
+        after(async () => {
+          await GenericSTRINGCache.delete(STRINGKeySingleID.getKeyName(VALUE))
+        })
+
+        it('should return `true`', async () => {
+          const result = await STRINGKeySingleID.isCached(VALUE)
+
+          expect(result).to.eql(true)
+        })
+      })
+
+      context('and there is no value cached', () => {
+        it('should return `false`', async () => {
+          const result = await STRINGKeySingleID.isCached(VALUE)
+
+          expect(result).to.eql(false)
         })
       })
     })

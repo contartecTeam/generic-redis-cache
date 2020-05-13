@@ -272,4 +272,54 @@ describe('GenericSTRINGCache', () => {
       })
     })
   })
+
+  describe('.isCached', () => {
+    context('when `keyName` is cached', () => {
+      const VALUE = 'string_value'
+      const KEY_NAME = STRINGKeySingleID.getKeyName(VALUE)
+
+      before(async () => {
+        await GenericSTRINGCache.setCache(KEY_NAME, VALUE)
+      })
+
+      after(async () => {
+        await GenericSTRINGCache.delete(KEY_NAME)
+      })
+
+      context('when `keyName` is passed', () => {
+        let  isCached
+
+        before(async () => {
+          isCached = await GenericSTRINGCache
+            .isCached(KEY_NAME)
+        })
+
+        it('should return `true`', () => {
+          expect(isCached).to.equal(true)
+        })
+      })
+
+      context('when `keyName` is not passed', () => {
+        let isCached
+
+        before(async () => {
+          isCached = await GenericSTRINGCache
+            .isCached()
+        })
+
+        it('should return `false`', () => {
+          expect(isCached).to.equal(false)
+        })
+      })
+    })
+
+    context('when `keyName` is not cached', () => {
+      it('should return false', async () => {
+        const isCached = await GenericSTRINGCache
+          .isCached(STRINGKeySingleID.getKeyName(9999))
+
+        expect(isCached).to.equal(false)
+      })
+    })
+  })
 })
