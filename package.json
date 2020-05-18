@@ -1,6 +1,6 @@
 {
   "name": "@contartecTeam/generic-redis-cache",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Generic service for operations on redis keys",
   "main": "lib/services/GenericRedisCache.js",
   "scripts": {
@@ -31,14 +31,9 @@
   "author": "contartec",
   "license": "MIT",
   "_moduleAliases": {
-    "generic-redis-cache-lib": "./lib",
-    "generic-redis-cache-services": "./lib/services",
-    "generic-redis-cache-enums": "./lib/enums",
-    "generic-redis-cache-configs": "./lib/configs",
+    "generic-redis-cache": "./lib",
     "generic-redis-cache-types": "./lib/services/types",
-    "generic-redis-cache-doc": "./docs",
-    "generic-redis-cache-tests": "./tests",
-    "generic-redis-cache-mocks": "./tests/mocks"
+    "generic-redis-cache-tests": "./tests"
   },
   "dependencies": {
     "dotenv": "^1.2.0",

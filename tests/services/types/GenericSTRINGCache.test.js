@@ -3,7 +3,7 @@
 const GenericSTRINGCache = require('generic-redis-cache-types/GenericSTRINGCache')
 const STRINGKeySingleID = require('generic-redis-cache-tests/cache/STRING/STRINGKeySingleID')
 
-const GenericRedisCacheMock = require('generic-redis-cache-mocks/GenericRedisCacheMock')
+const GenericRedisCacheMock = require('generic-redis-cache-tests/mocks/GenericRedisCacheMock')
 
 describe('GenericSTRINGCache', () => {
   describe('.getCache', () => {
