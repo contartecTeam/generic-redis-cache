@@ -21,7 +21,7 @@ class JSONKeySingleID extends GenericRedisCache {
   get ID()                  { return IDS }
   get TYPE()                { return TYPE }
 
-  static async onSave(key, value, commands) {
+  static async onSave(key, value, oldCache, commands) {
     const keyName = this.getKeyName( Math.floor(Math.random() * 100) + 1)
     GenericJSONCache._getCache(keyName, ['.'], commands)
   }
