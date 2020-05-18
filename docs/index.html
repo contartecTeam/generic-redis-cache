@@ -927,7 +927,7 @@ returns
       <div class="clearfix small pointer toggle-sibling">
         <div class="py1 contain">
             <a class='icon pin-right py1 dark-link caret-right'>▸</a>
-            <span class='code strong strong truncate'>set(key, value, attr, commands = redis.multi())</span>
+            <span class='code strong strong truncate'>set(key, value, attr, commands = redis)</span>
         </div>
       </div>
       <div class="clearfix display-none toggle-target">
@@ -975,7 +975,7 @@ returns
         <div class='space-bottom0'>
           <div>
             <span class='code bold'>attr</span> <code class='quiet'>(any
-            = <code>DEFAULT_PATH</code>)</code>
+            = <code>GenericJSONCache.DEFAULT_PATH</code>)</code>
 	    
           </div>
           
@@ -984,7 +984,7 @@ returns
         <div class='space-bottom0'>
           <div>
             <span class='code bold'>commands</span> <code class='quiet'>(redis.Multi?
-            = <code>redis.multi()</code>)</code>
+            = <code>redis</code>)</code>
 	    The 
 <code>redis</code>
  multi command object to chain(See 
@@ -1086,7 +1086,7 @@ returns
         <div class='space-bottom0'>
           <div>
             <span class='code bold'>attr</span> <code class='quiet'>(any
-            = <code>DEFAULT_PATH</code>)</code>
+            = <code>GenericJSONCache.DEFAULT_PATH</code>)</code>
 	    
           </div>
           
