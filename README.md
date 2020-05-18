@@ -55,6 +55,8 @@ class YourCacheService extends GenericRedisCache {
 
 }
 
+module.exports = YourCacheService
+
 ```
 
 ## Docs
