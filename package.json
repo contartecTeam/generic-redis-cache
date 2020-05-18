@@ -1,6 +1,6 @@
 {
   "name": "@contartecTeam/generic-redis-cache",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Generic service for operations on redis keys",
   "main": "lib/services/GenericRedisCache.js",
   "scripts": {
