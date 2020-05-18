@@ -9,6 +9,56 @@ Generic service for operations on redis keys
 
 `npm i @contartecTeam/generic-redis-cache`
 
+## Quick-start
+
+```js
+app/
+  queries/
+  script.js
+  index.js
+```
+
+```js
+// index.js (aka bootstrap/init file)
+// Pass the `redis` instance
+require('@contartecTeam/generic-redis-cache/lib/configs/redisInstanceService')(redis)
+```
+
+```js
+// your_cache_service.js
+const GenericRedisCache = require('@contartecTeam/generic-redis-cache')
+const RedisKeyTypeEnum = require('@contartecTeam/generic-redis-cache/lib/enums/RedisKeyTypeEnum')
+
+const KEY_NAME = 'key:{?}'
+
+const TYPE = RedisKeyTypeEnum.JSON //or any type in the enums
+
+//An array with all the ids to compose the path of the key as objets
+const IDS = [{
+  id: 'some_id'
+  undefinedValue: 'something_undefined' //any value to replace the key when undefined is passed
+  nullValue: 'something_null' //any value to replace the key when null is passed
+}]
+
+class YourCacheService extends GenericRedisCache {
+   constructor (object) {
+    super(KEY_NAME, TYPE, IDS)
+  }
+
+  static get KEY_NAME()             { return KEY_NAME }
+  static get ID()                  { return IDS }
+  static get TYPE()                { return TYPE }
+
+  get KEY_NAME()            { return KEY_NAME }
+  get ID()                  { return IDS }
+  get TYPE()                { return TYPE }
+
+}
+
+module.exports = YourCacheService
+
+```
+
 ## Docs
 
 https://contartecteam.github.io/generic-redis-cache/

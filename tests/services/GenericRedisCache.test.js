@@ -1,12 +1,12 @@
 'use strict'
 
-const GenericRedisCache = rewire('generic-redis-cache-services/GenericRedisCache')
-const RedisKeyTypeEnum = require('generic-redis-cache-enums/RedisKeyTypeEnum')
+const GenericRedisCache = rewire('generic-redis-cache/services/GenericRedisCache')
+const RedisKeyTypeEnum = require('generic-redis-cache/enums/RedisKeyTypeEnum')
 
-const GenericRedisCacheMock = require('generic-redis-cache-mocks/GenericRedisCacheMock')
+const GenericRedisCacheMock = require('generic-redis-cache-tests/mocks/GenericRedisCacheMock')
 
 const GenericJSONCache = require('generic-redis-cache-types/GenericJSONCache')
-const GenericJSONCacheMock = require('generic-redis-cache-mocks/GenericJSONCacheMock')
+const GenericJSONCacheMock = require('generic-redis-cache-tests/mocks/GenericJSONCacheMock')
 const GenericHASHCache = require('generic-redis-cache-types/GenericHASHCache')
 const GenericSTRINGCache = require('generic-redis-cache-types/GenericSTRINGCache')
 
@@ -23,7 +23,7 @@ const HASHKeySingleID = require('generic-redis-cache-tests/cache/HASH/HASHKeySin
 
 const STRINGKeySingleID = require('generic-redis-cache-tests/cache/STRING/STRINGKeySingleID')
 
-const SpyMock = require('generic-redis-cache-mocks/SpyMock')
+const SpyMock = require('generic-redis-cache-tests/mocks/SpyMock')
 
 describe('GenericRedisCache', () => {
   before(function*() {
