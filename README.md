@@ -1,13 +1,13 @@
 Generic service for operations on redis keys
 
-[![CircleCI](https://circleci.com/gh/contartec/generic-model-bookshelf.svg?style=shield&circle-token=21e695f1398a24c2a7387f71cf5b33ebac7893e3)](https://circleci.com/gh/contartecTeam/generic-redis-cache)
+[![CircleCI](https://circleci.com/gh/contartec/generic-model-bookshelf.svg?style=shield&circle-token=21e695f1398a24c2a7387f71cf5b33ebac7893e3)](https://circleci.com/gh/contartec-team/generic-redis-cache)
 [![Maintainability](https://api.codeclimate.com/v1/badges/26df8aa208935c7fd638/maintainability)](https://codeclimate.com/github/contartecTeam/generic-redis-cache/maintainability)
-[![Test Coverage](https://codecov.io/gh/contartecTeam/generic-redis-cache/branch/master/graph/badge.svg)](https://codecov.io/gh/contartecTeam/generic-redis-cache)
+[![Test Coverage](https://codecov.io/gh/contartec-team/generic-redis-cache/branch/master/graph/badge.svg)](https://codecov.io/gh/contartec-team/generic-redis-cache)
 
 
 ## Install
 
-`npm i @contartecTeam/generic-redis-cache`
+`npm i @contartec-team/generic-redis-cache`
 
 ## Quick-start
 
@@ -21,13 +21,13 @@ app/
 ```js
 // index.js (aka bootstrap/init file)
 // Pass the `redis` instance
-require('@contartecTeam/generic-redis-cache/lib/configs/redisInstanceService')(redis)
+require('@contartec-team/generic-redis-cache/lib/configs/redisInstanceService')(redis)
 ```
 
 ```js
 // your_cache_service.js
-const GenericRedisCache = require('@contartecTeam/generic-redis-cache')
-const RedisKeyTypeEnum = require('@contartecTeam/generic-redis-cache/lib/enums/RedisKeyTypeEnum')
+const GenericRedisCache = require('@contartec-team/generic-redis-cache')
+const RedisKeyTypeEnum = require('@contartec-team/generic-redis-cache/lib/enums/RedisKeyTypeEnum')
 
 const KEY_NAME = 'key:{?}'
 
