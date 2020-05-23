@@ -13,7 +13,8 @@
     "coverage:upload": "codecov && npm run coverageBadge",
     "coverageBadge": "istanbul-cobertura-badger -f -v -b badge",
     "update:docs": "npm run docs && git add docs/. && git diff-index --quiet HEAD || git commit -m 'Updating `docs`'",
-    "postinstall": "link-module-alias"
+    "postinstall": "link-module-alias",
+    "preinstall": "command -v link-module-alias && link-module-alias clean || true"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
