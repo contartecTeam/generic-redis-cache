@@ -1,9 +1,9 @@
 'use strict'
 
 const GenericJSONCache = require('generic-redis-cache-types/GenericJSONCache')
-const GenericJSONCacheMock = require('generic-redis-cache-tests/mocks/GenericJSONCacheMock')
-const GenericRedisCacheMock = require('generic-redis-cache-tests/mocks/GenericRedisCacheMock')
-const JSONKeySingleID = require('generic-redis-cache-tests/cache/JSON/JSONKeySingleID')
+const GenericJSONCacheMock = require('../../mocks/GenericJSONCacheMock')
+const GenericRedisCacheMock = require('../../mocks/GenericRedisCacheMock')
+const JSONKeySingleID = require('../../cache/JSON/JSONKeySingleID')
 
 describe('GenericJSONCache', () => {
   describe('.getCache', () => {
