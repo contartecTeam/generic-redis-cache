@@ -1,14 +1,14 @@
 'use strict'
 
-const GenericRedisCache = rewire('generic-redis-cache/services/GenericRedisCache')
-const RedisKeyTypeEnum = require('generic-redis-cache/enums/RedisKeyTypeEnum')
+const GenericRedisCache = rewire('../lib/services/GenericRedisCache')
+const RedisKeyTypeEnum = require('../../lib/enums/RedisKeyTypeEnum')
 
 const GenericRedisCacheMock = require('../mocks/GenericRedisCacheMock')
 
-const GenericJSONCache = require('generic-redis-cache-types/GenericJSONCache')
+const GenericJSONCache = require('../../lib/services/types/GenericJSONCache')
 const GenericJSONCacheMock = require('../mocks/GenericJSONCacheMock')
-const GenericHASHCache = require('generic-redis-cache-types/GenericHASHCache')
-const GenericSTRINGCache = require('generic-redis-cache-types/GenericSTRINGCache')
+const GenericHASHCache = require('../../lib/services/types/GenericHASHCache')
+const GenericSTRINGCache = require('../../lib/services/types/GenericSTRINGCache')
 
 const JSONKeySingleID = require('../cache/JSON/JSONKeySingleID')
 const JSONKeySingleIDWithUndefined = require('../cache/JSON/JSONKeySingleIDWithUndefined')

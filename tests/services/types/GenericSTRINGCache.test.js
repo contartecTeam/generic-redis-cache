@@ -1,6 +1,6 @@
 'use strict'
 
-const GenericSTRINGCache = require('generic-redis-cache-types/GenericSTRINGCache')
+const GenericSTRINGCache = require('../../../lib/services/types/GenericSTRINGCache')
 const STRINGKeySingleID = require('../../cache/STRING/STRINGKeySingleID')
 
 const GenericRedisCacheMock = require('../../mocks/GenericRedisCacheMock')
