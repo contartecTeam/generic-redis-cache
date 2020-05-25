@@ -24,7 +24,7 @@ global.expect = chai.expect
 global.rewire = require('rewire')
 global.redis = bluebird.promisifyAll(require('./config/socket').redis)
 
-require('../lib/configs/redisInstanceService')(global.redis)
+require('generic-redis-cache/configs/redisInstanceService')(global.redis)
 
 global.clear_database = function*() {
   yield redis.flushallAsync()

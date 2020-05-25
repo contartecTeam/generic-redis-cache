@@ -1,10 +1,11 @@
 {
   "name": "@contartec-team/generic-redis-cache",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Generic service for operations on redis keys",
   "main": "lib/services/GenericRedisCache.js",
   "directories": {
-    "lib": "./lib"
+    "lib": "./lib",
+    "test": "./tests"
   },
   "scripts": {
     "lint": "cross-env NODE_ENV=test eslint -c ./.eslintrc.json \"lib/**/*.js\" \"tests/**/*.js\"",
@@ -15,7 +16,8 @@
     "test:coverage": "cross-env NODE_ENV=test nyc --reporter=text-summary --reporter=lcov --reporter=cobertura --report-dir=./coverage --reporter=html npm run mocha -- --reporter=min --exit",
     "coverage:upload": "codecov && npm run coverageBadge",
     "coverageBadge": "istanbul-cobertura-badger -f -v -b badge",
-    "update:docs": "npm run docs && git add docs/. && git diff-index --quiet HEAD || git commit -m 'Updating `docs`'"
+    "update:docs": "npm run docs && git add docs/. && git diff-index --quiet HEAD || git commit -m 'Updating `docs`'",
+    "postinstall": "link-module-alias"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
@@ -32,9 +34,15 @@
   ],
   "author": "contartec",
   "license": "MIT",
+  "_moduleAliases": {
+    "generic-redis-cache": "./lib",
+    "generic-redis-cache-types": "./lib/services/types",
+    "generic-redis-cache-tests": "./tests"
+  },
   "dependencies": {
     "dotenv": "^1.2.0",
-    "jsdoc": "^3.6.2"
+    "jsdoc": "^3.6.2",
+    "link-module-alias": "^1.2.0"
   },
   "devDependencies": {
     "bluebird": "^3.4.6",
@@ -79,8 +87,7 @@
     "exclude": [
       "*.js",
       "tests",
-      "enums",
-      "configs"
+      "enums"
     ]
   }
 }

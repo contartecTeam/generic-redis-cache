@@ -1,6 +1,6 @@
 'use strict'
 
-const GenericJSONCache = require('../../lib/services/types/GenericJSONCache')
+const GenericJSONCache = require('generic-redis-cache-types/GenericJSONCache')
 
 /**
  * Mock class for [`GenericJSONCache`]{@link GenericJSONCache}
