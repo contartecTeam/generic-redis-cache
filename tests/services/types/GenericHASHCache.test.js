@@ -1,8 +1,8 @@
 'use strict'
 
-const GenericHASHCache = require('generic-redis-cache-types/GenericHASHCache')
-const HASHKeySingleID = require('generic-redis-cache-tests/cache/HASH/HASHKeySingleID')
-const GenericRedisCacheMock = require('generic-redis-cache-tests/mocks/GenericRedisCacheMock')
+const GenericHASHCache = require('../../../lib/services/types/GenericHASHCache')
+const HASHKeySingleID = require('../../cache/HASH/HASHKeySingleID')
+const GenericRedisCacheMock = require('../../mocks/GenericRedisCacheMock')
 
 describe('GenericHASHCache', () => {
   describe('.getCache', () => {

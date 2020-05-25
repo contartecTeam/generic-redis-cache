@@ -1,29 +1,29 @@
 'use strict'
 
-const GenericRedisCache = rewire('generic-redis-cache/services/GenericRedisCache')
-const RedisKeyTypeEnum = require('generic-redis-cache/enums/RedisKeyTypeEnum')
+const GenericRedisCache = rewire('../lib/services/GenericRedisCache')
+const RedisKeyTypeEnum = require('../../lib/enums/RedisKeyTypeEnum')
 
-const GenericRedisCacheMock = require('generic-redis-cache-tests/mocks/GenericRedisCacheMock')
+const GenericRedisCacheMock = require('../mocks/GenericRedisCacheMock')
 
-const GenericJSONCache = require('generic-redis-cache-types/GenericJSONCache')
-const GenericJSONCacheMock = require('generic-redis-cache-tests/mocks/GenericJSONCacheMock')
-const GenericHASHCache = require('generic-redis-cache-types/GenericHASHCache')
-const GenericSTRINGCache = require('generic-redis-cache-types/GenericSTRINGCache')
+const GenericJSONCache = require('../../lib/services/types/GenericJSONCache')
+const GenericJSONCacheMock = require('../mocks/GenericJSONCacheMock')
+const GenericHASHCache = require('../../lib/services/types/GenericHASHCache')
+const GenericSTRINGCache = require('../../lib/services/types/GenericSTRINGCache')
 
-const JSONKeySingleID = require('generic-redis-cache-tests/cache/JSON/JSONKeySingleID')
-const JSONKeySingleIDWithUndefined = require('generic-redis-cache-tests/cache/JSON/JSONKeySingleIDWithUndefined')
-const JSONKeySingleIDWithNull = require('generic-redis-cache-tests/cache/JSON/JSONKeySingleIDWithNull')
-const JSONKeyNoID = require('generic-redis-cache-tests/cache/JSON/JSONKeyNoID')
+const JSONKeySingleID = require('../cache/JSON/JSONKeySingleID')
+const JSONKeySingleIDWithUndefined = require('../cache/JSON/JSONKeySingleIDWithUndefined')
+const JSONKeySingleIDWithNull = require('../cache/JSON/JSONKeySingleIDWithNull')
+const JSONKeyNoID = require('../cache/JSON/JSONKeyNoID')
 
-const JSONKeyMultiID = require('generic-redis-cache-tests/cache/JSON/JSONKeyMultiID')
-const JSONKeyMultiIDWithUndefined = require('generic-redis-cache-tests/cache/JSON/JSONKeyMultiIDWithUndefined')
-const JSONKeyMultiIDWithNull = require('generic-redis-cache-tests/cache/JSON/JSONKeyMultiIDWithNull')
+const JSONKeyMultiID = require('../cache/JSON/JSONKeyMultiID')
+const JSONKeyMultiIDWithUndefined = require('../cache/JSON/JSONKeyMultiIDWithUndefined')
+const JSONKeyMultiIDWithNull = require('../cache/JSON/JSONKeyMultiIDWithNull')
 
-const HASHKeySingleID = require('generic-redis-cache-tests/cache/HASH/HASHKeySingleID')
+const HASHKeySingleID = require('../cache/HASH/HASHKeySingleID')
 
-const STRINGKeySingleID = require('generic-redis-cache-tests/cache/STRING/STRINGKeySingleID')
+const STRINGKeySingleID = require('../cache/STRING/STRINGKeySingleID')
 
-const SpyMock = require('generic-redis-cache-tests/mocks/SpyMock')
+const SpyMock = require('../mocks/SpyMock')
 
 describe('GenericRedisCache', () => {
   before(function*() {
