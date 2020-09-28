@@ -1,7 +1,6 @@
 'use strict'
 
 const GenericRedisCache = rewire('../lib/services/GenericRedisCache')
-const RedisKeyTypeEnum = require('../../lib/enums/RedisKeyTypeEnum')
 
 const GenericRedisCacheMock = require('../mocks/GenericRedisCacheMock')
 
@@ -30,43 +29,13 @@ describe('GenericRedisCache', () => {
     yield clear_database()
   })
 
-  describe('#constructor', () => {
-    let genericRedisCache
-    const KEY_NAME = 'test:{?}'
-    const IDS = [{ id: 'id' }]
-    const TYPE = RedisKeyTypeEnum.JSON
-
-    before(() =>  {
-      genericRedisCache = new GenericRedisCache(KEY_NAME, TYPE, IDS)
-    })
-
-    it('should return an object of type GenericRedisCache', () => {
-      expect(genericRedisCache).to.be.instanceOf(GenericRedisCache)
-    })
-
-    it('should set "_keyName"', () => {
-      expect(genericRedisCache.keyAttrs._keyName).to.eql(KEY_NAME)
-      expect(genericRedisCache.KEY_NAME).to.eql(KEY_NAME)
-    })
-
-    it('should set "_id"', () => {
-      expect(genericRedisCache.keyAttrs._id).to.eql(IDS)
-      expect(genericRedisCache.ID).to.eql(IDS)
-    })
-
-    it('should set "_type"', () => {
-      expect(genericRedisCache.keyAttrs._type).to.eql(TYPE)
-      expect(genericRedisCache.TYPE).to.eql(TYPE)
-    })
-  })
-
   describe('.getKeyName', () => {
     context('when the `key` is passed', () => {
       context('when the `KEY_NAME` has one id', () => {
         context('and the `key` is a `string`', () => {
           it('should return the key name', () => {
             const key = 'value'
-            const compareKeyName = JSONKeySingleID.KEY_NAME.replace('{?}', key)
+            const compareKeyName = JSONKeySingleID.GENERIC_REDIS_ATTRS.keyName.replace('{?}', key)
             const keyName = JSONKeySingleID.getKeyName(key)
 
             expect(keyName).to.eql(compareKeyName)
@@ -75,7 +44,7 @@ describe('GenericRedisCache', () => {
           context('and the `key` contains `:` symbols', () => {
             it('should return the key name', () => {
               const key = 'aa:bb:cc'
-              const compareKeyName = JSONKeySingleID.KEY_NAME.replace('{?}', key.replace(/:/g, ''))
+              const compareKeyName = JSONKeySingleID.GENERIC_REDIS_ATTRS.keyName.replace('{?}', key.replace(/:/g, ''))
               const keyName = JSONKeySingleID.getKeyName(key)
 
               expect(keyName).to.eql(compareKeyName)
@@ -86,7 +55,7 @@ describe('GenericRedisCache', () => {
         context('and the `key` is a `Number`', () => {
           it('should return the key name', () => {
             const key = Math.floor(Math.random() * 100) + 1
-            const compareKeyName = JSONKeySingleID.KEY_NAME.replace('{?}', key)
+            const compareKeyName = JSONKeySingleID.GENERIC_REDIS_ATTRS.keyName.replace('{?}', key)
             const keyName = JSONKeySingleID.getKeyName(key)
 
             expect(keyName).to.eql(compareKeyName)
@@ -98,7 +67,7 @@ describe('GenericRedisCache', () => {
             context('and the `attr` is a `string`', () => {
               it('should return the key name', () => {
                 const objectKey = { id: 'id' }
-                const compareKeyName = JSONKeySingleID.KEY_NAME.replace('{?}', objectKey.id)
+                const compareKeyName = JSONKeySingleID.GENERIC_REDIS_ATTRS.keyName.replace('{?}', objectKey.id)
                 const keyName = JSONKeySingleID.getKeyName(objectKey)
 
                 expect(keyName).to.eql(compareKeyName)
@@ -108,7 +77,7 @@ describe('GenericRedisCache', () => {
             context('and the `attr` is a Number', () => {
               it('should return the key name', () => {
                 const objectKey = { id: Math.floor(Math.random() * 100) + 1}
-                const compareKeyName = JSONKeySingleID.KEY_NAME.replace('{?}', objectKey.id)
+                const compareKeyName = JSONKeySingleID.GENERIC_REDIS_ATTRS.keyName.replace('{?}', objectKey.id)
                 const keyName = JSONKeySingleID.getKeyName(objectKey)
 
                 expect(keyName).to.eql(compareKeyName)
@@ -119,7 +88,7 @@ describe('GenericRedisCache', () => {
               context('and the `ID` has no `undefinedValue` defined', () => {
                 it('should return the key name with the default `DEFAULT_UNDEFINED_ID` value', () => {
                   const objectKey = { id: undefined }
-                  const compareKeyName = JSONKeySingleID.KEY_NAME.replace('{?}', GenericRedisCache.DEFAULT_UNDEFINED_ID)
+                  const compareKeyName = JSONKeySingleID.GENERIC_REDIS_ATTRS.keyName.replace('{?}', GenericRedisCache.DEFAULT_GENERIC_REDIS_ATTRS.idUndefined)
                   const keyName = JSONKeySingleID.getKeyName(objectKey)
 
                   expect(keyName).to.eql(compareKeyName)
@@ -129,7 +98,7 @@ describe('GenericRedisCache', () => {
               context('and the `ID` has an `undefinedValue` defined', () => {
                 it('should return the key name with the `undefinedValue` attr', () => {
                   const objectKey = { id: undefined }
-                  const compareKeyName = JSONKeySingleIDWithUndefined.KEY_NAME.replace('{?}', JSONKeySingleIDWithUndefined.ID[0].undefinedValue)
+                  const compareKeyName = JSONKeySingleIDWithUndefined.GENERIC_REDIS_ATTRS.keyName.replace('{?}', JSONKeySingleIDWithUndefined.GENERIC_REDIS_ATTRS.ids[0].undefinedValue)
                   const keyName = JSONKeySingleIDWithUndefined.getKeyName(objectKey)
 
                   expect(keyName).to.eql(compareKeyName)
@@ -141,7 +110,7 @@ describe('GenericRedisCache', () => {
               context('and the `ID` has no `nullValue` defined', () => {
                 it('should return the key name with the default `DEFAULT_NULL_ID` value', () => {
                   const objectKey = { id: null }
-                  const compareKeyName = JSONKeySingleID.KEY_NAME.replace('{?}', GenericRedisCache.DEFAULT_NULL_ID)
+                  const compareKeyName = JSONKeySingleID.GENERIC_REDIS_ATTRS.keyName.replace('{?}', GenericRedisCache.DEFAULT_GENERIC_REDIS_ATTRS.idNull)
                   const keyName = JSONKeySingleID.getKeyName(objectKey)
 
                   expect(keyName).to.eql(compareKeyName)
@@ -151,7 +120,7 @@ describe('GenericRedisCache', () => {
               context('and the `ID` has an `nullValue` defined', () => {
                 it('should return the key name with the `nullValue` attr', () => {
                   const objectKey = { id: null }
-                  const compareKeyName = JSONKeySingleIDWithNull.KEY_NAME.replace('{?}', JSONKeySingleIDWithNull.ID[0].nullValue)
+                  const compareKeyName = JSONKeySingleIDWithNull.GENERIC_REDIS_ATTRS.keyName.replace('{?}', JSONKeySingleIDWithNull.GENERIC_REDIS_ATTRS.ids[0].nullValue)
                   const keyName = JSONKeySingleIDWithNull.getKeyName(objectKey)
 
                   expect(keyName).to.eql(compareKeyName)
@@ -163,7 +132,7 @@ describe('GenericRedisCache', () => {
           context('and `key` has none attr', () => {
             it('should return the key name with `DEFAULT_UNDEFINED_ID`', () => {
               const objectKey = {}
-              let compareKeyName = JSONKeySingleID.KEY_NAME.replace('?', GenericRedisCache.DEFAULT_UNDEFINED_ID)
+              let compareKeyName = JSONKeySingleID.GENERIC_REDIS_ATTRS.keyName.replace('?', GenericRedisCache.DEFAULT_GENERIC_REDIS_ATTRS.idUndefined)
               compareKeyName = compareKeyName.replace(/{/g, '')
               compareKeyName = compareKeyName.replace(/}/g, '')
               const keyName = JSONKeySingleID.getKeyName(objectKey)
@@ -174,7 +143,7 @@ describe('GenericRedisCache', () => {
 
           context('and `key` has more than one attr', () => {
             it('should return null', () => {
-              const objectKey = { id: 'teste', id2: 'teste2'}
+              const objectKey = { id: 'teste', id2: 'teste2' }
 
               const keyName = JSONKeySingleID.getKeyName(objectKey)
               expect(keyName).to.eql(null)
@@ -185,27 +154,18 @@ describe('GenericRedisCache', () => {
 
       context('when the `KEY_NAME` has more than one id', () => {
         context ('and the `ids` have no undefinedValue or nullValue options', () => {
-          // let genericRedisCache
-          // const KEY_NAME = 'test:{?}:second:{?}:third:{?}'
-          // const IDS = [{ id: 'id'}, { id: 'id2' }, { id: 'id3'} ]
-          // const TYPE = RedisKeyTypeEnum.JSON
-
-          // before(() =>  {
-          //   genericRedisCache = new GenericRedisCache(KEY_NAME, TYPE, IDS)
-          // })
-
           context('and the `key` is an `object`', () => {
             context('and all the attrs have values', () => {
               it('should return the key name', () => {
                 const objectKey = {
-                  id:   'aa:bb:cc',
-                  id2:  Math.floor(Math.random() * 100) + 1,
-                  id3:  Math.floor(Math.random() * 100) + 1
+                  id  : 'aa:bb:cc',
+                  id2 : Math.floor(Math.random() * 100) + 1,
+                  id3 : Math.floor(Math.random() * 100) + 1
                 }
 
-                const idsIndexes = JSONKeyMultiID.getIdIndexes(JSONKeyMultiID.KEY_NAME)
+                const idsIndexes = JSONKeyMultiID.getIdIndexes(JSONKeyMultiID.GENERIC_REDIS_ATTRS.keyName)
 
-                const chars = JSONKeyMultiID.KEY_NAME.split('')
+                const chars = JSONKeyMultiID.GENERIC_REDIS_ATTRS.keyName.split('')
 
                 Object.keys(objectKey).forEach((key, index) => {
                   chars[idsIndexes[index]] = typeof(objectKey[key]) == 'string' ? objectKey[key].replace(/:/g, '') : objectKey[key]
@@ -225,13 +185,13 @@ describe('GenericRedisCache', () => {
             context('and the attrs have `undefined` values', () => {
               it('should return the key name`', () => {
                 const objectKey = {
-                  id:   'aa:bb:cc',
-                  id2:  undefined,
-                  id3:  undefined
+                  id  : 'aa:bb:cc',
+                  id2 : undefined,
+                  id3 : undefined
                 }
 
-                let compareKeyName = JSONKeyMultiID.KEY_NAME.replace('{?}', objectKey.id.replace(/:/g, ''))
-                JSONKeyMultiID.ID.forEach((objectId, index) => {
+                let compareKeyName = JSONKeyMultiID.GENERIC_REDIS_ATTRS.keyName.replace('{?}', objectKey.id.replace(/:/g, ''))
+                JSONKeyMultiID.GENERIC_REDIS_ATTRS.ids.forEach((objectId, index) => {
                   if (index > 0) {
                     compareKeyName = compareKeyName
                       .replace('{?}', JSONKeyMultiID.DEFAULT_UNDEFINED_ID)
@@ -246,16 +206,16 @@ describe('GenericRedisCache', () => {
             context('and the attrs have null values', () => {
               it('should return the key name', () => {
                 const objectKey = {
-                  id:   'aa:bb:cc',
-                  id2:  null,
-                  id3:  null
+                  id  : 'aa:bb:cc',
+                  id2 : null,
+                  id3 : null
                 }
 
-                let compareKeyName = JSONKeyMultiID.KEY_NAME.replace('{?}', objectKey.id.replace(/:/g, ''))
-                JSONKeyMultiID.ID.forEach((objectId, index) => {
+                let compareKeyName = JSONKeyMultiID.GENERIC_REDIS_ATTRS.keyName.replace('{?}', objectKey.id.replace(/:/g, ''))
+                JSONKeyMultiID.GENERIC_REDIS_ATTRS.ids.forEach((objectId, index) => {
                   if (index > 0) {
                     compareKeyName = compareKeyName
-                      .replace('{?}', GenericRedisCache.DEFAULT_NULL_ID)
+                      .replace('{?}', GenericRedisCache.DEFAULT_GENERIC_REDIS_ATTRS.idNull)
                   }
                 })
                 const keyName = JSONKeyMultiID.getKeyName(objectKey)
@@ -267,20 +227,23 @@ describe('GenericRedisCache', () => {
             context('and the `key` has less attrs than the `ID` size', () => {
               it('should set the unpresents `ids` to the defaut `undefined` value', () => {
                 const objectKey = {
-                  id:  'aa:bb:cc',
-                  id2: 'teste'
+                  id  : 'aa:bb:cc',
+                  id2 : 'teste'
                 }
 
-                const chars = JSONKeyMultiID.KEY_NAME.split('')
-                const idsIndexes = JSONKeyMultiID.getIdIndexes(JSONKeyMultiID.KEY_NAME)
+                const chars = JSONKeyMultiID.GENERIC_REDIS_ATTRS.keyName.split('')
+                const idsIndexes = JSONKeyMultiID.getIdIndexes(JSONKeyMultiID.GENERIC_REDIS_ATTRS.keyName)
 
                 idsIndexes.forEach((indexKeyName, index) =>  {
                   const paramKey = Object.keys(objectKey)[index]
 
                   if (paramKey)
                     chars[indexKeyName] = objectKey[paramKey].replace(/:/g, '')
-                  else
-                    chars[indexKeyName] = JSONKeyMultiID.ID[index].undefinedValue ? JSONKeyMultiID.ID[index].undefinedValue : GenericRedisCache.DEFAULT_UNDEFINED_ID
+                  else {
+                    chars[indexKeyName] = JSONKeyMultiID.GENERIC_REDIS_ATTRS.ids[index].undefinedValue ?
+                      JSONKeyMultiID.GENERIC_REDIS_ATTRS.ids[index].undefinedValue :
+                      GenericRedisCache.DEFAULT_GENERIC_REDIS_ATTRS.idUndefined
+                  }
                 })
 
                 let compareKeyName = chars.join('')
@@ -297,8 +260,8 @@ describe('GenericRedisCache', () => {
           context('and the `key` is a `string`', () => {
             it('should return the key name', () => {
               const key = 'value'
-              let compareKeyName = JSONKeyMultiID.KEY_NAME.replace('{?}', key)
-              JSONKeyMultiID.ID.forEach((objectId, index) => {
+              let compareKeyName = JSONKeyMultiID.GENERIC_REDIS_ATTRS.keyName.replace('{?}', key)
+              JSONKeyMultiID.GENERIC_REDIS_ATTRS.ids.forEach((objectId, index) => {
                 if (index > 0) {
                   compareKeyName = compareKeyName
                     .replace('{?}', JSONKeyMultiID.DEFAULT_UNDEFINED_ID)
@@ -313,8 +276,8 @@ describe('GenericRedisCache', () => {
           context('and the `key` is a `Number`', () => {
             it('should return the key name', () => {
               const key = Math.floor(Math.random() * 100) + 1
-              let compareKeyName = JSONKeyMultiID.KEY_NAME.replace('{?}', key)
-              JSONKeyMultiID.ID.forEach((objectId, index) => {
+              let compareKeyName = JSONKeyMultiID.GENERIC_REDIS_ATTRS.keyName.replace('{?}', key)
+              JSONKeyMultiID.GENERIC_REDIS_ATTRS.ids.forEach((objectId, index) => {
                 if (index > 0) {
                   compareKeyName = compareKeyName
                     .replace('{?}', JSONKeyMultiID.DEFAULT_UNDEFINED_ID)
@@ -331,16 +294,16 @@ describe('GenericRedisCache', () => {
           context('and the `key` is an `object` with undefined `attrs`', () => {
             it('should return the key name', () => {
               const objectKey = {
-                id: 'aa:bb:cc',
-                id2: undefined
+                id  : 'aa:bb:cc',
+                id2 : undefined
               }
 
-              const idsIndexes = GenericRedisCache.getIdIndexes(JSONKeyMultiIDWithUndefined.KEY_NAME)
+              const idsIndexes = GenericRedisCache.getIdIndexes(JSONKeyMultiIDWithUndefined.GENERIC_REDIS_ATTRS.keyName)
 
-              const chars = JSONKeyMultiIDWithUndefined.KEY_NAME.split('')
+              const chars = JSONKeyMultiIDWithUndefined.GENERIC_REDIS_ATTRS.keyName.split('')
 
               Object.keys(objectKey).forEach((key, index) => {
-                chars[idsIndexes[index]] = typeof(objectKey[key]) == 'string' ? objectKey[key].replace(/:/g, '') : JSONKeyMultiIDWithUndefined.ID[index].undefinedValue
+                chars[idsIndexes[index]] = typeof(objectKey[key]) == 'string' ? objectKey[key].replace(/:/g, '') : JSONKeyMultiIDWithUndefined.GENERIC_REDIS_ATTRS.ids[index].undefinedValue
               })
 
               let compareKeyName = chars.join('')
@@ -357,11 +320,11 @@ describe('GenericRedisCache', () => {
           context('and the `key` has less attrs than the `ID` size', () => {
             it('should set the unpresents `ID` values to the `undefinedValue`', () => {
               const objectKey = {
-                id:  'aa:bb:cc'
+                id: 'aa:bb:cc'
               }
 
-              const chars = JSONKeyMultiIDWithUndefined.KEY_NAME.split('')
-              const idsIndexes = GenericRedisCache.getIdIndexes(JSONKeyMultiIDWithUndefined.KEY_NAME)
+              const chars = JSONKeyMultiIDWithUndefined.GENERIC_REDIS_ATTRS.keyName.split('')
+              const idsIndexes = GenericRedisCache.getIdIndexes(JSONKeyMultiIDWithUndefined.GENERIC_REDIS_ATTRS.keyName)
 
               idsIndexes.forEach((indexKeyName, index) =>  {
                 const paramKey = Object.keys(objectKey)[index]
@@ -369,7 +332,7 @@ describe('GenericRedisCache', () => {
                 if (paramKey)
                   chars[indexKeyName] = objectKey[paramKey].replace(/:/g, '')
                 else
-                  chars[indexKeyName] =  JSONKeyMultiIDWithUndefined.ID[index].undefinedValue
+                  chars[indexKeyName] =  JSONKeyMultiIDWithUndefined.GENERIC_REDIS_ATTRS.ids[index].undefinedValue
               })
 
               let compareKeyName = chars.join('')
@@ -385,8 +348,8 @@ describe('GenericRedisCache', () => {
           context('and the `key` is an `string`', () => {
             it('should return the key name', () => {
               const key = 'value'
-              let compareKeyName = JSONKeyMultiIDWithUndefined.KEY_NAME.replace('{?}', key)
-              JSONKeyMultiIDWithUndefined.ID.forEach((objectId, index) => {
+              let compareKeyName = JSONKeyMultiIDWithUndefined.GENERIC_REDIS_ATTRS.keyName.replace('{?}', key)
+              JSONKeyMultiIDWithUndefined.GENERIC_REDIS_ATTRS.ids.forEach((objectId, index) => {
                 if (index > 0) {
                   compareKeyName = compareKeyName
                     .replace('{?}', objectId.undefinedValue)
@@ -401,8 +364,8 @@ describe('GenericRedisCache', () => {
           context('and the `key` is an `Number`', () => {
             it('should return the key name', () => {
               const key = Math.floor(Math.random() * 100) + 1
-              let compareKeyName = JSONKeyMultiIDWithUndefined.KEY_NAME.replace('{?}', key)
-              JSONKeyMultiIDWithUndefined.ID.forEach((objectId, index) => {
+              let compareKeyName = JSONKeyMultiIDWithUndefined.GENERIC_REDIS_ATTRS.keyName.replace('{?}', key)
+              JSONKeyMultiIDWithUndefined.GENERIC_REDIS_ATTRS.ids.forEach((objectId, index) => {
                 if (index > 0) {
                   compareKeyName = compareKeyName
                     .replace('{?}',  objectId.undefinedValue)
@@ -423,12 +386,12 @@ describe('GenericRedisCache', () => {
                 id2: null
               }
 
-              const idsIndexes = GenericRedisCache.getIdIndexes(JSONKeyMultiIDWithNull.KEY_NAME)
+              const idsIndexes = GenericRedisCache.getIdIndexes(JSONKeyMultiIDWithNull.GENERIC_REDIS_ATTRS.keyName)
 
-              const chars = JSONKeyMultiIDWithNull.KEY_NAME.split('')
+              const chars = JSONKeyMultiIDWithNull.GENERIC_REDIS_ATTRS.keyName.split('')
 
               Object.keys(objectKey).forEach((key, index) => {
-                chars[idsIndexes[index]] = typeof(objectKey[key]) == 'string' ? objectKey[key].replace(/:/g, '') : JSONKeyMultiIDWithNull.ID[index].nullValue
+                chars[idsIndexes[index]] = typeof(objectKey[key]) == 'string' ? objectKey[key].replace(/:/g, '') : JSONKeyMultiIDWithNull.GENERIC_REDIS_ATTRS.ids[index].nullValue
               })
 
               let compareKeyName = chars.join('')
@@ -445,11 +408,11 @@ describe('GenericRedisCache', () => {
           context('and the `key` has less attrs than the `ID` size', () => {
             it('should set the unpresents `ID` values to the `undefinedValue`', () => {
               const objectKey = {
-                id:  'aa:bb:cc'
+                id: 'aa:bb:cc'
               }
 
-              const chars = JSONKeyMultiIDWithNull.KEY_NAME.split('')
-              const idsIndexes = GenericRedisCache.getIdIndexes(JSONKeyMultiIDWithNull.KEY_NAME)
+              const chars = JSONKeyMultiIDWithNull.GENERIC_REDIS_ATTRS.keyName.split('')
+              const idsIndexes = GenericRedisCache.getIdIndexes(JSONKeyMultiIDWithNull.GENERIC_REDIS_ATTRS.keyName)
 
               idsIndexes.forEach((indexKeyName, index) =>  {
                 const paramKey = Object.keys(objectKey)[index]
@@ -457,7 +420,7 @@ describe('GenericRedisCache', () => {
                 if (paramKey)
                   chars[indexKeyName] = objectKey[paramKey].replace(/:/g, '')
                 else
-                  chars[indexKeyName] =  GenericRedisCache.DEFAULT_UNDEFINED_ID
+                  chars[indexKeyName] =  GenericRedisCache.DEFAULT_GENERIC_REDIS_ATTRS.idUndefined
               })
 
               let compareKeyName = chars.join('')
@@ -473,11 +436,11 @@ describe('GenericRedisCache', () => {
           context('and the `key` is an `string`', () => {
             it('should return the key name', () => {
               const key = 'value'
-              let compareKeyName = JSONKeyMultiIDWithNull.KEY_NAME.replace('{?}', key)
-              JSONKeyMultiIDWithNull.ID.forEach((objectId, index) => {
+              let compareKeyName = JSONKeyMultiIDWithNull.GENERIC_REDIS_ATTRS.keyName.replace('{?}', key)
+              JSONKeyMultiIDWithNull.GENERIC_REDIS_ATTRS.ids.forEach((objectId, index) => {
                 if (index > 0) {
                   compareKeyName = compareKeyName
-                    .replace('{?}', GenericRedisCache.DEFAULT_UNDEFINED_ID)
+                    .replace('{?}', GenericRedisCache.DEFAULT_GENERIC_REDIS_ATTRS.idUndefined)
                 }
               })
               const keyName = JSONKeyMultiIDWithNull.getKeyName(key)
@@ -489,11 +452,11 @@ describe('GenericRedisCache', () => {
           context('and the `key` is an `Number`', () => {
             it('should return the key name', () => {
               const key = Math.floor(Math.random() * 100) + 1
-              let compareKeyName = JSONKeyMultiIDWithNull.KEY_NAME.replace('{?}', key)
-              JSONKeyMultiIDWithNull.ID.forEach((objectId, index) => {
+              let compareKeyName = JSONKeyMultiIDWithNull.GENERIC_REDIS_ATTRS.keyName.replace('{?}', key)
+              JSONKeyMultiIDWithNull.GENERIC_REDIS_ATTRS.ids.forEach((objectId, index) => {
                 if (index > 0) {
                   compareKeyName = compareKeyName
-                    .replace('{?}', GenericRedisCache.DEFAULT_UNDEFINED_ID)
+                    .replace('{?}', GenericRedisCache.DEFAULT_GENERIC_REDIS_ATTRS.idUndefined)
                 }
               })
               const keyName = JSONKeyMultiIDWithNull.getKeyName(key)
@@ -509,11 +472,11 @@ describe('GenericRedisCache', () => {
       context('when the cache have `ID` elements', () => {
         context ('and the `ids` have no `undefinedValue`  options', () => {
           it('should replace all the `ids` with the `DEFAULT_UNDEFINED_ID` value', () => {
-            const idsIndexes = GenericRedisCache.getIdIndexes(JSONKeyMultiID.KEY_NAME)
-            const chars = JSONKeyMultiID.KEY_NAME.split('')
+            const idsIndexes = GenericRedisCache.getIdIndexes(JSONKeyMultiID.GENERIC_REDIS_ATTRS.keyName)
+            const chars = JSONKeyMultiID.GENERIC_REDIS_ATTRS.keyName.split('')
 
             idsIndexes.forEach((indexKeyName) =>  {
-              chars[indexKeyName] =  GenericRedisCache.DEFAULT_UNDEFINED_ID
+              chars[indexKeyName] =  GenericRedisCache.DEFAULT_GENERIC_REDIS_ATTRS.idUndefined
             })
 
             let compareKeyName = chars.join('')
@@ -529,11 +492,13 @@ describe('GenericRedisCache', () => {
 
         context ('and the `ids` have `undefinedValue`  options', () => {
           it('should replace all the `ids` with the `undefinedValue` values', () => {
-            const idsIndexes = GenericRedisCache.getIdIndexes(JSONKeyMultiIDWithUndefined.KEY_NAME)
-            const chars = JSONKeyMultiIDWithUndefined.KEY_NAME.split('')
+            const idsIndexes = GenericRedisCache.getIdIndexes(JSONKeyMultiIDWithUndefined.GENERIC_REDIS_ATTRS.keyName)
+            const chars = JSONKeyMultiIDWithUndefined.GENERIC_REDIS_ATTRS.keyName.split('')
 
             idsIndexes.forEach((indexKeyName, index) =>  {
-              chars[indexKeyName] =  JSONKeyMultiIDWithUndefined.ID[index].undefinedValue ? JSONKeyMultiIDWithUndefined.ID[index].undefinedValue : GenericRedisCache.DEFAULT_UNDEFINED_ID
+              chars[indexKeyName] =  JSONKeyMultiIDWithUndefined.GENERIC_REDIS_ATTRS.ids[index].undefinedValue ?
+                JSONKeyMultiIDWithUndefined.GENERIC_REDIS_ATTRS.ids[index].undefinedValue :
+                GenericRedisCache.DEFAULT_GENERIC_REDIS_ATTRS.idUndefined
             })
 
             let compareKeyName = chars.join('')
@@ -552,7 +517,7 @@ describe('GenericRedisCache', () => {
         it('should return the `KEY_NAME` itself', () => {
           const keyName = JSONKeyNoID.getKeyName()
 
-          expect(keyName).to.eql(JSONKeyNoID.KEY_NAME)
+          expect(keyName).to.eql(JSONKeyNoID.GENERIC_REDIS_ATTRS.keyName)
         })
       })
     })
@@ -563,7 +528,7 @@ describe('GenericRedisCache', () => {
       context('and it is an `Object`', () => {
         context('and `keys` has the same size of attrs than the key `ID`', () => {
           it('should return an `Array` with the key names', async () => {
-            const KEY_NAME_SIZES = Array.from({length: Object.keys(JSONKeyMultiID.ID).length}, () => Math.floor((Math.random() * 50) + 1))
+            const KEY_NAME_SIZES = Array.from({length: Object.keys(JSONKeyMultiID.GENERIC_REDIS_ATTRS.ids).length}, () => Math.floor((Math.random() * 50) + 1))
             const keys = {
               primaries: Array.from({length: KEY_NAME_SIZES[0]}, () => Math.floor(Math.random() * 99)),
               secondaries: Array.from({length: KEY_NAME_SIZES[1]}, () => Math.floor(Math.random() * 99)),
@@ -573,13 +538,13 @@ describe('GenericRedisCache', () => {
             const result = await JSONKeyMultiID.getKeyNames(keys)
 
             expect(result.length).to.eql(KEY_NAME_SIZES.reduce( (a,b) => a * b ))
-            expect(result[0][JSONKeyMultiID.ID[0].id]).not.to.be.null
+            expect(result[0][JSONKeyMultiID.GENERIC_REDIS_ATTRS.ids[0].id]).not.to.be.null
           })
         })
 
         context('and `keys` has a lower size of attrs than the key `ID`', () => {
           it('should return an `Array` with the key names', async () => {
-            const KEY_NAME_SIZES = Array.from({length: Object.keys(JSONKeyMultiID.ID).length}, () => Math.floor((Math.random() * 50) + 1))
+            const KEY_NAME_SIZES = Array.from({length: Object.keys(JSONKeyMultiID.GENERIC_REDIS_ATTRS.ids).length}, () => Math.floor((Math.random() * 50) + 1))
             const keys = {
               primaries: Array.from({length: KEY_NAME_SIZES[0]}, () => Math.floor(Math.random() * 99))
             }
@@ -587,8 +552,8 @@ describe('GenericRedisCache', () => {
             const result = await JSONKeyMultiID.getKeyNames(keys)
 
             expect(result.length).to.eql(KEY_NAME_SIZES[0])
-            expect(result[0][JSONKeyMultiID.ID[0].id]).not.to.be.null
-            expect(result[0][JSONKeyMultiID.ID[1].id]).to.be.undefined
+            expect(result[0][JSONKeyMultiID.GENERIC_REDIS_ATTRS.ids[0].id]).not.to.be.null
+            expect(result[0][JSONKeyMultiID.GENERIC_REDIS_ATTRS.ids[1].id]).to.be.undefined
           })
         })
 
@@ -629,7 +594,7 @@ describe('GenericRedisCache', () => {
             const result = await JSONKeyMultiID.getKeyNames(keys)
 
             expect(result.length).to.eql(KEY_NAME_SIZE)
-            expect(result[0][JSONKeyMultiID.ID[1].id]).to.be.undefined
+            expect(result[0][JSONKeyMultiID.GENERIC_REDIS_ATTRS.ids[1].id]).to.be.undefined
           })
         })
       })
@@ -646,7 +611,7 @@ describe('GenericRedisCache', () => {
               const values = Array.from({length: KEYS_SIZE}, () => Math.floor(Math.random() * 999))
               const objectValues = values.map((value) => {
                 const object = {}
-                object[JSONKeySingleIDWithUndefined.ID[0].id] = value
+                object[JSONKeySingleIDWithUndefined.GENERIC_REDIS_ATTRS.ids[0].id] = value
                 return object
               })
 
@@ -1299,7 +1264,7 @@ describe('GenericRedisCache', () => {
           before(async () => {
             keyNames = await JSONKeySingleID.getKeyNames(ID_ATTRS)
 
-            const keyValues = OBJECTS.map((object) =>{
+            const keyValues = OBJECTS.map((object) => {
               return {
                 key: JSONKeySingleID._getIdAttr(object),
                 value: object
@@ -1328,7 +1293,7 @@ describe('GenericRedisCache', () => {
           before(async () => {
             keyNames = await JSONKeySingleID.getKeyNames(ID_ATTRS)
 
-            const stringValues = OBJECTS.map((object) =>{
+            const stringValues = OBJECTS.map((object) => {
               return object.id
             })
 
@@ -1383,7 +1348,7 @@ describe('GenericRedisCache', () => {
           before(async () => {
             keyNames = await HASHKeySingleID.getKeyNames(ID_ATTRS)
 
-            const keyValues = OBJECTS.map((object) =>{
+            const keyValues = OBJECTS.map((object) => {
               return {
                 key: HASHKeySingleID._getIdAttr(object),
                 value: object
@@ -1412,7 +1377,7 @@ describe('GenericRedisCache', () => {
           before(async () => {
             keyNames = await HASHKeySingleID.getKeyNames(ID_ATTRS)
 
-            const stringValues = OBJECTS.map((object) =>{
+            const stringValues = OBJECTS.map((object) => {
               return object.id
             })
 
@@ -1471,7 +1436,7 @@ describe('GenericRedisCache', () => {
           before(async () => {
             keyNames = await STRINGKeySingleID.getKeyNames(ID_ATTRS)
 
-            const keyValues = OBJECTS.map((object) =>{
+            const keyValues = OBJECTS.map((object) => {
               return {
                 key: STRINGKeySingleID._getIdAttr(object),
                 value: object
@@ -1500,7 +1465,7 @@ describe('GenericRedisCache', () => {
           before(async () => {
             keyNames = await STRINGKeySingleID.getKeyNames(ID_ATTRS)
 
-            const stringValues = OBJECTS.map((object) =>{
+            const stringValues = OBJECTS.map((object) => {
               return {
                 key: object.id,
                 value: 'test'+ (Math.floor(Math.random() * 1000) + 1)
@@ -1530,7 +1495,7 @@ describe('GenericRedisCache', () => {
           before(async () => {
             keyNames = await STRINGKeySingleID.getKeyNames(ID_ATTRS)
 
-            const stringValues = OBJECTS.map((object) =>{
+            const stringValues = OBJECTS.map((object) => {
               return {
                 key: object.id,
                 value:  GenericRedisCacheMock.getRandomStrings(VALUE_LENGTH)
@@ -2307,7 +2272,7 @@ describe('GenericRedisCache', () => {
 
           values = GenericRedisCacheMock.getRandomStrings(3)
 
-          stringValues = OBJECTS.map((object, index) =>{
+          stringValues = OBJECTS.map((object, index) => {
             return {
               key: object.id,
               value: values[index]
