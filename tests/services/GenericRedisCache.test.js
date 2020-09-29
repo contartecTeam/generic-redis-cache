@@ -1189,7 +1189,7 @@ describe('GenericRedisCache', () => {
             })
 
             it('should return `null`', () => {
-              expect(redisResponse).to.be.null
+              expect(redisResponse).to.not.exist
             })
           })
         })
@@ -1352,8 +1352,8 @@ describe('GenericRedisCache', () => {
 
             const keyValues = OBJECTS.map((object) => {
               return {
-                key: HASHKeySingleID._getIdAttr(object),
-                value: object
+                key   : HASHKeySingleID._getIdAttr(object),
+                value : object
               }
             })
 
@@ -1379,9 +1379,13 @@ describe('GenericRedisCache', () => {
           before(async () => {
             keyNames = await HASHKeySingleID.getKeyNames(ID_ATTRS)
 
-            const stringValues = OBJECTS.map((object) => {
-              return object.id
-            })
+            const stringValues = OBJECTS
+              .map((object) => {
+                return {
+                  key   : object.id,
+                  value : object.id.toString()
+                }
+              })
 
             redisResponse = await HASHKeySingleID.setList(stringValues)
           })
