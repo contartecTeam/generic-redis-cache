@@ -5,9 +5,9 @@ const RedisKeyTypeEnum = require('../../../lib/enums/RedisKeyTypeEnum')
 const GenericJSONCache = require('../../../lib/services/types/GenericJSONCache')
 
 const GENERIC_REDIS_ATTRS = {
-  keyName     : 'test:{?}',
-  type        : RedisKeyTypeEnum.JSON,
-  ids         : [{ id: 'id' }]
+  keyName : 'test:{?}',
+  type    : RedisKeyTypeEnum.JSON,
+  ids     : [{ id: 'id' }]
 }
 
 class JSONKeySingleID extends GenericRedisCache {

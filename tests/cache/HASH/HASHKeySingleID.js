@@ -4,9 +4,9 @@ const GenericRedisCache = require('../../../lib/services/GenericRedisCache')
 const RedisKeyTypeEnum = require('../../../lib/enums/RedisKeyTypeEnum')
 
 const GENERIC_REDIS_ATTRS = {
-  keyName     : 'hash_key:{?}',
-  type        : RedisKeyTypeEnum.HASH,
-  ids         : [{ id: 'id' }]
+  keyName : 'hash_key:{?}',
+  type    : RedisKeyTypeEnum.HASH,
+  ids     : [{ id: 'id' }]
 }
 
 class HASHKeySingleID extends GenericRedisCache {
