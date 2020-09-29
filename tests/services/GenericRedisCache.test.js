@@ -1166,11 +1166,12 @@ describe('GenericRedisCache', () => {
             })
           })
 
-          context('and `_getIdAttr` returns null', () => {
+          context('and `_getIdAttr` returns `null`', () => {
             before(async () => {
               spies = {
                 setCache: SpyMock
                   .addReturnSpy(JSONKeySingleID, 'setCache'),
+
                 getIdAttr: SpyMock
                   .addReturnSpy(JSONKeySingleID, '_getIdAttr', null)
               }
@@ -1181,7 +1182,7 @@ describe('GenericRedisCache', () => {
             after(() => { SpyMock.restoreAll() })
 
             it('should call `_getIdAttr`', () => {
-              expect(spies.getIdAttr).have.been.calledOnce
+              expect(spies.getIdAttr).have.been.called
             })
 
             it('should not call `setCache`', () => {
@@ -1498,6 +1499,7 @@ describe('GenericRedisCache', () => {
 
         context('and the values are arrays of `strings`', () => {
           const VALUE_LENGTH = 4
+
           before(async () => {
             keyNames = await STRINGKeySingleID.getKeyNames(ID_ATTRS)
 
