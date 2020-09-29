@@ -886,13 +886,13 @@ describe('GenericRedisCache', () => {
       }
       const KEY_NAME = JSONKeySingleID.getKeyName(VALUE)
 
-      context('and `onGet` returns an object', () => {
+      context('and `getDB` returns an object', () => {
         before(async () => {
           spies = {
             getCache  :  SpyMock
               .addReturnSpy(JSONKeySingleID, 'getCache', null),
-            onGet : SpyMock
-              .addReturnSpy(JSONKeySingleID, 'onGet', OBJECT)
+            getDB : SpyMock
+              .addReturnSpy(JSONKeySingleID, 'getDB', OBJECT)
           }
 
           response = await JSONKeySingleID.get(VALUE)
@@ -904,8 +904,8 @@ describe('GenericRedisCache', () => {
           SpyMock.restoreAll()
         })
 
-        it('should call `onGet`', () => {
-          expect(spies.onGet).have.been.calledOnce
+        it('should call `getDB`', () => {
+          expect(spies.getDB).have.been.calledOnce
         })
 
         it('should return the object', () => {
@@ -919,13 +919,13 @@ describe('GenericRedisCache', () => {
         })
       })
 
-      context('and `onGet` returns null', () => {
+      context('and `getDB` returns null', () => {
         before(async () => {
           spies = {
             getCache  : SpyMock
               .addReturnSpy(JSONKeySingleID, 'getCache', null),
-            onGet : SpyMock
-              .addReturnSpy(JSONKeySingleID, 'onGet', null),
+            getDB : SpyMock
+              .addReturnSpy(JSONKeySingleID, 'getDB', null),
           }
 
           response = await JSONKeySingleID.get(VALUE)
@@ -933,8 +933,8 @@ describe('GenericRedisCache', () => {
 
         after(() => { SpyMock.restoreAll() })
 
-        it('should call `onGet`', () => {
-          expect(spies.onGet).have.been.calledOnce
+        it('should call `getDB`', () => {
+          expect(spies.getDB).have.been.calledOnce
         })
 
         it('should return null', () => {
@@ -1129,8 +1129,8 @@ describe('GenericRedisCache', () => {
   })
 
   describe('.set', () => {
-    context('and a `key` is passed', () => {
-      context('and the `key` is an object', () => {
+    context('when `key` not `null`', () => {
+      context('when `key` is an `object`', () => {
         const OBJECT_KEY = {
           id: 1,
           attr1: 'teste'
@@ -1195,8 +1195,9 @@ describe('GenericRedisCache', () => {
         })
       })
 
-      context('and the `key` is a `String`', () => {
+      context('when `key` is a `string`', () => {
         const STRING_KEY = 'teste'
+
         let redisResponse
 
         before(async () => {
@@ -1209,8 +1210,9 @@ describe('GenericRedisCache', () => {
       })
     })
 
-    context('and no `key` is passed', () => {
+    context('when `key` is `null`', () => {
       let spies
+
       before(() => {
         spies = {
           setCache: SpyMock
@@ -1222,8 +1224,8 @@ describe('GenericRedisCache', () => {
 
       after(() => { SpyMock.restoreAll() })
 
-      it('should call `setCache`', () => {
-        expect(spies.setCache).have.been.calledOnce
+      it('should not call `setCache`', () => {
+        expect(spies.setCache).to.not.have.been.calledOnce
       })
     })
   })
@@ -1629,7 +1631,7 @@ describe('GenericRedisCache', () => {
 
           before(async () => {
             spies = {
-              getIds  : SpyMock
+              getIds: SpyMock
                 .addReturnSpy(JSONKeySingleID, 'getIds')
             }
 
@@ -1659,13 +1661,13 @@ describe('GenericRedisCache', () => {
           const ID_ATTRS = JSONKeySingleID.getIdAttrs(OBJECTS)
           let keyNames, spies, redisResponse
 
-          context('and `getListFromDB` returns an array', () => {
+          context('and `getListDB` returns an array', () => {
             before(async () => {
               spies = {
                 getIds  : SpyMock
                   .addReturnSpy(JSONKeySingleID, 'getIds'),
-                getListFromDB : SpyMock
-                  .addReturnSpy(JSONKeySingleID, 'getListFromDB', OBJECTS.slice(2))
+                getListDB : SpyMock
+                  .addReturnSpy(JSONKeySingleID, 'getListDB', OBJECTS.slice(2))
               }
 
               keyNames = await JSONKeySingleID.getKeyNames(ID_ATTRS)
@@ -1685,8 +1687,8 @@ describe('GenericRedisCache', () => {
               expect(spies.getIds).have.been.called
             })
 
-            it('should call `getListFromDB`', () => {
-              expect(spies.getListFromDB).have.been.calledOnce
+            it('should call `getListDB`', () => {
+              expect(spies.getListDB).have.been.calledOnce
             })
 
             it('should return the cached values', async () => {
@@ -1694,13 +1696,13 @@ describe('GenericRedisCache', () => {
             })
           })
 
-          context('and `getListFromDB` returns an empty array', () => {
+          context('and `getListDB` returns an empty array', () => {
             before(async () => {
               spies = {
                 getIds  : SpyMock
                   .addReturnSpy(JSONKeySingleID, 'getIds'),
-                getListFromDB : SpyMock
-                  .addReturnSpy(JSONKeySingleID, 'getListFromDB', [])
+                getListDB : SpyMock
+                  .addReturnSpy(JSONKeySingleID, 'getListDB', [])
               }
 
               keyNames = await JSONKeySingleID.getKeyNames(ID_ATTRS)
@@ -1720,8 +1722,8 @@ describe('GenericRedisCache', () => {
               expect(spies.getIds).have.been.called
             })
 
-            it('should call `getListFromDB`', () => {
-              expect(spies.getListFromDB).have.been.calledOnce
+            it('should call `getListDB`', () => {
+              expect(spies.getListDB).have.been.calledOnce
             })
 
             it('should return the cached values', async () => {
@@ -1735,13 +1737,13 @@ describe('GenericRedisCache', () => {
         let keyNames, spies, redisResponse
         const ID_ATTRS = JSONKeySingleID.getIdAttrs(OBJECTS)
 
-        context('and `getListFromDB` returns an array', () => {
+        context('and `getListDB` returns an array', () => {
           before(async () => {
             spies = {
               getIds  : SpyMock
                 .addReturnSpy(JSONKeySingleID, 'getIds'),
-              getListFromDB : SpyMock
-                .addReturnSpy(JSONKeySingleID, 'getListFromDB', OBJECTS)
+              getListDB : SpyMock
+                .addReturnSpy(JSONKeySingleID, 'getListDB', OBJECTS)
             }
 
             keyNames = await JSONKeySingleID.getKeyNames(ID_ATTRS)
@@ -1759,8 +1761,8 @@ describe('GenericRedisCache', () => {
             expect(spies.getIds).have.been.called
           })
 
-          it('should call `getListFromDB`', () => {
-            expect(spies.getListFromDB).have.been.calledOnce
+          it('should call `getListDB`', () => {
+            expect(spies.getListDB).have.been.calledOnce
           })
 
           it('should return the cached values', async () => {
@@ -1768,13 +1770,13 @@ describe('GenericRedisCache', () => {
           })
         })
 
-        context('and `getListFromDB` returns an empty array', () => {
+        context('and `getListDB` returns an empty array', () => {
           before(async () => {
             spies = {
               getIds  : SpyMock
                 .addReturnSpy(JSONKeySingleID, 'getIds'),
-              getListFromDB : SpyMock
-                .addReturnSpy(JSONKeySingleID, 'getListFromDB', [])
+              getListDB : SpyMock
+                .addReturnSpy(JSONKeySingleID, 'getListDB', [])
             }
 
             keyNames = await JSONKeySingleID.getKeyNames(ID_ATTRS)
@@ -1792,8 +1794,8 @@ describe('GenericRedisCache', () => {
             expect(spies.getIds).have.been.called
           })
 
-          it('should call `getListFromDB`', () => {
-            expect(spies.getListFromDB).have.been.calledOnce
+          it('should call `getListDB`', () => {
+            expect(spies.getListDB).have.been.calledOnce
           })
 
           it('should return an emtpy array', async () => {
@@ -1843,13 +1845,13 @@ describe('GenericRedisCache', () => {
           const ID_ATTRS = HASHKeySingleID.getIdAttrs(OBJECTS)
           let keyNames, spies, redisResponse
 
-          context('and `getListFromDB` returns an array', () => {
+          context('and `getListDB` returns an array', () => {
             before(async () => {
               spies = {
                 getIds  : SpyMock
                   .addReturnSpy(HASHKeySingleID, 'getIds'),
-                getListFromDB : SpyMock
-                  .addReturnSpy(HASHKeySingleID, 'getListFromDB', OBJECTS.slice(2))
+                getListDB : SpyMock
+                  .addReturnSpy(HASHKeySingleID, 'getListDB', OBJECTS.slice(2))
               }
 
               keyNames = await HASHKeySingleID.getKeyNames(ID_ATTRS)
@@ -1869,8 +1871,8 @@ describe('GenericRedisCache', () => {
               expect(spies.getIds).have.been.called
             })
 
-            it('should call `getListFromDB`', () => {
-              expect(spies.getListFromDB).have.been.calledOnce
+            it('should call `getListDB`', () => {
+              expect(spies.getListDB).have.been.calledOnce
             })
 
             it('should return the cached values', async () => {
@@ -1878,13 +1880,13 @@ describe('GenericRedisCache', () => {
             })
           })
 
-          context('and `getListFromDB` returns an empty array', () => {
+          context('and `getListDB` returns an empty array', () => {
             before(async () => {
               spies = {
                 getIds  : SpyMock
                   .addReturnSpy(HASHKeySingleID, 'getIds'),
-                getListFromDB : SpyMock
-                  .addReturnSpy(HASHKeySingleID, 'getListFromDB', [])
+                getListDB : SpyMock
+                  .addReturnSpy(HASHKeySingleID, 'getListDB', [])
               }
 
               keyNames = await HASHKeySingleID.getKeyNames(ID_ATTRS)
@@ -1904,8 +1906,8 @@ describe('GenericRedisCache', () => {
               expect(spies.getIds).have.been.called
             })
 
-            it('should call `getListFromDB`', () => {
-              expect(spies.getListFromDB).have.been.calledOnce
+            it('should call `getListDB`', () => {
+              expect(spies.getListDB).have.been.calledOnce
             })
 
             it('should return the cached values', async () => {
@@ -1919,13 +1921,13 @@ describe('GenericRedisCache', () => {
         let keyNames, spies, redisResponse
         const ID_ATTRS = HASHKeySingleID.getIdAttrs(OBJECTS)
 
-        context('and `getListFromDB` returns an array', () => {
+        context('and `getListDB` returns an array', () => {
           before(async () => {
             spies = {
               getIds  : SpyMock
                 .addReturnSpy(HASHKeySingleID, 'getIds'),
-              getListFromDB : SpyMock
-                .addReturnSpy(HASHKeySingleID, 'getListFromDB', OBJECTS)
+              getListDB : SpyMock
+                .addReturnSpy(HASHKeySingleID, 'getListDB', OBJECTS)
             }
 
             keyNames = await HASHKeySingleID.getKeyNames(ID_ATTRS)
@@ -1943,8 +1945,8 @@ describe('GenericRedisCache', () => {
             expect(spies.getIds).have.been.called
           })
 
-          it('should call `getListFromDB`', () => {
-            expect(spies.getListFromDB).have.been.calledOnce
+          it('should call `getListDB`', () => {
+            expect(spies.getListDB).have.been.calledOnce
           })
 
           it('should return the cached values', async () => {
@@ -1952,13 +1954,13 @@ describe('GenericRedisCache', () => {
           })
         })
 
-        context('and `getListFromDB` returns an empty array', () => {
+        context('and `getListDB` returns an empty array', () => {
           before(async () => {
             spies = {
               getIds  : SpyMock
                 .addReturnSpy(HASHKeySingleID, 'getIds'),
-              getListFromDB : SpyMock
-                .addReturnSpy(HASHKeySingleID, 'getListFromDB', [])
+              getListDB : SpyMock
+                .addReturnSpy(HASHKeySingleID, 'getListDB', [])
             }
 
             keyNames = await HASHKeySingleID.getKeyNames(ID_ATTRS)
@@ -1976,8 +1978,8 @@ describe('GenericRedisCache', () => {
             expect(spies.getIds).have.been.called
           })
 
-          it('should call `getListFromDB`', () => {
-            expect(spies.getListFromDB).have.been.calledOnce
+          it('should call `getListDB`', () => {
+            expect(spies.getListDB).have.been.calledOnce
           })
 
           it('should return an emtpy array', async () => {
@@ -2038,13 +2040,13 @@ describe('GenericRedisCache', () => {
           const ID_ATTRS = STRINGKeySingleID.getIdAttrs(OBJECTS)
           let keyNames, spies, redisResponse
 
-          context('and `getListFromDB` returns an array', () => {
+          context('and `getListDB` returns an array', () => {
             before(async () => {
               spies = {
                 getIds  : SpyMock
                   .addReturnSpy(STRINGKeySingleID, 'getIds'),
-                getListFromDB : SpyMock
-                  .addReturnSpy(STRINGKeySingleID, 'getListFromDB', STRING_KEY_VALUES.slice(2))
+                getListDB : SpyMock
+                  .addReturnSpy(STRINGKeySingleID, 'getListDB', STRING_KEY_VALUES.slice(2))
               }
 
               keyNames = await STRINGKeySingleID.getKeyNames(ID_ATTRS)
@@ -2064,8 +2066,8 @@ describe('GenericRedisCache', () => {
               expect(spies.getIds).have.been.called
             })
 
-            it('should call `getListFromDB`', () => {
-              expect(spies.getListFromDB).have.been.calledOnce
+            it('should call `getListDB`', () => {
+              expect(spies.getListDB).have.been.calledOnce
             })
 
             it('should return the cached values', async () => {
@@ -2073,13 +2075,13 @@ describe('GenericRedisCache', () => {
             })
           })
 
-          // context('and `getListFromDB` returns an empty array', () => {
+          // context('and `getListDB` returns an empty array', () => {
           //   before(async () => {
           //     spies = {
           //       getIds  : SpyMock
           //         .addReturnSpy(STRINGKeySingleID, 'getIds'),
-          //       getListFromDB : SpyMock
-          //         .addReturnSpy(STRINGKeySingleID, 'getListFromDB', [])
+          //       getListDB : SpyMock
+          //         .addReturnSpy(STRINGKeySingleID, 'getListDB', [])
           //     }
 
           //     keyNames = await STRINGKeySingleID.getKeyNames(ID_ATTRS)
@@ -2099,8 +2101,8 @@ describe('GenericRedisCache', () => {
           //     expect(spies.getIds).have.been.called
           //   })
 
-          //   it('should call `getListFromDB`', () => {
-          //     expect(spies.getListFromDB).have.been.calledOnce
+          //   it('should call `getListDB`', () => {
+          //     expect(spies.getListDB).have.been.calledOnce
           //   })
 
           //   it('should return the cached values', async () => {
@@ -2114,13 +2116,13 @@ describe('GenericRedisCache', () => {
         let keyNames, spies, redisResponse
         const ID_ATTRS = STRINGKeySingleID.getIdAttrs(OBJECTS)
 
-        context('and `getListFromDB` returns an array', () => {
+        context('and `getListDB` returns an array', () => {
           before(async () => {
             spies = {
               getIds  : SpyMock
                 .addReturnSpy(STRINGKeySingleID, 'getIds'),
-              getListFromDB : SpyMock
-                .addReturnSpy(STRINGKeySingleID, 'getListFromDB', STRING_KEY_VALUES)
+              getListDB : SpyMock
+                .addReturnSpy(STRINGKeySingleID, 'getListDB', STRING_KEY_VALUES)
             }
 
             keyNames = await STRINGKeySingleID.getKeyNames(ID_ATTRS)
@@ -2138,8 +2140,8 @@ describe('GenericRedisCache', () => {
             expect(spies.getIds).have.been.called
           })
 
-          it('should call `getListFromDB`', () => {
-            expect(spies.getListFromDB).have.been.calledOnce
+          it('should call `getListDB`', () => {
+            expect(spies.getListDB).have.been.calledOnce
           })
 
           it('should return the cached values', async () => {
@@ -2147,13 +2149,13 @@ describe('GenericRedisCache', () => {
           })
         })
 
-        context('and `getListFromDB` returns an empty array', () => {
+        context('and `getListDB` returns an empty array', () => {
           before(async () => {
             spies = {
               getIds  : SpyMock
                 .addReturnSpy(STRINGKeySingleID, 'getIds'),
-              getListFromDB : SpyMock
-                .addReturnSpy(STRINGKeySingleID, 'getListFromDB', [])
+              getListDB : SpyMock
+                .addReturnSpy(STRINGKeySingleID, 'getListDB', [])
             }
 
             keyNames = await STRINGKeySingleID.getKeyNames(ID_ATTRS)
@@ -2171,8 +2173,8 @@ describe('GenericRedisCache', () => {
             expect(spies.getIds).have.been.called
           })
 
-          it('should call `getListFromDB`', () => {
-            expect(spies.getListFromDB).have.been.calledOnce
+          it('should call `getListDB`', () => {
+            expect(spies.getListDB).have.been.calledOnce
           })
 
           it('should return an emtpy array', async () => {
