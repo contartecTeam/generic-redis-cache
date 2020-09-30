@@ -751,7 +751,6 @@ describe('GenericRedisCache', () => {
               expect(result).to.be.null
             })
           })
-
         })
 
         context('when there is no value cached', () => {
@@ -781,7 +780,6 @@ describe('GenericRedisCache', () => {
             await GenericJSONCacheMock.delete(JSONKeyMultiID.getKeyName(VALUES))
           })
 
-
           it('should return the cached object', async () => {
             const result = await JSONKeyMultiID.getCache(VALUES)
 
@@ -810,7 +808,6 @@ describe('GenericRedisCache', () => {
         after(async () => {
           await GenericHASHCache.delete(HASHKeySingleID.getKeyName(VALUE), VALUE)
         })
-
 
         it('should return the cached object', async () => {
           const result = await HASHKeySingleID.getCache(VALUE)
@@ -859,11 +856,12 @@ describe('GenericRedisCache', () => {
 
   describe('.get', () => {
     context('when there is cached value', () => {
-      let response
       const VALUE = 1
       const CACHE_VALUE = {
         id: VALUE
       }
+
+      let response
 
       before(async () => {
         SpyMock.addReturnSpy(JSONKeySingleID, 'getCache', CACHE_VALUE)
@@ -880,9 +878,11 @@ describe('GenericRedisCache', () => {
 
     context('when threre is no cached value', () => {
       let spies, response
+
       const VALUE = 1
       const OBJECT = {
-        id: VALUE
+        id  : VALUE,
+        name: `Name: ${VALUE}`
       }
       const KEY_NAME = JSONKeySingleID.getKeyName(VALUE)
 
@@ -891,7 +891,8 @@ describe('GenericRedisCache', () => {
           spies = {
             getCache  :  SpyMock
               .addReturnSpy(JSONKeySingleID, 'getCache', null),
-            getDB : SpyMock
+
+            getDB     : SpyMock
               .addReturnSpy(JSONKeySingleID, 'getDB', OBJECT)
           }
 
@@ -924,7 +925,8 @@ describe('GenericRedisCache', () => {
           spies = {
             getCache  : SpyMock
               .addReturnSpy(JSONKeySingleID, 'getCache', null),
-            getDB : SpyMock
+
+            getDB     : SpyMock
               .addReturnSpy(JSONKeySingleID, 'getDB', null),
           }
 
@@ -949,12 +951,12 @@ describe('GenericRedisCache', () => {
 
     context('when the verification `hook` returns `true`', () => {
       context('when the key is `JSON`', () => {
-        let redisResponse
+        const KEY_NAME = JSONKeySingleID.getKeyName(VALUE)
         const CACHE_VALUE = {
           id: VALUE
         }
 
-        const KEY_NAME = JSONKeySingleID.getKeyName(VALUE)
+        let redisResponse
 
         context('and `key` is passed', () => {
           before(async () => {
@@ -966,7 +968,6 @@ describe('GenericRedisCache', () => {
 
             SpyMock.restoreAll()
           })
-
 
           it('should return the response', () => {
             expect(redisResponse).to.not.null
@@ -1015,12 +1016,12 @@ describe('GenericRedisCache', () => {
       })
 
       context('when the key is `HASH`', () => {
-        let redisResponse
+        const KEY_NAME = HASHKeySingleID.getKeyName(VALUE)
         const CACHE_VALUE = {
           id: VALUE
         }
 
-        const KEY_NAME = HASHKeySingleID.getKeyName(VALUE)
+        let redisResponse
 
         context('and `key` is passed', () => {
           before(async () => {
@@ -1072,10 +1073,11 @@ describe('GenericRedisCache', () => {
       })
 
       context('when the key is `STRING`', () => {
-        let redisResponse
         const STRING_VALUE = 'string_value'
 
         const KEY_NAME = STRINGKeySingleID.getKeyName(VALUE)
+
+        let redisResponse
 
         context('and `key` is passed', () => {
           before(async () => {
@@ -1269,8 +1271,8 @@ describe('GenericRedisCache', () => {
 
             const keyValues = OBJECTS.map((object) => {
               return {
-                key: JSONKeySingleID._getIdAttr(object),
-                value: object
+                key   : JSONKeySingleID._getIdAttr(object),
+                value : object
               }
             })
 
