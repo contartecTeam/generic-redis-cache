@@ -7,8 +7,8 @@ const GENERIC_REDIS_ATTRS = {
   keyName : 'test:{?}:second:{?}',
   type    : RedisKeyTypeEnum.JSON,
   ids     : [
-    { id: 'id', undefinedValue: 'undefinedValue1' },
-    { id: 'id2', undefinedValue: 'undefinedValue2' }
+    { id: 'id', idUndefined: 'undefinedValue1' },
+    { id: 'id2', idUndefined: 'undefinedValue2' }
   ]
 }
 
