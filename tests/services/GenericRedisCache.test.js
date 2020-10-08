@@ -85,7 +85,7 @@ describe('GenericRedisCache', () => {
             })
 
             context('and the `attr` is `undefined`', () => {
-              context('and the `ID` has no `undefinedValue` defined', () => {
+              context('and the `ID` has no `idUndefined` defined', () => {
                 it('should return the key name with the default `DEFAULT_UNDEFINED_ID` value', () => {
                   const objectKey = { id: undefined }
                   const compareKeyName = JSONKeySingleID.GENERIC_REDIS_ATTRS.keyName.replace('{?}', GenericRedisCache.DEFAULT_GENERIC_REDIS_ATTRS.idUndefined)
@@ -95,10 +95,10 @@ describe('GenericRedisCache', () => {
                 })
               })
 
-              context('and the `ID` has an `undefinedValue` defined', () => {
-                it('should return the key name with the `undefinedValue` attr', () => {
+              context('and the `ID` has an `idUndefined` defined', () => {
+                it('should return the key name with the `idUndefined` attr', () => {
                   const objectKey = { id: undefined }
-                  const compareKeyName = JSONKeySingleIDWithUndefined.GENERIC_REDIS_ATTRS.keyName.replace('{?}', JSONKeySingleIDWithUndefined.GENERIC_REDIS_ATTRS.ids[0].undefinedValue)
+                  const compareKeyName = JSONKeySingleIDWithUndefined.GENERIC_REDIS_ATTRS.keyName.replace('{?}', JSONKeySingleIDWithUndefined.GENERIC_REDIS_ATTRS.ids[0].idUndefined)
                   const keyName = JSONKeySingleIDWithUndefined.getKeyName(objectKey)
 
                   expect(keyName).to.eql(compareKeyName)
@@ -107,7 +107,7 @@ describe('GenericRedisCache', () => {
             })
 
             context('and the `attr` is `null`', () => {
-              context('and the `ID` has no `nullValue` defined', () => {
+              context('and the `ID` has no `idNull` defined', () => {
                 it('should return the key name with the default `DEFAULT_NULL_ID` value', () => {
                   const objectKey = { id: null }
                   const compareKeyName = JSONKeySingleID.GENERIC_REDIS_ATTRS.keyName.replace('{?}', GenericRedisCache.DEFAULT_GENERIC_REDIS_ATTRS.idNull)
@@ -117,10 +117,10 @@ describe('GenericRedisCache', () => {
                 })
               })
 
-              context('and the `ID` has an `nullValue` defined', () => {
-                it('should return the key name with the `nullValue` attr', () => {
+              context('and the `ID` has an `idNull` defined', () => {
+                it('should return the key name with the `idNull` attr', () => {
                   const objectKey = { id: null }
-                  const compareKeyName = JSONKeySingleIDWithNull.GENERIC_REDIS_ATTRS.keyName.replace('{?}', JSONKeySingleIDWithNull.GENERIC_REDIS_ATTRS.ids[0].nullValue)
+                  const compareKeyName = JSONKeySingleIDWithNull.GENERIC_REDIS_ATTRS.keyName.replace('{?}', JSONKeySingleIDWithNull.GENERIC_REDIS_ATTRS.ids[0].idNull)
                   const keyName = JSONKeySingleIDWithNull.getKeyName(objectKey)
 
                   expect(keyName).to.eql(compareKeyName)
@@ -153,7 +153,7 @@ describe('GenericRedisCache', () => {
       })
 
       context('when the `KEY_NAME` has more than one id', () => {
-        context ('and the `ids` have no undefinedValue or nullValue options', () => {
+        context ('and the `ids` have no idUndefined or idNull options', () => {
           context('and the `key` is an `object`', () => {
             context('and all the attrs have values', () => {
               it('should return the key name', () => {
@@ -240,8 +240,8 @@ describe('GenericRedisCache', () => {
                   if (paramKey)
                     chars[indexKeyName] = objectKey[paramKey].replace(/:/g, '')
                   else {
-                    chars[indexKeyName] = JSONKeyMultiID.GENERIC_REDIS_ATTRS.ids[index].undefinedValue ?
-                      JSONKeyMultiID.GENERIC_REDIS_ATTRS.ids[index].undefinedValue :
+                    chars[indexKeyName] = JSONKeyMultiID.GENERIC_REDIS_ATTRS.ids[index].idUndefined ?
+                      JSONKeyMultiID.GENERIC_REDIS_ATTRS.ids[index].idUndefined :
                       GenericRedisCache.DEFAULT_GENERIC_REDIS_ATTRS.idUndefined
                   }
                 })
@@ -303,7 +303,7 @@ describe('GenericRedisCache', () => {
               const chars = JSONKeyMultiIDWithUndefined.GENERIC_REDIS_ATTRS.keyName.split('')
 
               Object.keys(objectKey).forEach((key, index) => {
-                chars[idsIndexes[index]] = typeof(objectKey[key]) == 'string' ? objectKey[key].replace(/:/g, '') : JSONKeyMultiIDWithUndefined.GENERIC_REDIS_ATTRS.ids[index].undefinedValue
+                chars[idsIndexes[index]] = typeof(objectKey[key]) == 'string' ? objectKey[key].replace(/:/g, '') : JSONKeyMultiIDWithUndefined.GENERIC_REDIS_ATTRS.ids[index].idUndefined
               })
 
               let compareKeyName = chars.join('')
@@ -318,7 +318,7 @@ describe('GenericRedisCache', () => {
           })
 
           context('and the `key` has less attrs than the `ID` size', () => {
-            it('should set the unpresents `ID` values to the `undefinedValue`', () => {
+            it('should set the unpresents `ID` values to the `idUndefined`', () => {
               const objectKey = {
                 id: 'aa:bb:cc'
               }
@@ -332,7 +332,7 @@ describe('GenericRedisCache', () => {
                 if (paramKey)
                   chars[indexKeyName] = objectKey[paramKey].replace(/:/g, '')
                 else
-                  chars[indexKeyName] =  JSONKeyMultiIDWithUndefined.GENERIC_REDIS_ATTRS.ids[index].undefinedValue
+                  chars[indexKeyName] =  JSONKeyMultiIDWithUndefined.GENERIC_REDIS_ATTRS.ids[index].idUndefined
               })
 
               let compareKeyName = chars.join('')
@@ -352,7 +352,7 @@ describe('GenericRedisCache', () => {
               JSONKeyMultiIDWithUndefined.GENERIC_REDIS_ATTRS.ids.forEach((objectId, index) => {
                 if (index > 0) {
                   compareKeyName = compareKeyName
-                    .replace('{?}', objectId.undefinedValue)
+                    .replace('{?}', objectId.idUndefined)
                 }
               })
               const keyName = JSONKeyMultiIDWithUndefined.getKeyName(key)
@@ -368,7 +368,7 @@ describe('GenericRedisCache', () => {
               JSONKeyMultiIDWithUndefined.GENERIC_REDIS_ATTRS.ids.forEach((objectId, index) => {
                 if (index > 0) {
                   compareKeyName = compareKeyName
-                    .replace('{?}',  objectId.undefinedValue)
+                    .replace('{?}',  objectId.idUndefined)
                 }
               })
               const keyName = JSONKeyMultiIDWithUndefined.getKeyName(key)
@@ -391,7 +391,7 @@ describe('GenericRedisCache', () => {
               const chars = JSONKeyMultiIDWithNull.GENERIC_REDIS_ATTRS.keyName.split('')
 
               Object.keys(objectKey).forEach((key, index) => {
-                chars[idsIndexes[index]] = typeof(objectKey[key]) == 'string' ? objectKey[key].replace(/:/g, '') : JSONKeyMultiIDWithNull.GENERIC_REDIS_ATTRS.ids[index].nullValue
+                chars[idsIndexes[index]] = typeof(objectKey[key]) == 'string' ? objectKey[key].replace(/:/g, '') : JSONKeyMultiIDWithNull.GENERIC_REDIS_ATTRS.ids[index].idNull
               })
 
               let compareKeyName = chars.join('')
@@ -406,7 +406,7 @@ describe('GenericRedisCache', () => {
           })
 
           context('and the `key` has less attrs than the `ID` size', () => {
-            it('should set the unpresents `ID` values to the `undefinedValue`', () => {
+            it('should set the unpresents `ID` values to the `idUndefined`', () => {
               const objectKey = {
                 id: 'aa:bb:cc'
               }
@@ -470,7 +470,7 @@ describe('GenericRedisCache', () => {
 
     context('when the `key` is not passed', () => {
       context('when the cache have `ID` elements', () => {
-        context ('and the `ids` have no `undefinedValue`  options', () => {
+        context ('and the `ids` have no `idUndefined`  options', () => {
           it('should replace all the `ids` with the `DEFAULT_UNDEFINED_ID` value', () => {
             const idsIndexes = GenericRedisCache.getIdIndexes(JSONKeyMultiID.GENERIC_REDIS_ATTRS.keyName)
             const chars = JSONKeyMultiID.GENERIC_REDIS_ATTRS.keyName.split('')
@@ -490,14 +490,14 @@ describe('GenericRedisCache', () => {
           })
         })
 
-        context ('and the `ids` have `undefinedValue`  options', () => {
-          it('should replace all the `ids` with the `undefinedValue` values', () => {
+        context ('and the `ids` have `idUndefined`  options', () => {
+          it('should replace all the `ids` with the `idUndefined` values', () => {
             const idsIndexes = GenericRedisCache.getIdIndexes(JSONKeyMultiIDWithUndefined.GENERIC_REDIS_ATTRS.keyName)
             const chars = JSONKeyMultiIDWithUndefined.GENERIC_REDIS_ATTRS.keyName.split('')
 
             idsIndexes.forEach((indexKeyName, index) =>  {
-              chars[indexKeyName] =  JSONKeyMultiIDWithUndefined.GENERIC_REDIS_ATTRS.ids[index].undefinedValue ?
-                JSONKeyMultiIDWithUndefined.GENERIC_REDIS_ATTRS.ids[index].undefinedValue :
+              chars[indexKeyName] =  JSONKeyMultiIDWithUndefined.GENERIC_REDIS_ATTRS.ids[index].idUndefined ?
+                JSONKeyMultiIDWithUndefined.GENERIC_REDIS_ATTRS.ids[index].idUndefined :
                 GenericRedisCache.DEFAULT_GENERIC_REDIS_ATTRS.idUndefined
             })
 
@@ -602,7 +602,7 @@ describe('GenericRedisCache', () => {
 
     context('when `keys` is not passed', () => {
       context('and `IDS` have one attr', () => {
-        context('and it has an `undefinedValue`', () => {
+        context('and it has an `idUndefined`', () => {
           context('and there are keys on cache', () => {
             const KEYS_SIZE = 3
             let keyNames
@@ -1507,8 +1507,8 @@ describe('GenericRedisCache', () => {
 
             const stringValues = OBJECTS.map((object) => {
               return {
-                key: object.id,
-                value:  GenericRedisCacheMock.getRandomStrings(VALUE_LENGTH)
+                key   : object.id,
+                value : GenericRedisCacheMock.getRandomStrings(VALUE_LENGTH)
               }
             })
 
