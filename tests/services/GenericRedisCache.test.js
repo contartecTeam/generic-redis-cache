@@ -2452,4 +2452,279 @@ describe('GenericRedisCache', () => {
       })
     })
   })
+
+  describe('.isAttrTrue', () => {
+    const ATTR_NAME = 'attr'
+
+    context('when `id` is a `Number`', () => {
+      context('when `attrName` is not `null`', () => {
+        context('when there is an `object`', () => {
+          context('when `attr` is not `null`', () => {
+            const IS_ENABLED = false
+
+            let isAttrTrue
+
+            before(async () => {
+              const objectId = `${Math.round(Math.random() * 99999)}-3b`
+              const objectMock = {
+                [ATTR_NAME]: IS_ENABLED
+              }
+
+              SpyMock
+                .getDependencySpy(GenericRedisCache, 'GenericRedisCache.get', objectMock)
+
+              isAttrTrue = await GenericRedisCache
+                .isAttrTrue(objectId, ATTR_NAME)
+            })
+
+            after(() => SpyMock.restoreAll())
+
+            it('should return its value', () => {
+              expect(isAttrTrue).to.eql(IS_ENABLED)
+            })
+          })
+
+          context('when `attr` is `null`', () => {
+            context('when `defaultValue` is `undefined`', () => {
+              let isAttrTrue
+
+              before(async () => {
+                const objectId = `${Math.round(Math.random() * 99999)}-3b`
+                const objectMock = {
+                  [ATTR_NAME]: null
+                }
+
+                SpyMock
+                  .getDependencySpy(GenericRedisCache, 'GenericRedisCache.get', objectMock)
+
+                isAttrTrue = await GenericRedisCache
+                  .isAttrTrue(objectId, ATTR_NAME)
+              })
+
+              after(() => SpyMock.restoreAll())
+
+              it('should return `true`', () => {
+                expect(isAttrTrue).to.true
+              })
+            })
+
+            context('when `defaultValue` is `false`', () => {
+              let isAttrTrue
+
+              before(async () => {
+                const objectId = `${Math.round(Math.random() * 99999)}-3b`
+                const objectMock = {
+                  [ATTR_NAME]: null
+                }
+
+                SpyMock
+                  .getDependencySpy(GenericRedisCache, 'GenericRedisCache.get', objectMock)
+
+                isAttrTrue = await GenericRedisCache
+                  .isAttrTrue(objectId, ATTR_NAME, false)
+              })
+
+              after(() => SpyMock.restoreAll())
+
+              it('should return `false`', () => {
+                expect(isAttrTrue).to.false
+              })
+            })
+          })
+
+          context('when `attr` is `undefined`', () => {
+            context('when `defaultValue` is `undefined`', () => {
+              let isAttrTrue
+
+              before(async () => {
+                const objectId = `${Math.round(Math.random() * 99999)}-3b`
+                const objectMock = {}
+
+                SpyMock
+                  .getDependencySpy(GenericRedisCache, 'GenericRedisCache.get', objectMock)
+
+                isAttrTrue = await GenericRedisCache
+                  .isAttrTrue(objectId, ATTR_NAME)
+              })
+
+              after(() => SpyMock.restoreAll())
+
+              it('should return `true`', () => {
+                expect(isAttrTrue).to.true
+              })
+            })
+
+            context('when `defaultValue` is `false`', () => {
+              let isAttrTrue
+
+              before(async () => {
+                const objectId = `${Math.round(Math.random() * 99999)}-3b`
+                const objectMock = {}
+
+                SpyMock
+                  .getDependencySpy(GenericRedisCache, 'GenericRedisCache.get', objectMock)
+
+                isAttrTrue = await GenericRedisCache
+                  .isAttrTrue(objectId, ATTR_NAME, false)
+              })
+
+              after(() => SpyMock.restoreAll())
+
+              it('should return `false`', () => {
+                expect(isAttrTrue).to.false
+              })
+            })
+          })
+        })
+
+        context('when there is no `object`', () => {
+          let isAttrTrue
+
+          before(async () => {
+            const objectId = `${Math.round(Math.random() * 99999)}-3b`
+
+            SpyMock
+              .getDependencySpy(GenericRedisCache, 'GenericRedisCache.get', null)
+
+            isAttrTrue = await GenericRedisCache
+              .isAttrTrue(objectId, ATTR_NAME)
+          })
+
+          after(() => SpyMock.restoreAll())
+
+          it('should return `null`', () => {
+            expect(isAttrTrue).to.not.exist
+          })
+        })
+      })
+
+      context('when `attrName` is `null`', () => {
+        const IS_ENABLED = false
+
+        let isAttrTrue
+
+        before(async () => {
+          const objectId = `${Math.round(Math.random() * 99999)}-3b`
+          const objectMock = {
+            [ATTR_NAME]: IS_ENABLED
+          }
+
+          SpyMock
+            .getDependencySpy(GenericRedisCache, 'GenericRedisCache.get', objectMock)
+
+          isAttrTrue = await GenericRedisCache
+            .isAttrTrue(objectId, null)
+        })
+
+        it('should return `null`', () => {
+          expect(isAttrTrue).to.not.exist
+        })
+      })
+    })
+
+    context('when `id` is an `Object`', () => {
+      context('when `attrName` is not `null`', () => {
+        context('when `attr` is not `null`', () => {
+          const IS_ENABLED = false
+
+          let isAttrTrue
+
+          before(async () => {
+            const objectMock = {
+              [ATTR_NAME]: IS_ENABLED
+            }
+
+            SpyMock
+              .getDependencySpy(GenericRedisCache, 'GenericRedisCache.get', objectMock)
+
+            isAttrTrue = await GenericRedisCache
+              .isAttrTrue(objectMock, ATTR_NAME)
+          })
+
+          after(() => SpyMock.restoreAll())
+
+          it('should return its value', () => {
+            expect(isAttrTrue).to.eql(IS_ENABLED)
+          })
+        })
+
+        context('when `attr` is `null`', () => {
+          let isAttrTrue
+
+          before(async () => {
+            const objectMock = {
+              [ATTR_NAME]: null
+            }
+
+            SpyMock
+              .getDependencySpy(GenericRedisCache, 'GenericRedisCache.get', objectMock)
+
+            isAttrTrue = await GenericRedisCache
+              .isAttrTrue(objectMock, ATTR_NAME)
+          })
+
+          after(() => SpyMock.restoreAll())
+
+          it('should return `true`', () => {
+            expect(isAttrTrue).to.true
+          })
+        })
+
+        context('when `attr` is `undefined`', () => {
+          let isAttrTrue
+
+          before(async () => {
+            const objectMock = {}
+
+            SpyMock
+              .getDependencySpy(GenericRedisCache, 'GenericRedisCache.get', objectMock)
+
+            isAttrTrue = await GenericRedisCache
+              .isAttrTrue(objectMock, ATTR_NAME)
+          })
+
+          after(() => SpyMock.restoreAll())
+
+          it('should return `true`', () => {
+            expect(isAttrTrue).to.true
+          })
+        })
+      })
+
+      context('when `attrName` is `null`', () => {
+        const IS_ENABLED = false
+
+        let isAttrTrue
+
+        before(async () => {
+          const objectMock = {
+            [ATTR_NAME]: IS_ENABLED
+          }
+
+          SpyMock
+            .getDependencySpy(GenericRedisCache, 'GenericRedisCache.get', objectMock)
+
+          isAttrTrue = await GenericRedisCache
+            .isAttrTrue(objectMock, null)
+        })
+
+        it('should return `null`', () => {
+          expect(isAttrTrue).to.not.exist
+        })
+      })
+    })
+
+    context('when `id` is `null`', () => {
+      let isAttrTrue
+
+      before(async () => {
+        isAttrTrue = await GenericRedisCache
+          .isAttrTrue(null)
+      })
+
+      it('should return `null`', () => {
+        expect(isAttrTrue).to.not.exist
+      })
+    })
+  })
 })
