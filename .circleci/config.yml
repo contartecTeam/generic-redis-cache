@@ -5,7 +5,7 @@ jobs:
     working_directory: /home/circleci/generic-redis-cache
 
     docker:
-      - image: circleci/node:10.14
+      - image: circleci/node:10.18
 
     steps:
       - checkout
@@ -19,7 +19,7 @@ jobs:
     working_directory: /home/circleci/generic-redis-cache
 
     docker:
-      - image: circleci/node:10.14
+      - image: circleci/node:10.18
 
     steps:
       - restore_cache:
@@ -46,7 +46,7 @@ jobs:
     working_directory: /home/circleci/generic-redis-cache
 
     docker:
-      - image: circleci/node:10.14
+      - image: circleci/node:10.18
 
       - image: redislabs/rejson:latest
 
@@ -85,7 +85,7 @@ jobs:
       working_directory: /home/circleci/users
 
       docker:
-        - image: circleci/node:10.14
+        - image: circleci/node:10.18
 
       steps:
         - restore_cache:
@@ -102,7 +102,7 @@ jobs:
     working_directory: /home/circleci/users
 
     docker:
-      - image: circleci/node:10.14
+      - image: circleci/node:10.18
 
     steps:
       - restore_cache:
