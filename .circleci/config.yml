@@ -30,9 +30,7 @@ jobs:
 
       - run:
           name    : Authenticating with github registry
-          command : |
-            npm config set '//npm.pkg.github.com/:_authToken' "${NPM_GITHUB_TOKEN}"
-            git config --global credential.helper 'cache --timeout=600'
+          command : git config --global credential.helper 'cache --timeout=600'
 
       - run:
           name    : Installing npm dependencies
@@ -115,8 +113,6 @@ jobs:
       - run:
           name    : Authenticating with registry
           command : |
-            npm config set '//npm.pkg.github.com/:_authToken' "${NPM_GITHUB_TOKEN}"
-            git config --global credential.helper 'cache --timeout=600'
             echo "registry=https://npm.pkg.github.com/contartec-team" > .npmrc
             echo "//npm.pkg.github.com/:_authToken=$NPM_GITHUB_TOKEN" >> .npmrc
 

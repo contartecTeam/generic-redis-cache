@@ -1,7 +1,7 @@
 {
   "name": "@contartec-team/generic-redis-cache",
   "version": "1.1.4",
-  "description": "Generic service for operations on redis keys",
+  "description": "Generic service for operations on redis",
   "main": "lib/services/GenericRedisCache.js",
   "directories": {
     "lib": "./lib"
@@ -24,7 +24,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://contartec-team@github.com/contartec-team/generic-redis-cache.git"
+    "url": "git+https://contartec@github.com/contartec-team/generic-redis-cache.git"
   },
   "keywords": [
     "node",
