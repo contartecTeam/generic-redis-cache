@@ -31,7 +31,6 @@ jobs:
       - run:
           name    : Authenticating with github registry
           command : |
-            npm logout
             npm config set '//npm.pkg.github.com/:_authToken' "${NPM_GITHUB_TOKEN}"
 
       - run:
