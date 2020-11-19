@@ -30,7 +30,10 @@ jobs:
 
       - run:
           name    : Authenticating with github registry
-          command : npm config set '//npm.pkg.github.com/:_authToken' "${NPM_GITHUB_TOKEN}"
+          command : |
+            npm config set '//npm.pkg.github.com/:_authToken' "${NPM_GITHUB_TOKEN}"
+            echo "registry=https://npm.pkg.github.com/contartec-team" > .npmrc
+            echo "//npm.pkg.github.com/:_authToken=$NPM_GITHUB_TOKEN" >> .npmrc
 
       - run:
           name    : Installing npm dependencies
@@ -45,7 +48,7 @@ jobs:
     working_directory: /home/circleci/generic-redis-cache
 
     docker:
-      - image: hallais/nodejs:0.8.0
+      - image: circleci/node:10.14
 
       - image: redislabs/rejson:latest
 
@@ -101,7 +104,7 @@ jobs:
     working_directory: /home/circleci/users
 
     docker:
-      - image: circleci/node:10.18
+      - image: circleci/node:10.14
 
     steps:
       - restore_cache:
