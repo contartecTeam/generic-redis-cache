@@ -3327,7 +3327,7 @@ GenericJSONCache.getJSONGetParams(params)
       <div class="clearfix small pointer toggle-sibling">
         <div class="py1 contain">
             <a class='icon pin-right py1 dark-link caret-right'>▸</a>
-            <span class='code strong strong truncate'>getListCache(keyNames, params, commands = redis.multi(), attrs)</span>
+            <span class='code strong strong truncate'>getListCache(keyNames, params, commands)</span>
         </div>
       </div>
       <div class="clearfix display-none toggle-target">
@@ -3337,7 +3337,7 @@ GenericJSONCache.getJSONGetParams(params)
 
   <p>Returns the list of <code>objects</code> in cache</p>
 
-    <div class='pre p1 fill-light mt0'>getListCache(keyNames: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, params: any, commands: redis.Multi?, attrs: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>></div>
+    <div class='pre p1 fill-light mt0'>getListCache(keyNames: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, params: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>, commands: redis.Multi): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>></div>
   
   
 
@@ -3365,21 +3365,12 @@ GenericJSONCache.getJSONGetParams(params)
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>params</span> <code class='quiet'>(any
+            <span class='code bold'>params</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>
             = <code>DEFAULT_JSON_GET_PARAMS</code>)</code>
-	    
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>commands</span> <code class='quiet'>(redis.Multi?
-            = <code>redis.multi()</code>)</code>
-	    The 
-<code>redis</code>
- multi command object to chain(See 
-<a href="https://github.com/NodeRedis/node_redis#clientmulticommands">https://github.com/NodeRedis/node_redis#clientmulticommands</a>
+	    The list of specified 
+<code>attrs</code>
+ to return (@see 
+<a href="GenericJSONCache.DEFAULT_JSON_GET_PARAMS">GenericJSONCache.DEFAULT_JSON_GET_PARAMS</a>
 )
 
           </div>
@@ -3388,12 +3379,12 @@ GenericJSONCache.getJSONGetParams(params)
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>attrs</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>
-            = <code>[]</code>)</code>
-	    The list of specified 
-<code>attrs</code>
- to return (
-<code>default: all</code>
+            <span class='code bold'>commands</span> <code class='quiet'>(redis.Multi
+            = <code>redis</code>)</code>
+	    The 
+<code>redis</code>
+ multi command object to chain(See 
+<a href="https://github.com/NodeRedis/node_redis#clientmulticommands">https://github.com/NodeRedis/node_redis#clientmulticommands</a>
 )
 
           </div>
@@ -3653,7 +3644,7 @@ GenericJSONCache.getJSONGetParams(params)
       <div class="clearfix small pointer toggle-sibling">
         <div class="py1 contain">
             <a class='icon pin-right py1 dark-link caret-right'>▸</a>
-            <span class='code strong strong truncate'>_getCache(keyName, params, commands = redis, attrs)</span>
+            <span class='code strong strong truncate'>_getCache(keyName, params, commands)</span>
         </div>
       </div>
       <div class="clearfix display-none toggle-target">
@@ -3663,7 +3654,7 @@ GenericJSONCache.getJSONGetParams(params)
 
   <p>Returns the <code>objects</code> cache object</p>
 
-    <div class='pre p1 fill-light mt0'>_getCache(keyName: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, params: any, commands: redis.Multi?, attrs: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>></div>
+    <div class='pre p1 fill-light mt0'>_getCache(keyName: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, params: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>, commands: redis.Multi): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>></div>
   
   
 
@@ -3691,21 +3682,12 @@ GenericJSONCache.getJSONGetParams(params)
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>params</span> <code class='quiet'>(any
+            <span class='code bold'>params</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>
             = <code>DEFAULT_JSON_GET_PARAMS</code>)</code>
-	    
-          </div>
-          
-        </div>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>commands</span> <code class='quiet'>(redis.Multi?
-            = <code>redis</code>)</code>
-	    The 
-<code>redis</code>
- multi command object to chain(See 
-<a href="https://github.com/NodeRedis/node_redis#clientmulticommands">https://github.com/NodeRedis/node_redis#clientmulticommands</a>
+	    The list of specified 
+<code>attrs</code>
+ to return (@see 
+<a href="GenericJSONCache.DEFAULT_JSON_GET_PARAMS">GenericJSONCache.DEFAULT_JSON_GET_PARAMS</a>
 )
 
           </div>
@@ -3714,12 +3696,12 @@ GenericJSONCache.getJSONGetParams(params)
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>attrs</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>
-            = <code>[]</code>)</code>
-	    The list of specified 
-<code>attrs</code>
- to return (
-<code>default: all</code>
+            <span class='code bold'>commands</span> <code class='quiet'>(redis.Multi
+            = <code>redis</code>)</code>
+	    The 
+<code>redis</code>
+ multi command object to chain(See 
+<a href="https://github.com/NodeRedis/node_redis#clientmulticommands">https://github.com/NodeRedis/node_redis#clientmulticommands</a>
 )
 
           </div>
