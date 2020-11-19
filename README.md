@@ -1,7 +1,7 @@
 # Generic service for operations on redis cache
 
 [![CircleCI](https://circleci.com/gh/contartec/generic-model-bookshelf.svg?style=shield&circle-token=21e695f1398a24c2a7387f71cf5b33ebac7893e3)](https://circleci.com/gh/contartec-team/generic-redis-cache)
-[![Maintainability](https://api.codeclimate.com/v1/badges/26df8aa208935c7fd638/maintainability)](https://codeclimate.com/github/contartecTeam/generic-redis-cache/maintainability)
+[![Maintainability](https://api.codeclimate.com/v1/badges/771d5d19224905f02163/maintainability)](https://codeclimate.com/github/contartec-team/generic-redis-cache/maintainability)
 [![Test Coverage](https://codecov.io/gh/contartec-team/generic-redis-cache/branch/master/graph/badge.svg)](https://codecov.io/gh/contartec-team/generic-redis-cache)
 
 
