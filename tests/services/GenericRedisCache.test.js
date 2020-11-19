@@ -22,7 +22,7 @@ const HASHKeySingleID = require('../cache/HASH/HASHKeySingleID')
 
 const STRINGKeySingleID = require('../cache/STRING/STRINGKeySingleID')
 
-const SpyMock = require('../mocks/SpyMock')
+const SpyMock = require('@contartec-team/spy-mock/lib/SpyMock')
 
 describe('GenericRedisCache', () => {
   before(function*() {
@@ -1234,7 +1234,43 @@ describe('GenericRedisCache', () => {
   })
 
   describe('.setList', () => {
-    context('when the key is `JSON`', () => {
+    context('when the key is `string`', () => {
+      context('when objects are persisted', async () => {
+        let redisResponse, ids, spies
+
+        before(async () => {
+          ids = [
+            Math.round(Math.random() * 999999),
+            Math.round(Math.random() * 999999),
+            Math.round(Math.random() * 999999)
+          ]
+
+          const object = {
+            id  : Math.round(Math.random() * 999999),
+            name: `Name: ${Math.round(Math.random() * 999999)}`
+          }
+
+          spies = {
+            getDB: SpyMock
+              .addReturnSpy(JSONKeySingleID, 'getDB', object)
+          }
+
+          redisResponse = await JSONKeySingleID.setList(ids)
+        })
+
+        after(async () => SpyMock.restoreAll())
+
+        it('should return the inserted objects', () => {
+          expect(redisResponse).to.have.lengthOf(ids.length)
+        })
+
+        it('should save the objects to cache', async () => {
+          expect(spies.getDB.getCalls()).to.have.been.lengthOf(ids.length)
+        })
+      })
+    })
+
+    context('when the key is `Object`', () => {
       const OBJECTS = GenericRedisCacheMock.getObjectMocks()
       const ID_ATTRS = JSONKeySingleID.getIdAttrs(OBJECTS)
 
@@ -1265,55 +1301,31 @@ describe('GenericRedisCache', () => {
       context('and `key/value` objects are passed', () => {
         let redisResponse, keyNames
 
-        context('and the values are `objects`',() => {
-          before(async () => {
-            keyNames = await JSONKeySingleID.getKeyNames(ID_ATTRS)
+        before(async () => {
+          keyNames = await JSONKeySingleID.getKeyNames(ID_ATTRS)
 
-            const keyValues = OBJECTS.map((object) => {
-              return {
-                key   : JSONKeySingleID._getIdAttr(object),
-                value : object
-              }
-            })
-
-            redisResponse = await JSONKeySingleID.setList(keyValues)
+          const keyValues = OBJECTS.map((object) => {
+            return {
+              key   : JSONKeySingleID._getIdAttr(object),
+              value : object
+            }
           })
 
-          after(async () => {
-            await GenericJSONCacheMock.delete(keyNames)
-          })
-
-          it('should return the commands executed', () => {
-            expect(redisResponse.length).to.be.above(1)
-          })
-
-          it('should save the objects to cache', async () => {
-            const cachedValues = await GenericJSONCache.getListCache(keyNames)
-
-            expect(cachedValues.length).to.eql(OBJECTS.length)
-          })
+          redisResponse = await JSONKeySingleID.setList(keyValues)
         })
 
-        context('and the values are `strings`', () => {
-          before(async () => {
-            keyNames = await JSONKeySingleID.getKeyNames(ID_ATTRS)
+        after(async () => {
+          await GenericJSONCacheMock.delete(keyNames)
+        })
 
-            const stringValues = OBJECTS.map((object) => {
-              return object.id
-            })
+        it('should return the commands executed', () => {
+          expect(redisResponse.length).to.be.above(1)
+        })
 
-            redisResponse = await JSONKeySingleID.setList(stringValues)
-          })
+        it('should save the objects to cache', async () => {
+          const cachedValues = await GenericJSONCache.getListCache(keyNames)
 
-          it('should return the commands executed', () => {
-            expect(redisResponse.length).to.eql(0)
-          })
-
-          it('should not save the keys on cache', async () => {
-            const cachedValues = await GenericJSONCache.getListCache(keyNames)
-
-            expect(cachedValues).to.eql([])
-          })
+          expect(cachedValues.length).to.eql(OBJECTS.length)
         })
       })
     })
@@ -2161,7 +2173,8 @@ describe('GenericRedisCache', () => {
           before(async () => {
             spies = {
               getIds  : SpyMock
-                .addReturnSpy(STRINGKeySingleID, 'getIds'),
+                .addReturnSpy(STRINGKeySingleID, 'getIds', []),
+
               getListDB : SpyMock
                 .addReturnSpy(STRINGKeySingleID, 'getListDB', [])
             }
@@ -2471,7 +2484,7 @@ describe('GenericRedisCache', () => {
               }
 
               SpyMock
-                .getDependencySpy(GenericRedisCache, 'GenericRedisCache.get', objectMock)
+                .addDependencySpy(GenericRedisCache, 'GenericRedisCache.get', objectMock)
 
               isAttrTrue = await GenericRedisCache
                 .isAttrTrue(objectId, ATTR_NAME)
@@ -2495,7 +2508,7 @@ describe('GenericRedisCache', () => {
                 }
 
                 SpyMock
-                  .getDependencySpy(GenericRedisCache, 'GenericRedisCache.get', objectMock)
+                  .addDependencySpy(GenericRedisCache, 'GenericRedisCache.get', objectMock)
 
                 isAttrTrue = await GenericRedisCache
                   .isAttrTrue(objectId, ATTR_NAME)
@@ -2518,7 +2531,7 @@ describe('GenericRedisCache', () => {
                 }
 
                 SpyMock
-                  .getDependencySpy(GenericRedisCache, 'GenericRedisCache.get', objectMock)
+                  .addDependencySpy(GenericRedisCache, 'GenericRedisCache.get', objectMock)
 
                 isAttrTrue = await GenericRedisCache
                   .isAttrTrue(objectId, ATTR_NAME, false)
@@ -2541,7 +2554,7 @@ describe('GenericRedisCache', () => {
                 const objectMock = {}
 
                 SpyMock
-                  .getDependencySpy(GenericRedisCache, 'GenericRedisCache.get', objectMock)
+                  .addDependencySpy(GenericRedisCache, 'GenericRedisCache.get', objectMock)
 
                 isAttrTrue = await GenericRedisCache
                   .isAttrTrue(objectId, ATTR_NAME)
@@ -2562,7 +2575,7 @@ describe('GenericRedisCache', () => {
                 const objectMock = {}
 
                 SpyMock
-                  .getDependencySpy(GenericRedisCache, 'GenericRedisCache.get', objectMock)
+                  .addDependencySpy(GenericRedisCache, 'GenericRedisCache.get', objectMock)
 
                 isAttrTrue = await GenericRedisCache
                   .isAttrTrue(objectId, ATTR_NAME, false)
@@ -2584,7 +2597,7 @@ describe('GenericRedisCache', () => {
             const objectId = `${Math.round(Math.random() * 99999)}-3b`
 
             SpyMock
-              .getDependencySpy(GenericRedisCache, 'GenericRedisCache.get', null)
+              .addDependencySpy(GenericRedisCache, 'GenericRedisCache.get', null)
 
             isAttrTrue = await GenericRedisCache
               .isAttrTrue(objectId, ATTR_NAME)
@@ -2610,7 +2623,7 @@ describe('GenericRedisCache', () => {
           }
 
           SpyMock
-            .getDependencySpy(GenericRedisCache, 'GenericRedisCache.get', objectMock)
+            .addDependencySpy(GenericRedisCache, 'GenericRedisCache.get', objectMock)
 
           isAttrTrue = await GenericRedisCache
             .isAttrTrue(objectId, null)
@@ -2635,7 +2648,7 @@ describe('GenericRedisCache', () => {
             }
 
             SpyMock
-              .getDependencySpy(GenericRedisCache, 'GenericRedisCache.get', objectMock)
+              .addDependencySpy(GenericRedisCache, 'GenericRedisCache.get', objectMock)
 
             isAttrTrue = await GenericRedisCache
               .isAttrTrue(objectMock, ATTR_NAME)
@@ -2657,7 +2670,7 @@ describe('GenericRedisCache', () => {
             }
 
             SpyMock
-              .getDependencySpy(GenericRedisCache, 'GenericRedisCache.get', objectMock)
+              .addDependencySpy(GenericRedisCache, 'GenericRedisCache.get', objectMock)
 
             isAttrTrue = await GenericRedisCache
               .isAttrTrue(objectMock, ATTR_NAME)
@@ -2677,7 +2690,7 @@ describe('GenericRedisCache', () => {
             const objectMock = {}
 
             SpyMock
-              .getDependencySpy(GenericRedisCache, 'GenericRedisCache.get', objectMock)
+              .addDependencySpy(GenericRedisCache, 'GenericRedisCache.get', objectMock)
 
             isAttrTrue = await GenericRedisCache
               .isAttrTrue(objectMock, ATTR_NAME)
@@ -2702,7 +2715,7 @@ describe('GenericRedisCache', () => {
           }
 
           SpyMock
-            .getDependencySpy(GenericRedisCache, 'GenericRedisCache.get', objectMock)
+            .addDependencySpy(GenericRedisCache, 'GenericRedisCache.get', objectMock)
 
           isAttrTrue = await GenericRedisCache
             .isAttrTrue(objectMock, null)
