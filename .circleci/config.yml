@@ -30,10 +30,7 @@ jobs:
 
       - run:
           name    : Authenticating with github registry
-          command : |
-            npm config set '//npm.pkg.github.com/:_authToken' "${NPM_GITHUB_TOKEN}"
-            echo "registry=https://npm.pkg.github.com/contartec-team" > .npmrc
-            echo "//npm.pkg.github.com/:_authToken=$NPM_GITHUB_TOKEN" >> .npmrc
+          command : npm config set '//npm.pkg.github.com/:_authToken' "${NPM_GITHUB_TOKEN}"
 
       - run:
           name    : Installing npm dependencies
@@ -84,7 +81,7 @@ jobs:
           paths : ./coverage
 
   npm_version:
-      working_directory: /home/circleci/users
+      working_directory: /home/circleci/generic-redis-cache
 
       docker:
         - image: circleci/node:10.14
