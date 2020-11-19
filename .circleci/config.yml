@@ -98,7 +98,7 @@ jobs:
             command : npm run update-version
 
   npm_release:
-    working_directory: /home/circleci/users
+    working_directory: /home/circleci/generic-redis-cache
 
     docker:
       - image: circleci/node:10.14
