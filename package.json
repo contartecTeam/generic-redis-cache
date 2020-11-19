@@ -1,6 +1,6 @@
 {
   "name": "@contartec-team/generic-redis-cache",
-  "version": "1.1.4",
+  "version": "1.2.0",
   "description": "Generic service for operations on redis keys",
   "main": "lib/services/GenericRedisCache.js",
   "directories": {
@@ -15,7 +15,9 @@
     "test:coverage": "cross-env NODE_ENV=test nyc --reporter=text-summary --reporter=lcov --reporter=cobertura --report-dir=./coverage --reporter=html npm run mocha -- --reporter=min --exit",
     "coverage:upload": "codecov && npm run coverageBadge",
     "coverageBadge": "istanbul-cobertura-badger -f -v -b badge",
-    "update:docs": "npm run docs && git add docs/. && git diff-index --quiet HEAD || git commit -m 'Updating `docs`'"
+    "update:docs": "npm run docs && git add docs/. && git diff-index --quiet HEAD || git commit -m 'Updating `docs`'",
+    "update-version": "node -e 'require(\"@contartec-team/version-release\").updateVersion()'",
+    "release-version": "node -e 'require(\"@contartec-team/version-release\").releaseVersion()'"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
@@ -34,39 +36,40 @@
   "license": "MIT",
   "dependencies": {
     "dotenv": "^1.2.0",
-    "jsdoc": "^3.6.2"
+    "redis": "^2.8.0",
+    "redis-rejson": "^1.0.0",
+    "redis-url": "^1.2.1"
   },
   "devDependencies": {
+    "@contartec-team/spy-mock": "^0.2.0",
+    "@contartec-team/version-release": "git+https://github.com/contartec-team/version-release.git",
+    "@contartec-team/git-hooks": "git+https://github.com/contartec-team/git-hooks.git",
     "bluebird": "^3.4.6",
-    "chai": "^3.5.0",
+    "chai": "^4.2.0",
     "chai-as-promised": "^5.3.0",
-    "chai-shallow-deep-equal": "^1.4.6",
-    "chai-things": "^0.2.0",
     "chai-datetime": "^1.4.1",
     "chai-http": "^2.0.1",
+    "chai-shallow-deep-equal": "^1.4.6",
+    "chai-things": "^0.2.0",
     "co": "^4.6.0",
     "co-express": "^1.2.1",
     "co-mocha": "^1.1.3",
     "codecov": "^3.5.0",
     "cross-env": "^5.2.0",
-    "documentation": "^11.0.0",
     "deep-equal-in-any-order": "^1.0.27",
-    "deep-diff": "^1.0.2",
-    "deep-equal": "^1.1.1",
+    "documentation": "^11.0.0",
     "eslint": "^5.16.0",
     "faker": "^3.1.0",
     "husky": "^3.0.5",
     "istanbul-cobertura-badger": "^1.3.0",
+    "jsdoc": "^3.6.2",
     "mocha": "^6.1.4",
     "mocha-lcov-reporter": "^1.3.0",
     "nyc": "^14.1.1",
-    "redis": "^2.8.0",
-    "redis-rejson": "^1.0.0",
-    "redis-url": "^1.2.1",
-    "rewire": "^2.5.2",
-    "sinon": "^1.17.5",
+    "rewire": "^5.0.0",
+    "sinon": "^9.0.3",
     "sinon-as-promised": "^4.0.2",
-    "sinon-chai": "^2.8.0",
+    "sinon-chai": "^3.5.0",
     "socket.io": "^1.6.0",
     "socket.io-redis": "^1.0.0"
   },

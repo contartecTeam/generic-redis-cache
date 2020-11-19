@@ -1,7 +1,6 @@
 'use strict'
 
 const GenericRedisCache = rewire('../lib/services/GenericRedisCache')
-const RedisKeyTypeEnum = require('../../lib/enums/RedisKeyTypeEnum')
 
 const GenericRedisCacheMock = require('../mocks/GenericRedisCacheMock')
 
@@ -23,41 +22,11 @@ const HASHKeySingleID = require('../cache/HASH/HASHKeySingleID')
 
 const STRINGKeySingleID = require('../cache/STRING/STRINGKeySingleID')
 
-const SpyMock = require('../mocks/SpyMock')
+const SpyMock = require('@contartec-team/spy-mock/lib/SpyMock')
 
 describe('GenericRedisCache', () => {
   before(function*() {
     yield clear_database()
-  })
-
-  describe('#constructor', () => {
-    let genericRedisCache
-    const KEY_NAME = 'test:{?}'
-    const IDS = [{ id: 'id' }]
-    const TYPE = RedisKeyTypeEnum.JSON
-
-    before(() =>  {
-      genericRedisCache = new GenericRedisCache(KEY_NAME, TYPE, IDS)
-    })
-
-    it('should return an object of type GenericRedisCache', () => {
-      expect(genericRedisCache).to.be.instanceOf(GenericRedisCache)
-    })
-
-    it('should set "_keyName"', () => {
-      expect(genericRedisCache.keyAttrs._keyName).to.eql(KEY_NAME)
-      expect(genericRedisCache.KEY_NAME).to.eql(KEY_NAME)
-    })
-
-    it('should set "_id"', () => {
-      expect(genericRedisCache.keyAttrs._id).to.eql(IDS)
-      expect(genericRedisCache.ID).to.eql(IDS)
-    })
-
-    it('should set "_type"', () => {
-      expect(genericRedisCache.keyAttrs._type).to.eql(TYPE)
-      expect(genericRedisCache.TYPE).to.eql(TYPE)
-    })
   })
 
   describe('.getKeyName', () => {
@@ -66,7 +35,7 @@ describe('GenericRedisCache', () => {
         context('and the `key` is a `string`', () => {
           it('should return the key name', () => {
             const key = 'value'
-            const compareKeyName = JSONKeySingleID.KEY_NAME.replace('{?}', key)
+            const compareKeyName = JSONKeySingleID.GENERIC_REDIS_ATTRS.keyName.replace('{?}', key)
             const keyName = JSONKeySingleID.getKeyName(key)
 
             expect(keyName).to.eql(compareKeyName)
@@ -75,7 +44,7 @@ describe('GenericRedisCache', () => {
           context('and the `key` contains `:` symbols', () => {
             it('should return the key name', () => {
               const key = 'aa:bb:cc'
-              const compareKeyName = JSONKeySingleID.KEY_NAME.replace('{?}', key.replace(/:/g, ''))
+              const compareKeyName = JSONKeySingleID.GENERIC_REDIS_ATTRS.keyName.replace('{?}', key.replace(/:/g, ''))
               const keyName = JSONKeySingleID.getKeyName(key)
 
               expect(keyName).to.eql(compareKeyName)
@@ -86,7 +55,7 @@ describe('GenericRedisCache', () => {
         context('and the `key` is a `Number`', () => {
           it('should return the key name', () => {
             const key = Math.floor(Math.random() * 100) + 1
-            const compareKeyName = JSONKeySingleID.KEY_NAME.replace('{?}', key)
+            const compareKeyName = JSONKeySingleID.GENERIC_REDIS_ATTRS.keyName.replace('{?}', key)
             const keyName = JSONKeySingleID.getKeyName(key)
 
             expect(keyName).to.eql(compareKeyName)
@@ -98,7 +67,7 @@ describe('GenericRedisCache', () => {
             context('and the `attr` is a `string`', () => {
               it('should return the key name', () => {
                 const objectKey = { id: 'id' }
-                const compareKeyName = JSONKeySingleID.KEY_NAME.replace('{?}', objectKey.id)
+                const compareKeyName = JSONKeySingleID.GENERIC_REDIS_ATTRS.keyName.replace('{?}', objectKey.id)
                 const keyName = JSONKeySingleID.getKeyName(objectKey)
 
                 expect(keyName).to.eql(compareKeyName)
@@ -108,7 +77,7 @@ describe('GenericRedisCache', () => {
             context('and the `attr` is a Number', () => {
               it('should return the key name', () => {
                 const objectKey = { id: Math.floor(Math.random() * 100) + 1}
-                const compareKeyName = JSONKeySingleID.KEY_NAME.replace('{?}', objectKey.id)
+                const compareKeyName = JSONKeySingleID.GENERIC_REDIS_ATTRS.keyName.replace('{?}', objectKey.id)
                 const keyName = JSONKeySingleID.getKeyName(objectKey)
 
                 expect(keyName).to.eql(compareKeyName)
@@ -116,20 +85,20 @@ describe('GenericRedisCache', () => {
             })
 
             context('and the `attr` is `undefined`', () => {
-              context('and the `ID` has no `undefinedValue` defined', () => {
+              context('and the `ID` has no `idUndefined` defined', () => {
                 it('should return the key name with the default `DEFAULT_UNDEFINED_ID` value', () => {
                   const objectKey = { id: undefined }
-                  const compareKeyName = JSONKeySingleID.KEY_NAME.replace('{?}', GenericRedisCache.DEFAULT_UNDEFINED_ID)
+                  const compareKeyName = JSONKeySingleID.GENERIC_REDIS_ATTRS.keyName.replace('{?}', GenericRedisCache.DEFAULT_GENERIC_REDIS_ATTRS.idUndefined)
                   const keyName = JSONKeySingleID.getKeyName(objectKey)
 
                   expect(keyName).to.eql(compareKeyName)
                 })
               })
 
-              context('and the `ID` has an `undefinedValue` defined', () => {
-                it('should return the key name with the `undefinedValue` attr', () => {
+              context('and the `ID` has an `idUndefined` defined', () => {
+                it('should return the key name with the `idUndefined` attr', () => {
                   const objectKey = { id: undefined }
-                  const compareKeyName = JSONKeySingleIDWithUndefined.KEY_NAME.replace('{?}', JSONKeySingleIDWithUndefined.ID[0].undefinedValue)
+                  const compareKeyName = JSONKeySingleIDWithUndefined.GENERIC_REDIS_ATTRS.keyName.replace('{?}', JSONKeySingleIDWithUndefined.GENERIC_REDIS_ATTRS.ids[0].idUndefined)
                   const keyName = JSONKeySingleIDWithUndefined.getKeyName(objectKey)
 
                   expect(keyName).to.eql(compareKeyName)
@@ -138,20 +107,20 @@ describe('GenericRedisCache', () => {
             })
 
             context('and the `attr` is `null`', () => {
-              context('and the `ID` has no `nullValue` defined', () => {
+              context('and the `ID` has no `idNull` defined', () => {
                 it('should return the key name with the default `DEFAULT_NULL_ID` value', () => {
                   const objectKey = { id: null }
-                  const compareKeyName = JSONKeySingleID.KEY_NAME.replace('{?}', GenericRedisCache.DEFAULT_NULL_ID)
+                  const compareKeyName = JSONKeySingleID.GENERIC_REDIS_ATTRS.keyName.replace('{?}', GenericRedisCache.DEFAULT_GENERIC_REDIS_ATTRS.idNull)
                   const keyName = JSONKeySingleID.getKeyName(objectKey)
 
                   expect(keyName).to.eql(compareKeyName)
                 })
               })
 
-              context('and the `ID` has an `nullValue` defined', () => {
-                it('should return the key name with the `nullValue` attr', () => {
+              context('and the `ID` has an `idNull` defined', () => {
+                it('should return the key name with the `idNull` attr', () => {
                   const objectKey = { id: null }
-                  const compareKeyName = JSONKeySingleIDWithNull.KEY_NAME.replace('{?}', JSONKeySingleIDWithNull.ID[0].nullValue)
+                  const compareKeyName = JSONKeySingleIDWithNull.GENERIC_REDIS_ATTRS.keyName.replace('{?}', JSONKeySingleIDWithNull.GENERIC_REDIS_ATTRS.ids[0].idNull)
                   const keyName = JSONKeySingleIDWithNull.getKeyName(objectKey)
 
                   expect(keyName).to.eql(compareKeyName)
@@ -163,7 +132,7 @@ describe('GenericRedisCache', () => {
           context('and `key` has none attr', () => {
             it('should return the key name with `DEFAULT_UNDEFINED_ID`', () => {
               const objectKey = {}
-              let compareKeyName = JSONKeySingleID.KEY_NAME.replace('?', GenericRedisCache.DEFAULT_UNDEFINED_ID)
+              let compareKeyName = JSONKeySingleID.GENERIC_REDIS_ATTRS.keyName.replace('?', GenericRedisCache.DEFAULT_GENERIC_REDIS_ATTRS.idUndefined)
               compareKeyName = compareKeyName.replace(/{/g, '')
               compareKeyName = compareKeyName.replace(/}/g, '')
               const keyName = JSONKeySingleID.getKeyName(objectKey)
@@ -174,7 +143,7 @@ describe('GenericRedisCache', () => {
 
           context('and `key` has more than one attr', () => {
             it('should return null', () => {
-              const objectKey = { id: 'teste', id2: 'teste2'}
+              const objectKey = { id: 'teste', id2: 'teste2' }
 
               const keyName = JSONKeySingleID.getKeyName(objectKey)
               expect(keyName).to.eql(null)
@@ -184,28 +153,19 @@ describe('GenericRedisCache', () => {
       })
 
       context('when the `KEY_NAME` has more than one id', () => {
-        context ('and the `ids` have no undefinedValue or nullValue options', () => {
-          // let genericRedisCache
-          // const KEY_NAME = 'test:{?}:second:{?}:third:{?}'
-          // const IDS = [{ id: 'id'}, { id: 'id2' }, { id: 'id3'} ]
-          // const TYPE = RedisKeyTypeEnum.JSON
-
-          // before(() =>  {
-          //   genericRedisCache = new GenericRedisCache(KEY_NAME, TYPE, IDS)
-          // })
-
+        context ('and the `ids` have no idUndefined or idNull options', () => {
           context('and the `key` is an `object`', () => {
             context('and all the attrs have values', () => {
               it('should return the key name', () => {
                 const objectKey = {
-                  id:   'aa:bb:cc',
-                  id2:  Math.floor(Math.random() * 100) + 1,
-                  id3:  Math.floor(Math.random() * 100) + 1
+                  id  : 'aa:bb:cc',
+                  id2 : Math.floor(Math.random() * 100) + 1,
+                  id3 : Math.floor(Math.random() * 100) + 1
                 }
 
-                const idsIndexes = JSONKeyMultiID.getIdIndexes(JSONKeyMultiID.KEY_NAME)
+                const idsIndexes = JSONKeyMultiID.getIdIndexes(JSONKeyMultiID.GENERIC_REDIS_ATTRS.keyName)
 
-                const chars = JSONKeyMultiID.KEY_NAME.split('')
+                const chars = JSONKeyMultiID.GENERIC_REDIS_ATTRS.keyName.split('')
 
                 Object.keys(objectKey).forEach((key, index) => {
                   chars[idsIndexes[index]] = typeof(objectKey[key]) == 'string' ? objectKey[key].replace(/:/g, '') : objectKey[key]
@@ -225,13 +185,13 @@ describe('GenericRedisCache', () => {
             context('and the attrs have `undefined` values', () => {
               it('should return the key name`', () => {
                 const objectKey = {
-                  id:   'aa:bb:cc',
-                  id2:  undefined,
-                  id3:  undefined
+                  id  : 'aa:bb:cc',
+                  id2 : undefined,
+                  id3 : undefined
                 }
 
-                let compareKeyName = JSONKeyMultiID.KEY_NAME.replace('{?}', objectKey.id.replace(/:/g, ''))
-                JSONKeyMultiID.ID.forEach((objectId, index) => {
+                let compareKeyName = JSONKeyMultiID.GENERIC_REDIS_ATTRS.keyName.replace('{?}', objectKey.id.replace(/:/g, ''))
+                JSONKeyMultiID.GENERIC_REDIS_ATTRS.ids.forEach((objectId, index) => {
                   if (index > 0) {
                     compareKeyName = compareKeyName
                       .replace('{?}', JSONKeyMultiID.DEFAULT_UNDEFINED_ID)
@@ -246,16 +206,16 @@ describe('GenericRedisCache', () => {
             context('and the attrs have null values', () => {
               it('should return the key name', () => {
                 const objectKey = {
-                  id:   'aa:bb:cc',
-                  id2:  null,
-                  id3:  null
+                  id  : 'aa:bb:cc',
+                  id2 : null,
+                  id3 : null
                 }
 
-                let compareKeyName = JSONKeyMultiID.KEY_NAME.replace('{?}', objectKey.id.replace(/:/g, ''))
-                JSONKeyMultiID.ID.forEach((objectId, index) => {
+                let compareKeyName = JSONKeyMultiID.GENERIC_REDIS_ATTRS.keyName.replace('{?}', objectKey.id.replace(/:/g, ''))
+                JSONKeyMultiID.GENERIC_REDIS_ATTRS.ids.forEach((objectId, index) => {
                   if (index > 0) {
                     compareKeyName = compareKeyName
-                      .replace('{?}', GenericRedisCache.DEFAULT_NULL_ID)
+                      .replace('{?}', GenericRedisCache.DEFAULT_GENERIC_REDIS_ATTRS.idNull)
                   }
                 })
                 const keyName = JSONKeyMultiID.getKeyName(objectKey)
@@ -267,20 +227,23 @@ describe('GenericRedisCache', () => {
             context('and the `key` has less attrs than the `ID` size', () => {
               it('should set the unpresents `ids` to the defaut `undefined` value', () => {
                 const objectKey = {
-                  id:  'aa:bb:cc',
-                  id2: 'teste'
+                  id  : 'aa:bb:cc',
+                  id2 : 'teste'
                 }
 
-                const chars = JSONKeyMultiID.KEY_NAME.split('')
-                const idsIndexes = JSONKeyMultiID.getIdIndexes(JSONKeyMultiID.KEY_NAME)
+                const chars = JSONKeyMultiID.GENERIC_REDIS_ATTRS.keyName.split('')
+                const idsIndexes = JSONKeyMultiID.getIdIndexes(JSONKeyMultiID.GENERIC_REDIS_ATTRS.keyName)
 
                 idsIndexes.forEach((indexKeyName, index) =>  {
                   const paramKey = Object.keys(objectKey)[index]
 
                   if (paramKey)
                     chars[indexKeyName] = objectKey[paramKey].replace(/:/g, '')
-                  else
-                    chars[indexKeyName] = JSONKeyMultiID.ID[index].undefinedValue ? JSONKeyMultiID.ID[index].undefinedValue : GenericRedisCache.DEFAULT_UNDEFINED_ID
+                  else {
+                    chars[indexKeyName] = JSONKeyMultiID.GENERIC_REDIS_ATTRS.ids[index].idUndefined ?
+                      JSONKeyMultiID.GENERIC_REDIS_ATTRS.ids[index].idUndefined :
+                      GenericRedisCache.DEFAULT_GENERIC_REDIS_ATTRS.idUndefined
+                  }
                 })
 
                 let compareKeyName = chars.join('')
@@ -297,8 +260,8 @@ describe('GenericRedisCache', () => {
           context('and the `key` is a `string`', () => {
             it('should return the key name', () => {
               const key = 'value'
-              let compareKeyName = JSONKeyMultiID.KEY_NAME.replace('{?}', key)
-              JSONKeyMultiID.ID.forEach((objectId, index) => {
+              let compareKeyName = JSONKeyMultiID.GENERIC_REDIS_ATTRS.keyName.replace('{?}', key)
+              JSONKeyMultiID.GENERIC_REDIS_ATTRS.ids.forEach((objectId, index) => {
                 if (index > 0) {
                   compareKeyName = compareKeyName
                     .replace('{?}', JSONKeyMultiID.DEFAULT_UNDEFINED_ID)
@@ -313,8 +276,8 @@ describe('GenericRedisCache', () => {
           context('and the `key` is a `Number`', () => {
             it('should return the key name', () => {
               const key = Math.floor(Math.random() * 100) + 1
-              let compareKeyName = JSONKeyMultiID.KEY_NAME.replace('{?}', key)
-              JSONKeyMultiID.ID.forEach((objectId, index) => {
+              let compareKeyName = JSONKeyMultiID.GENERIC_REDIS_ATTRS.keyName.replace('{?}', key)
+              JSONKeyMultiID.GENERIC_REDIS_ATTRS.ids.forEach((objectId, index) => {
                 if (index > 0) {
                   compareKeyName = compareKeyName
                     .replace('{?}', JSONKeyMultiID.DEFAULT_UNDEFINED_ID)
@@ -331,16 +294,16 @@ describe('GenericRedisCache', () => {
           context('and the `key` is an `object` with undefined `attrs`', () => {
             it('should return the key name', () => {
               const objectKey = {
-                id: 'aa:bb:cc',
-                id2: undefined
+                id  : 'aa:bb:cc',
+                id2 : undefined
               }
 
-              const idsIndexes = GenericRedisCache.getIdIndexes(JSONKeyMultiIDWithUndefined.KEY_NAME)
+              const idsIndexes = GenericRedisCache.getIdIndexes(JSONKeyMultiIDWithUndefined.GENERIC_REDIS_ATTRS.keyName)
 
-              const chars = JSONKeyMultiIDWithUndefined.KEY_NAME.split('')
+              const chars = JSONKeyMultiIDWithUndefined.GENERIC_REDIS_ATTRS.keyName.split('')
 
               Object.keys(objectKey).forEach((key, index) => {
-                chars[idsIndexes[index]] = typeof(objectKey[key]) == 'string' ? objectKey[key].replace(/:/g, '') : JSONKeyMultiIDWithUndefined.ID[index].undefinedValue
+                chars[idsIndexes[index]] = typeof(objectKey[key]) == 'string' ? objectKey[key].replace(/:/g, '') : JSONKeyMultiIDWithUndefined.GENERIC_REDIS_ATTRS.ids[index].idUndefined
               })
 
               let compareKeyName = chars.join('')
@@ -355,13 +318,13 @@ describe('GenericRedisCache', () => {
           })
 
           context('and the `key` has less attrs than the `ID` size', () => {
-            it('should set the unpresents `ID` values to the `undefinedValue`', () => {
+            it('should set the unpresents `ID` values to the `idUndefined`', () => {
               const objectKey = {
-                id:  'aa:bb:cc'
+                id: 'aa:bb:cc'
               }
 
-              const chars = JSONKeyMultiIDWithUndefined.KEY_NAME.split('')
-              const idsIndexes = GenericRedisCache.getIdIndexes(JSONKeyMultiIDWithUndefined.KEY_NAME)
+              const chars = JSONKeyMultiIDWithUndefined.GENERIC_REDIS_ATTRS.keyName.split('')
+              const idsIndexes = GenericRedisCache.getIdIndexes(JSONKeyMultiIDWithUndefined.GENERIC_REDIS_ATTRS.keyName)
 
               idsIndexes.forEach((indexKeyName, index) =>  {
                 const paramKey = Object.keys(objectKey)[index]
@@ -369,7 +332,7 @@ describe('GenericRedisCache', () => {
                 if (paramKey)
                   chars[indexKeyName] = objectKey[paramKey].replace(/:/g, '')
                 else
-                  chars[indexKeyName] =  JSONKeyMultiIDWithUndefined.ID[index].undefinedValue
+                  chars[indexKeyName] =  JSONKeyMultiIDWithUndefined.GENERIC_REDIS_ATTRS.ids[index].idUndefined
               })
 
               let compareKeyName = chars.join('')
@@ -385,11 +348,11 @@ describe('GenericRedisCache', () => {
           context('and the `key` is an `string`', () => {
             it('should return the key name', () => {
               const key = 'value'
-              let compareKeyName = JSONKeyMultiIDWithUndefined.KEY_NAME.replace('{?}', key)
-              JSONKeyMultiIDWithUndefined.ID.forEach((objectId, index) => {
+              let compareKeyName = JSONKeyMultiIDWithUndefined.GENERIC_REDIS_ATTRS.keyName.replace('{?}', key)
+              JSONKeyMultiIDWithUndefined.GENERIC_REDIS_ATTRS.ids.forEach((objectId, index) => {
                 if (index > 0) {
                   compareKeyName = compareKeyName
-                    .replace('{?}', objectId.undefinedValue)
+                    .replace('{?}', objectId.idUndefined)
                 }
               })
               const keyName = JSONKeyMultiIDWithUndefined.getKeyName(key)
@@ -401,11 +364,11 @@ describe('GenericRedisCache', () => {
           context('and the `key` is an `Number`', () => {
             it('should return the key name', () => {
               const key = Math.floor(Math.random() * 100) + 1
-              let compareKeyName = JSONKeyMultiIDWithUndefined.KEY_NAME.replace('{?}', key)
-              JSONKeyMultiIDWithUndefined.ID.forEach((objectId, index) => {
+              let compareKeyName = JSONKeyMultiIDWithUndefined.GENERIC_REDIS_ATTRS.keyName.replace('{?}', key)
+              JSONKeyMultiIDWithUndefined.GENERIC_REDIS_ATTRS.ids.forEach((objectId, index) => {
                 if (index > 0) {
                   compareKeyName = compareKeyName
-                    .replace('{?}',  objectId.undefinedValue)
+                    .replace('{?}',  objectId.idUndefined)
                 }
               })
               const keyName = JSONKeyMultiIDWithUndefined.getKeyName(key)
@@ -423,12 +386,12 @@ describe('GenericRedisCache', () => {
                 id2: null
               }
 
-              const idsIndexes = GenericRedisCache.getIdIndexes(JSONKeyMultiIDWithNull.KEY_NAME)
+              const idsIndexes = GenericRedisCache.getIdIndexes(JSONKeyMultiIDWithNull.GENERIC_REDIS_ATTRS.keyName)
 
-              const chars = JSONKeyMultiIDWithNull.KEY_NAME.split('')
+              const chars = JSONKeyMultiIDWithNull.GENERIC_REDIS_ATTRS.keyName.split('')
 
               Object.keys(objectKey).forEach((key, index) => {
-                chars[idsIndexes[index]] = typeof(objectKey[key]) == 'string' ? objectKey[key].replace(/:/g, '') : JSONKeyMultiIDWithNull.ID[index].nullValue
+                chars[idsIndexes[index]] = typeof(objectKey[key]) == 'string' ? objectKey[key].replace(/:/g, '') : JSONKeyMultiIDWithNull.GENERIC_REDIS_ATTRS.ids[index].idNull
               })
 
               let compareKeyName = chars.join('')
@@ -443,13 +406,13 @@ describe('GenericRedisCache', () => {
           })
 
           context('and the `key` has less attrs than the `ID` size', () => {
-            it('should set the unpresents `ID` values to the `undefinedValue`', () => {
+            it('should set the unpresents `ID` values to the `idUndefined`', () => {
               const objectKey = {
-                id:  'aa:bb:cc'
+                id: 'aa:bb:cc'
               }
 
-              const chars = JSONKeyMultiIDWithNull.KEY_NAME.split('')
-              const idsIndexes = GenericRedisCache.getIdIndexes(JSONKeyMultiIDWithNull.KEY_NAME)
+              const chars = JSONKeyMultiIDWithNull.GENERIC_REDIS_ATTRS.keyName.split('')
+              const idsIndexes = GenericRedisCache.getIdIndexes(JSONKeyMultiIDWithNull.GENERIC_REDIS_ATTRS.keyName)
 
               idsIndexes.forEach((indexKeyName, index) =>  {
                 const paramKey = Object.keys(objectKey)[index]
@@ -457,7 +420,7 @@ describe('GenericRedisCache', () => {
                 if (paramKey)
                   chars[indexKeyName] = objectKey[paramKey].replace(/:/g, '')
                 else
-                  chars[indexKeyName] =  GenericRedisCache.DEFAULT_UNDEFINED_ID
+                  chars[indexKeyName] =  GenericRedisCache.DEFAULT_GENERIC_REDIS_ATTRS.idUndefined
               })
 
               let compareKeyName = chars.join('')
@@ -473,11 +436,11 @@ describe('GenericRedisCache', () => {
           context('and the `key` is an `string`', () => {
             it('should return the key name', () => {
               const key = 'value'
-              let compareKeyName = JSONKeyMultiIDWithNull.KEY_NAME.replace('{?}', key)
-              JSONKeyMultiIDWithNull.ID.forEach((objectId, index) => {
+              let compareKeyName = JSONKeyMultiIDWithNull.GENERIC_REDIS_ATTRS.keyName.replace('{?}', key)
+              JSONKeyMultiIDWithNull.GENERIC_REDIS_ATTRS.ids.forEach((objectId, index) => {
                 if (index > 0) {
                   compareKeyName = compareKeyName
-                    .replace('{?}', GenericRedisCache.DEFAULT_UNDEFINED_ID)
+                    .replace('{?}', GenericRedisCache.DEFAULT_GENERIC_REDIS_ATTRS.idUndefined)
                 }
               })
               const keyName = JSONKeyMultiIDWithNull.getKeyName(key)
@@ -489,11 +452,11 @@ describe('GenericRedisCache', () => {
           context('and the `key` is an `Number`', () => {
             it('should return the key name', () => {
               const key = Math.floor(Math.random() * 100) + 1
-              let compareKeyName = JSONKeyMultiIDWithNull.KEY_NAME.replace('{?}', key)
-              JSONKeyMultiIDWithNull.ID.forEach((objectId, index) => {
+              let compareKeyName = JSONKeyMultiIDWithNull.GENERIC_REDIS_ATTRS.keyName.replace('{?}', key)
+              JSONKeyMultiIDWithNull.GENERIC_REDIS_ATTRS.ids.forEach((objectId, index) => {
                 if (index > 0) {
                   compareKeyName = compareKeyName
-                    .replace('{?}', GenericRedisCache.DEFAULT_UNDEFINED_ID)
+                    .replace('{?}', GenericRedisCache.DEFAULT_GENERIC_REDIS_ATTRS.idUndefined)
                 }
               })
               const keyName = JSONKeyMultiIDWithNull.getKeyName(key)
@@ -507,13 +470,13 @@ describe('GenericRedisCache', () => {
 
     context('when the `key` is not passed', () => {
       context('when the cache have `ID` elements', () => {
-        context ('and the `ids` have no `undefinedValue`  options', () => {
+        context ('and the `ids` have no `idUndefined`  options', () => {
           it('should replace all the `ids` with the `DEFAULT_UNDEFINED_ID` value', () => {
-            const idsIndexes = GenericRedisCache.getIdIndexes(JSONKeyMultiID.KEY_NAME)
-            const chars = JSONKeyMultiID.KEY_NAME.split('')
+            const idsIndexes = GenericRedisCache.getIdIndexes(JSONKeyMultiID.GENERIC_REDIS_ATTRS.keyName)
+            const chars = JSONKeyMultiID.GENERIC_REDIS_ATTRS.keyName.split('')
 
             idsIndexes.forEach((indexKeyName) =>  {
-              chars[indexKeyName] =  GenericRedisCache.DEFAULT_UNDEFINED_ID
+              chars[indexKeyName] =  GenericRedisCache.DEFAULT_GENERIC_REDIS_ATTRS.idUndefined
             })
 
             let compareKeyName = chars.join('')
@@ -527,13 +490,15 @@ describe('GenericRedisCache', () => {
           })
         })
 
-        context ('and the `ids` have `undefinedValue`  options', () => {
-          it('should replace all the `ids` with the `undefinedValue` values', () => {
-            const idsIndexes = GenericRedisCache.getIdIndexes(JSONKeyMultiIDWithUndefined.KEY_NAME)
-            const chars = JSONKeyMultiIDWithUndefined.KEY_NAME.split('')
+        context ('and the `ids` have `idUndefined`  options', () => {
+          it('should replace all the `ids` with the `idUndefined` values', () => {
+            const idsIndexes = GenericRedisCache.getIdIndexes(JSONKeyMultiIDWithUndefined.GENERIC_REDIS_ATTRS.keyName)
+            const chars = JSONKeyMultiIDWithUndefined.GENERIC_REDIS_ATTRS.keyName.split('')
 
             idsIndexes.forEach((indexKeyName, index) =>  {
-              chars[indexKeyName] =  JSONKeyMultiIDWithUndefined.ID[index].undefinedValue ? JSONKeyMultiIDWithUndefined.ID[index].undefinedValue : GenericRedisCache.DEFAULT_UNDEFINED_ID
+              chars[indexKeyName] =  JSONKeyMultiIDWithUndefined.GENERIC_REDIS_ATTRS.ids[index].idUndefined ?
+                JSONKeyMultiIDWithUndefined.GENERIC_REDIS_ATTRS.ids[index].idUndefined :
+                GenericRedisCache.DEFAULT_GENERIC_REDIS_ATTRS.idUndefined
             })
 
             let compareKeyName = chars.join('')
@@ -552,7 +517,7 @@ describe('GenericRedisCache', () => {
         it('should return the `KEY_NAME` itself', () => {
           const keyName = JSONKeyNoID.getKeyName()
 
-          expect(keyName).to.eql(JSONKeyNoID.KEY_NAME)
+          expect(keyName).to.eql(JSONKeyNoID.GENERIC_REDIS_ATTRS.keyName)
         })
       })
     })
@@ -563,7 +528,7 @@ describe('GenericRedisCache', () => {
       context('and it is an `Object`', () => {
         context('and `keys` has the same size of attrs than the key `ID`', () => {
           it('should return an `Array` with the key names', async () => {
-            const KEY_NAME_SIZES = Array.from({length: Object.keys(JSONKeyMultiID.ID).length}, () => Math.floor((Math.random() * 50) + 1))
+            const KEY_NAME_SIZES = Array.from({length: Object.keys(JSONKeyMultiID.GENERIC_REDIS_ATTRS.ids).length}, () => Math.floor((Math.random() * 50) + 1))
             const keys = {
               primaries: Array.from({length: KEY_NAME_SIZES[0]}, () => Math.floor(Math.random() * 99)),
               secondaries: Array.from({length: KEY_NAME_SIZES[1]}, () => Math.floor(Math.random() * 99)),
@@ -573,13 +538,13 @@ describe('GenericRedisCache', () => {
             const result = await JSONKeyMultiID.getKeyNames(keys)
 
             expect(result.length).to.eql(KEY_NAME_SIZES.reduce( (a,b) => a * b ))
-            expect(result[0][JSONKeyMultiID.ID[0].id]).not.to.be.null
+            expect(result[0][JSONKeyMultiID.GENERIC_REDIS_ATTRS.ids[0].id]).not.to.be.null
           })
         })
 
         context('and `keys` has a lower size of attrs than the key `ID`', () => {
           it('should return an `Array` with the key names', async () => {
-            const KEY_NAME_SIZES = Array.from({length: Object.keys(JSONKeyMultiID.ID).length}, () => Math.floor((Math.random() * 50) + 1))
+            const KEY_NAME_SIZES = Array.from({length: Object.keys(JSONKeyMultiID.GENERIC_REDIS_ATTRS.ids).length}, () => Math.floor((Math.random() * 50) + 1))
             const keys = {
               primaries: Array.from({length: KEY_NAME_SIZES[0]}, () => Math.floor(Math.random() * 99))
             }
@@ -587,8 +552,8 @@ describe('GenericRedisCache', () => {
             const result = await JSONKeyMultiID.getKeyNames(keys)
 
             expect(result.length).to.eql(KEY_NAME_SIZES[0])
-            expect(result[0][JSONKeyMultiID.ID[0].id]).not.to.be.null
-            expect(result[0][JSONKeyMultiID.ID[1].id]).to.be.undefined
+            expect(result[0][JSONKeyMultiID.GENERIC_REDIS_ATTRS.ids[0].id]).not.to.be.null
+            expect(result[0][JSONKeyMultiID.GENERIC_REDIS_ATTRS.ids[1].id]).to.be.undefined
           })
         })
 
@@ -629,7 +594,7 @@ describe('GenericRedisCache', () => {
             const result = await JSONKeyMultiID.getKeyNames(keys)
 
             expect(result.length).to.eql(KEY_NAME_SIZE)
-            expect(result[0][JSONKeyMultiID.ID[1].id]).to.be.undefined
+            expect(result[0][JSONKeyMultiID.GENERIC_REDIS_ATTRS.ids[1].id]).to.be.undefined
           })
         })
       })
@@ -637,7 +602,7 @@ describe('GenericRedisCache', () => {
 
     context('when `keys` is not passed', () => {
       context('and `IDS` have one attr', () => {
-        context('and it has an `undefinedValue`', () => {
+        context('and it has an `idUndefined`', () => {
           context('and there are keys on cache', () => {
             const KEYS_SIZE = 3
             let keyNames
@@ -646,7 +611,7 @@ describe('GenericRedisCache', () => {
               const values = Array.from({length: KEYS_SIZE}, () => Math.floor(Math.random() * 999))
               const objectValues = values.map((value) => {
                 const object = {}
-                object[JSONKeySingleIDWithUndefined.ID[0].id] = value
+                object[JSONKeySingleIDWithUndefined.GENERIC_REDIS_ATTRS.ids[0].id] = value
                 return object
               })
 
@@ -786,7 +751,6 @@ describe('GenericRedisCache', () => {
               expect(result).to.be.null
             })
           })
-
         })
 
         context('when there is no value cached', () => {
@@ -816,7 +780,6 @@ describe('GenericRedisCache', () => {
             await GenericJSONCacheMock.delete(JSONKeyMultiID.getKeyName(VALUES))
           })
 
-
           it('should return the cached object', async () => {
             const result = await JSONKeyMultiID.getCache(VALUES)
 
@@ -845,7 +808,6 @@ describe('GenericRedisCache', () => {
         after(async () => {
           await GenericHASHCache.delete(HASHKeySingleID.getKeyName(VALUE), VALUE)
         })
-
 
         it('should return the cached object', async () => {
           const result = await HASHKeySingleID.getCache(VALUE)
@@ -894,11 +856,12 @@ describe('GenericRedisCache', () => {
 
   describe('.get', () => {
     context('when there is cached value', () => {
-      let response
       const VALUE = 1
       const CACHE_VALUE = {
         id: VALUE
       }
+
+      let response
 
       before(async () => {
         SpyMock.addReturnSpy(JSONKeySingleID, 'getCache', CACHE_VALUE)
@@ -915,19 +878,22 @@ describe('GenericRedisCache', () => {
 
     context('when threre is no cached value', () => {
       let spies, response
+
       const VALUE = 1
       const OBJECT = {
-        id: VALUE
+        id  : VALUE,
+        name: `Name: ${VALUE}`
       }
       const KEY_NAME = JSONKeySingleID.getKeyName(VALUE)
 
-      context('and `onGet` returns an object', () => {
+      context('and `getDB` returns an object', () => {
         before(async () => {
           spies = {
             getCache  :  SpyMock
               .addReturnSpy(JSONKeySingleID, 'getCache', null),
-            onGet : SpyMock
-              .addReturnSpy(JSONKeySingleID, 'onGet', OBJECT)
+
+            getDB     : SpyMock
+              .addReturnSpy(JSONKeySingleID, 'getDB', OBJECT)
           }
 
           response = await JSONKeySingleID.get(VALUE)
@@ -939,8 +905,8 @@ describe('GenericRedisCache', () => {
           SpyMock.restoreAll()
         })
 
-        it('should call `onGet`', () => {
-          expect(spies.onGet).have.been.calledOnce
+        it('should call `getDB`', () => {
+          expect(spies.getDB).have.been.calledOnce
         })
 
         it('should return the object', () => {
@@ -954,13 +920,14 @@ describe('GenericRedisCache', () => {
         })
       })
 
-      context('and `onGet` returns null', () => {
+      context('and `getDB` returns null', () => {
         before(async () => {
           spies = {
             getCache  : SpyMock
               .addReturnSpy(JSONKeySingleID, 'getCache', null),
-            onGet : SpyMock
-              .addReturnSpy(JSONKeySingleID, 'onGet', null),
+
+            getDB     : SpyMock
+              .addReturnSpy(JSONKeySingleID, 'getDB', null),
           }
 
           response = await JSONKeySingleID.get(VALUE)
@@ -968,8 +935,8 @@ describe('GenericRedisCache', () => {
 
         after(() => { SpyMock.restoreAll() })
 
-        it('should call `onGet`', () => {
-          expect(spies.onGet).have.been.calledOnce
+        it('should call `getDB`', () => {
+          expect(spies.getDB).have.been.calledOnce
         })
 
         it('should return null', () => {
@@ -984,12 +951,12 @@ describe('GenericRedisCache', () => {
 
     context('when the verification `hook` returns `true`', () => {
       context('when the key is `JSON`', () => {
-        let redisResponse
+        const KEY_NAME = JSONKeySingleID.getKeyName(VALUE)
         const CACHE_VALUE = {
           id: VALUE
         }
 
-        const KEY_NAME = JSONKeySingleID.getKeyName(VALUE)
+        let redisResponse
 
         context('and `key` is passed', () => {
           before(async () => {
@@ -1001,7 +968,6 @@ describe('GenericRedisCache', () => {
 
             SpyMock.restoreAll()
           })
-
 
           it('should return the response', () => {
             expect(redisResponse).to.not.null
@@ -1050,12 +1016,12 @@ describe('GenericRedisCache', () => {
       })
 
       context('when the key is `HASH`', () => {
-        let redisResponse
+        const KEY_NAME = HASHKeySingleID.getKeyName(VALUE)
         const CACHE_VALUE = {
           id: VALUE
         }
 
-        const KEY_NAME = HASHKeySingleID.getKeyName(VALUE)
+        let redisResponse
 
         context('and `key` is passed', () => {
           before(async () => {
@@ -1107,10 +1073,11 @@ describe('GenericRedisCache', () => {
       })
 
       context('when the key is `STRING`', () => {
-        let redisResponse
         const STRING_VALUE = 'string_value'
 
         const KEY_NAME = STRINGKeySingleID.getKeyName(VALUE)
+
+        let redisResponse
 
         context('and `key` is passed', () => {
           before(async () => {
@@ -1164,8 +1131,8 @@ describe('GenericRedisCache', () => {
   })
 
   describe('.set', () => {
-    context('and a `key` is passed', () => {
-      context('and the `key` is an object', () => {
+    context('when `key` not `null`', () => {
+      context('when `key` is an `object`', () => {
         const OBJECT_KEY = {
           id: 1,
           attr1: 'teste'
@@ -1201,11 +1168,12 @@ describe('GenericRedisCache', () => {
             })
           })
 
-          context('and `_getIdAttr` returns null', () => {
+          context('and `_getIdAttr` returns `null`', () => {
             before(async () => {
               spies = {
                 setCache: SpyMock
                   .addReturnSpy(JSONKeySingleID, 'setCache'),
+
                 getIdAttr: SpyMock
                   .addReturnSpy(JSONKeySingleID, '_getIdAttr', null)
               }
@@ -1216,7 +1184,7 @@ describe('GenericRedisCache', () => {
             after(() => { SpyMock.restoreAll() })
 
             it('should call `_getIdAttr`', () => {
-              expect(spies.getIdAttr).have.been.calledOnce
+              expect(spies.getIdAttr).have.been.called
             })
 
             it('should not call `setCache`', () => {
@@ -1224,14 +1192,15 @@ describe('GenericRedisCache', () => {
             })
 
             it('should return `null`', () => {
-              expect(redisResponse).to.be.null
+              expect(redisResponse).to.not.exist
             })
           })
         })
       })
 
-      context('and the `key` is a `String`', () => {
+      context('when `key` is a `string`', () => {
         const STRING_KEY = 'teste'
+
         let redisResponse
 
         before(async () => {
@@ -1244,8 +1213,9 @@ describe('GenericRedisCache', () => {
       })
     })
 
-    context('and no `key` is passed', () => {
+    context('when `key` is `null`', () => {
       let spies
+
       before(() => {
         spies = {
           setCache: SpyMock
@@ -1257,14 +1227,50 @@ describe('GenericRedisCache', () => {
 
       after(() => { SpyMock.restoreAll() })
 
-      it('should call `setCache`', () => {
-        expect(spies.setCache).have.been.calledOnce
+      it('should not call `setCache`', () => {
+        expect(spies.setCache).to.not.have.been.calledOnce
       })
     })
   })
 
   describe('.setList', () => {
-    context('when the key is `JSON`', () => {
+    context('when the key is `string`', () => {
+      context('when objects are persisted', async () => {
+        let redisResponse, ids, spies
+
+        before(async () => {
+          ids = [
+            Math.round(Math.random() * 999999),
+            Math.round(Math.random() * 999999),
+            Math.round(Math.random() * 999999)
+          ]
+
+          const object = {
+            id  : Math.round(Math.random() * 999999),
+            name: `Name: ${Math.round(Math.random() * 999999)}`
+          }
+
+          spies = {
+            getDB: SpyMock
+              .addReturnSpy(JSONKeySingleID, 'getDB', object)
+          }
+
+          redisResponse = await JSONKeySingleID.setList(ids)
+        })
+
+        after(async () => SpyMock.restoreAll())
+
+        it('should return the inserted objects', () => {
+          expect(redisResponse).to.have.lengthOf(ids.length)
+        })
+
+        it('should save the objects to cache', async () => {
+          expect(spies.getDB.getCalls()).to.have.been.lengthOf(ids.length)
+        })
+      })
+    })
+
+    context('when the key is `Object`', () => {
       const OBJECTS = GenericRedisCacheMock.getObjectMocks()
       const ID_ATTRS = JSONKeySingleID.getIdAttrs(OBJECTS)
 
@@ -1295,55 +1301,31 @@ describe('GenericRedisCache', () => {
       context('and `key/value` objects are passed', () => {
         let redisResponse, keyNames
 
-        context('and the values are `objects`',() => {
-          before(async () => {
-            keyNames = await JSONKeySingleID.getKeyNames(ID_ATTRS)
+        before(async () => {
+          keyNames = await JSONKeySingleID.getKeyNames(ID_ATTRS)
 
-            const keyValues = OBJECTS.map((object) =>{
-              return {
-                key: JSONKeySingleID._getIdAttr(object),
-                value: object
-              }
-            })
-
-            redisResponse = await JSONKeySingleID.setList(keyValues)
+          const keyValues = OBJECTS.map((object) => {
+            return {
+              key   : JSONKeySingleID._getIdAttr(object),
+              value : object
+            }
           })
 
-          after(async () => {
-            await GenericJSONCacheMock.delete(keyNames)
-          })
-
-          it('should return the commands executed', () => {
-            expect(redisResponse.length).to.be.above(1)
-          })
-
-          it('should save the objects to cache', async () => {
-            const cachedValues = await GenericJSONCache.getListCache(keyNames)
-
-            expect(cachedValues.length).to.eql(OBJECTS.length)
-          })
+          redisResponse = await JSONKeySingleID.setList(keyValues)
         })
 
-        context('and the values are `strings`', () => {
-          before(async () => {
-            keyNames = await JSONKeySingleID.getKeyNames(ID_ATTRS)
+        after(async () => {
+          await GenericJSONCacheMock.delete(keyNames)
+        })
 
-            const stringValues = OBJECTS.map((object) =>{
-              return object.id
-            })
+        it('should return the commands executed', () => {
+          expect(redisResponse.length).to.be.above(1)
+        })
 
-            redisResponse = await JSONKeySingleID.setList(stringValues)
-          })
+        it('should save the objects to cache', async () => {
+          const cachedValues = await GenericJSONCache.getListCache(keyNames)
 
-          it('should return the commands executed', () => {
-            expect(redisResponse.length).to.eql(0)
-          })
-
-          it('should not save the keys on cache', async () => {
-            const cachedValues = await GenericJSONCache.getListCache(keyNames)
-
-            expect(cachedValues).to.eql([])
-          })
+          expect(cachedValues.length).to.eql(OBJECTS.length)
         })
       })
     })
@@ -1383,10 +1365,10 @@ describe('GenericRedisCache', () => {
           before(async () => {
             keyNames = await HASHKeySingleID.getKeyNames(ID_ATTRS)
 
-            const keyValues = OBJECTS.map((object) =>{
+            const keyValues = OBJECTS.map((object) => {
               return {
-                key: HASHKeySingleID._getIdAttr(object),
-                value: object
+                key   : HASHKeySingleID._getIdAttr(object),
+                value : object
               }
             })
 
@@ -1412,9 +1394,13 @@ describe('GenericRedisCache', () => {
           before(async () => {
             keyNames = await HASHKeySingleID.getKeyNames(ID_ATTRS)
 
-            const stringValues = OBJECTS.map((object) =>{
-              return object.id
-            })
+            const stringValues = OBJECTS
+              .map((object) => {
+                return {
+                  key   : object.id,
+                  value : object.id.toString()
+                }
+              })
 
             redisResponse = await HASHKeySingleID.setList(stringValues)
           })
@@ -1471,7 +1457,7 @@ describe('GenericRedisCache', () => {
           before(async () => {
             keyNames = await STRINGKeySingleID.getKeyNames(ID_ATTRS)
 
-            const keyValues = OBJECTS.map((object) =>{
+            const keyValues = OBJECTS.map((object) => {
               return {
                 key: STRINGKeySingleID._getIdAttr(object),
                 value: object
@@ -1500,7 +1486,7 @@ describe('GenericRedisCache', () => {
           before(async () => {
             keyNames = await STRINGKeySingleID.getKeyNames(ID_ATTRS)
 
-            const stringValues = OBJECTS.map((object) =>{
+            const stringValues = OBJECTS.map((object) => {
               return {
                 key: object.id,
                 value: 'test'+ (Math.floor(Math.random() * 1000) + 1)
@@ -1527,13 +1513,14 @@ describe('GenericRedisCache', () => {
 
         context('and the values are arrays of `strings`', () => {
           const VALUE_LENGTH = 4
+
           before(async () => {
             keyNames = await STRINGKeySingleID.getKeyNames(ID_ATTRS)
 
-            const stringValues = OBJECTS.map((object) =>{
+            const stringValues = OBJECTS.map((object) => {
               return {
-                key: object.id,
-                value:  GenericRedisCacheMock.getRandomStrings(VALUE_LENGTH)
+                key   : object.id,
+                value : GenericRedisCacheMock.getRandomStrings(VALUE_LENGTH)
               }
             })
 
@@ -1664,7 +1651,7 @@ describe('GenericRedisCache', () => {
 
           before(async () => {
             spies = {
-              getIds  : SpyMock
+              getIds: SpyMock
                 .addReturnSpy(JSONKeySingleID, 'getIds')
             }
 
@@ -1694,13 +1681,13 @@ describe('GenericRedisCache', () => {
           const ID_ATTRS = JSONKeySingleID.getIdAttrs(OBJECTS)
           let keyNames, spies, redisResponse
 
-          context('and `getListFromDB` returns an array', () => {
+          context('and `getListDB` returns an array', () => {
             before(async () => {
               spies = {
                 getIds  : SpyMock
                   .addReturnSpy(JSONKeySingleID, 'getIds'),
-                getListFromDB : SpyMock
-                  .addReturnSpy(JSONKeySingleID, 'getListFromDB', OBJECTS.slice(2))
+                getListDB : SpyMock
+                  .addReturnSpy(JSONKeySingleID, 'getListDB', OBJECTS.slice(2))
               }
 
               keyNames = await JSONKeySingleID.getKeyNames(ID_ATTRS)
@@ -1720,8 +1707,8 @@ describe('GenericRedisCache', () => {
               expect(spies.getIds).have.been.called
             })
 
-            it('should call `getListFromDB`', () => {
-              expect(spies.getListFromDB).have.been.calledOnce
+            it('should call `getListDB`', () => {
+              expect(spies.getListDB).have.been.calledOnce
             })
 
             it('should return the cached values', async () => {
@@ -1729,13 +1716,13 @@ describe('GenericRedisCache', () => {
             })
           })
 
-          context('and `getListFromDB` returns an empty array', () => {
+          context('and `getListDB` returns an empty array', () => {
             before(async () => {
               spies = {
                 getIds  : SpyMock
                   .addReturnSpy(JSONKeySingleID, 'getIds'),
-                getListFromDB : SpyMock
-                  .addReturnSpy(JSONKeySingleID, 'getListFromDB', [])
+                getListDB : SpyMock
+                  .addReturnSpy(JSONKeySingleID, 'getListDB', [])
               }
 
               keyNames = await JSONKeySingleID.getKeyNames(ID_ATTRS)
@@ -1755,8 +1742,8 @@ describe('GenericRedisCache', () => {
               expect(spies.getIds).have.been.called
             })
 
-            it('should call `getListFromDB`', () => {
-              expect(spies.getListFromDB).have.been.calledOnce
+            it('should call `getListDB`', () => {
+              expect(spies.getListDB).have.been.calledOnce
             })
 
             it('should return the cached values', async () => {
@@ -1770,13 +1757,13 @@ describe('GenericRedisCache', () => {
         let keyNames, spies, redisResponse
         const ID_ATTRS = JSONKeySingleID.getIdAttrs(OBJECTS)
 
-        context('and `getListFromDB` returns an array', () => {
+        context('and `getListDB` returns an array', () => {
           before(async () => {
             spies = {
               getIds  : SpyMock
                 .addReturnSpy(JSONKeySingleID, 'getIds'),
-              getListFromDB : SpyMock
-                .addReturnSpy(JSONKeySingleID, 'getListFromDB', OBJECTS)
+              getListDB : SpyMock
+                .addReturnSpy(JSONKeySingleID, 'getListDB', OBJECTS)
             }
 
             keyNames = await JSONKeySingleID.getKeyNames(ID_ATTRS)
@@ -1794,8 +1781,8 @@ describe('GenericRedisCache', () => {
             expect(spies.getIds).have.been.called
           })
 
-          it('should call `getListFromDB`', () => {
-            expect(spies.getListFromDB).have.been.calledOnce
+          it('should call `getListDB`', () => {
+            expect(spies.getListDB).have.been.calledOnce
           })
 
           it('should return the cached values', async () => {
@@ -1803,13 +1790,13 @@ describe('GenericRedisCache', () => {
           })
         })
 
-        context('and `getListFromDB` returns an empty array', () => {
+        context('and `getListDB` returns an empty array', () => {
           before(async () => {
             spies = {
               getIds  : SpyMock
                 .addReturnSpy(JSONKeySingleID, 'getIds'),
-              getListFromDB : SpyMock
-                .addReturnSpy(JSONKeySingleID, 'getListFromDB', [])
+              getListDB : SpyMock
+                .addReturnSpy(JSONKeySingleID, 'getListDB', [])
             }
 
             keyNames = await JSONKeySingleID.getKeyNames(ID_ATTRS)
@@ -1827,8 +1814,8 @@ describe('GenericRedisCache', () => {
             expect(spies.getIds).have.been.called
           })
 
-          it('should call `getListFromDB`', () => {
-            expect(spies.getListFromDB).have.been.calledOnce
+          it('should call `getListDB`', () => {
+            expect(spies.getListDB).have.been.calledOnce
           })
 
           it('should return an emtpy array', async () => {
@@ -1878,13 +1865,13 @@ describe('GenericRedisCache', () => {
           const ID_ATTRS = HASHKeySingleID.getIdAttrs(OBJECTS)
           let keyNames, spies, redisResponse
 
-          context('and `getListFromDB` returns an array', () => {
+          context('and `getListDB` returns an array', () => {
             before(async () => {
               spies = {
                 getIds  : SpyMock
                   .addReturnSpy(HASHKeySingleID, 'getIds'),
-                getListFromDB : SpyMock
-                  .addReturnSpy(HASHKeySingleID, 'getListFromDB', OBJECTS.slice(2))
+                getListDB : SpyMock
+                  .addReturnSpy(HASHKeySingleID, 'getListDB', OBJECTS.slice(2))
               }
 
               keyNames = await HASHKeySingleID.getKeyNames(ID_ATTRS)
@@ -1904,8 +1891,8 @@ describe('GenericRedisCache', () => {
               expect(spies.getIds).have.been.called
             })
 
-            it('should call `getListFromDB`', () => {
-              expect(spies.getListFromDB).have.been.calledOnce
+            it('should call `getListDB`', () => {
+              expect(spies.getListDB).have.been.calledOnce
             })
 
             it('should return the cached values', async () => {
@@ -1913,13 +1900,13 @@ describe('GenericRedisCache', () => {
             })
           })
 
-          context('and `getListFromDB` returns an empty array', () => {
+          context('and `getListDB` returns an empty array', () => {
             before(async () => {
               spies = {
                 getIds  : SpyMock
                   .addReturnSpy(HASHKeySingleID, 'getIds'),
-                getListFromDB : SpyMock
-                  .addReturnSpy(HASHKeySingleID, 'getListFromDB', [])
+                getListDB : SpyMock
+                  .addReturnSpy(HASHKeySingleID, 'getListDB', [])
               }
 
               keyNames = await HASHKeySingleID.getKeyNames(ID_ATTRS)
@@ -1939,8 +1926,8 @@ describe('GenericRedisCache', () => {
               expect(spies.getIds).have.been.called
             })
 
-            it('should call `getListFromDB`', () => {
-              expect(spies.getListFromDB).have.been.calledOnce
+            it('should call `getListDB`', () => {
+              expect(spies.getListDB).have.been.calledOnce
             })
 
             it('should return the cached values', async () => {
@@ -1954,13 +1941,13 @@ describe('GenericRedisCache', () => {
         let keyNames, spies, redisResponse
         const ID_ATTRS = HASHKeySingleID.getIdAttrs(OBJECTS)
 
-        context('and `getListFromDB` returns an array', () => {
+        context('and `getListDB` returns an array', () => {
           before(async () => {
             spies = {
               getIds  : SpyMock
                 .addReturnSpy(HASHKeySingleID, 'getIds'),
-              getListFromDB : SpyMock
-                .addReturnSpy(HASHKeySingleID, 'getListFromDB', OBJECTS)
+              getListDB : SpyMock
+                .addReturnSpy(HASHKeySingleID, 'getListDB', OBJECTS)
             }
 
             keyNames = await HASHKeySingleID.getKeyNames(ID_ATTRS)
@@ -1978,8 +1965,8 @@ describe('GenericRedisCache', () => {
             expect(spies.getIds).have.been.called
           })
 
-          it('should call `getListFromDB`', () => {
-            expect(spies.getListFromDB).have.been.calledOnce
+          it('should call `getListDB`', () => {
+            expect(spies.getListDB).have.been.calledOnce
           })
 
           it('should return the cached values', async () => {
@@ -1987,13 +1974,13 @@ describe('GenericRedisCache', () => {
           })
         })
 
-        context('and `getListFromDB` returns an empty array', () => {
+        context('and `getListDB` returns an empty array', () => {
           before(async () => {
             spies = {
               getIds  : SpyMock
                 .addReturnSpy(HASHKeySingleID, 'getIds'),
-              getListFromDB : SpyMock
-                .addReturnSpy(HASHKeySingleID, 'getListFromDB', [])
+              getListDB : SpyMock
+                .addReturnSpy(HASHKeySingleID, 'getListDB', [])
             }
 
             keyNames = await HASHKeySingleID.getKeyNames(ID_ATTRS)
@@ -2011,8 +1998,8 @@ describe('GenericRedisCache', () => {
             expect(spies.getIds).have.been.called
           })
 
-          it('should call `getListFromDB`', () => {
-            expect(spies.getListFromDB).have.been.calledOnce
+          it('should call `getListDB`', () => {
+            expect(spies.getListDB).have.been.calledOnce
           })
 
           it('should return an emtpy array', async () => {
@@ -2073,13 +2060,13 @@ describe('GenericRedisCache', () => {
           const ID_ATTRS = STRINGKeySingleID.getIdAttrs(OBJECTS)
           let keyNames, spies, redisResponse
 
-          context('and `getListFromDB` returns an array', () => {
+          context('and `getListDB` returns an array', () => {
             before(async () => {
               spies = {
                 getIds  : SpyMock
                   .addReturnSpy(STRINGKeySingleID, 'getIds'),
-                getListFromDB : SpyMock
-                  .addReturnSpy(STRINGKeySingleID, 'getListFromDB', STRING_KEY_VALUES.slice(2))
+                getListDB : SpyMock
+                  .addReturnSpy(STRINGKeySingleID, 'getListDB', STRING_KEY_VALUES.slice(2))
               }
 
               keyNames = await STRINGKeySingleID.getKeyNames(ID_ATTRS)
@@ -2099,8 +2086,8 @@ describe('GenericRedisCache', () => {
               expect(spies.getIds).have.been.called
             })
 
-            it('should call `getListFromDB`', () => {
-              expect(spies.getListFromDB).have.been.calledOnce
+            it('should call `getListDB`', () => {
+              expect(spies.getListDB).have.been.calledOnce
             })
 
             it('should return the cached values', async () => {
@@ -2108,13 +2095,13 @@ describe('GenericRedisCache', () => {
             })
           })
 
-          // context('and `getListFromDB` returns an empty array', () => {
+          // context('and `getListDB` returns an empty array', () => {
           //   before(async () => {
           //     spies = {
           //       getIds  : SpyMock
           //         .addReturnSpy(STRINGKeySingleID, 'getIds'),
-          //       getListFromDB : SpyMock
-          //         .addReturnSpy(STRINGKeySingleID, 'getListFromDB', [])
+          //       getListDB : SpyMock
+          //         .addReturnSpy(STRINGKeySingleID, 'getListDB', [])
           //     }
 
           //     keyNames = await STRINGKeySingleID.getKeyNames(ID_ATTRS)
@@ -2134,8 +2121,8 @@ describe('GenericRedisCache', () => {
           //     expect(spies.getIds).have.been.called
           //   })
 
-          //   it('should call `getListFromDB`', () => {
-          //     expect(spies.getListFromDB).have.been.calledOnce
+          //   it('should call `getListDB`', () => {
+          //     expect(spies.getListDB).have.been.calledOnce
           //   })
 
           //   it('should return the cached values', async () => {
@@ -2149,13 +2136,13 @@ describe('GenericRedisCache', () => {
         let keyNames, spies, redisResponse
         const ID_ATTRS = STRINGKeySingleID.getIdAttrs(OBJECTS)
 
-        context('and `getListFromDB` returns an array', () => {
+        context('and `getListDB` returns an array', () => {
           before(async () => {
             spies = {
               getIds  : SpyMock
                 .addReturnSpy(STRINGKeySingleID, 'getIds'),
-              getListFromDB : SpyMock
-                .addReturnSpy(STRINGKeySingleID, 'getListFromDB', STRING_KEY_VALUES)
+              getListDB : SpyMock
+                .addReturnSpy(STRINGKeySingleID, 'getListDB', STRING_KEY_VALUES)
             }
 
             keyNames = await STRINGKeySingleID.getKeyNames(ID_ATTRS)
@@ -2173,8 +2160,8 @@ describe('GenericRedisCache', () => {
             expect(spies.getIds).have.been.called
           })
 
-          it('should call `getListFromDB`', () => {
-            expect(spies.getListFromDB).have.been.calledOnce
+          it('should call `getListDB`', () => {
+            expect(spies.getListDB).have.been.calledOnce
           })
 
           it('should return the cached values', async () => {
@@ -2182,13 +2169,14 @@ describe('GenericRedisCache', () => {
           })
         })
 
-        context('and `getListFromDB` returns an empty array', () => {
+        context('and `getListDB` returns an empty array', () => {
           before(async () => {
             spies = {
               getIds  : SpyMock
-                .addReturnSpy(STRINGKeySingleID, 'getIds'),
-              getListFromDB : SpyMock
-                .addReturnSpy(STRINGKeySingleID, 'getListFromDB', [])
+                .addReturnSpy(STRINGKeySingleID, 'getIds', []),
+
+              getListDB : SpyMock
+                .addReturnSpy(STRINGKeySingleID, 'getListDB', [])
             }
 
             keyNames = await STRINGKeySingleID.getKeyNames(ID_ATTRS)
@@ -2206,8 +2194,8 @@ describe('GenericRedisCache', () => {
             expect(spies.getIds).have.been.called
           })
 
-          it('should call `getListFromDB`', () => {
-            expect(spies.getListFromDB).have.been.calledOnce
+          it('should call `getListDB`', () => {
+            expect(spies.getListDB).have.been.calledOnce
           })
 
           it('should return an emtpy array', async () => {
@@ -2307,7 +2295,7 @@ describe('GenericRedisCache', () => {
 
           values = GenericRedisCacheMock.getRandomStrings(3)
 
-          stringValues = OBJECTS.map((object, index) =>{
+          stringValues = OBJECTS.map((object, index) => {
             return {
               key: object.id,
               value: values[index]
@@ -2474,6 +2462,281 @@ describe('GenericRedisCache', () => {
 
           expect(result).to.eql(false)
         })
+      })
+    })
+  })
+
+  describe('.isAttrTrue', () => {
+    const ATTR_NAME = 'attr'
+
+    context('when `id` is a `Number`', () => {
+      context('when `attrName` is not `null`', () => {
+        context('when there is an `object`', () => {
+          context('when `attr` is not `null`', () => {
+            const IS_ENABLED = false
+
+            let isAttrTrue
+
+            before(async () => {
+              const objectId = `${Math.round(Math.random() * 99999)}-3b`
+              const objectMock = {
+                [ATTR_NAME]: IS_ENABLED
+              }
+
+              SpyMock
+                .addDependencySpy(GenericRedisCache, 'GenericRedisCache.get', objectMock)
+
+              isAttrTrue = await GenericRedisCache
+                .isAttrTrue(objectId, ATTR_NAME)
+            })
+
+            after(() => SpyMock.restoreAll())
+
+            it('should return its value', () => {
+              expect(isAttrTrue).to.eql(IS_ENABLED)
+            })
+          })
+
+          context('when `attr` is `null`', () => {
+            context('when `defaultValue` is `undefined`', () => {
+              let isAttrTrue
+
+              before(async () => {
+                const objectId = `${Math.round(Math.random() * 99999)}-3b`
+                const objectMock = {
+                  [ATTR_NAME]: null
+                }
+
+                SpyMock
+                  .addDependencySpy(GenericRedisCache, 'GenericRedisCache.get', objectMock)
+
+                isAttrTrue = await GenericRedisCache
+                  .isAttrTrue(objectId, ATTR_NAME)
+              })
+
+              after(() => SpyMock.restoreAll())
+
+              it('should return `true`', () => {
+                expect(isAttrTrue).to.true
+              })
+            })
+
+            context('when `defaultValue` is `false`', () => {
+              let isAttrTrue
+
+              before(async () => {
+                const objectId = `${Math.round(Math.random() * 99999)}-3b`
+                const objectMock = {
+                  [ATTR_NAME]: null
+                }
+
+                SpyMock
+                  .addDependencySpy(GenericRedisCache, 'GenericRedisCache.get', objectMock)
+
+                isAttrTrue = await GenericRedisCache
+                  .isAttrTrue(objectId, ATTR_NAME, false)
+              })
+
+              after(() => SpyMock.restoreAll())
+
+              it('should return `false`', () => {
+                expect(isAttrTrue).to.false
+              })
+            })
+          })
+
+          context('when `attr` is `undefined`', () => {
+            context('when `defaultValue` is `undefined`', () => {
+              let isAttrTrue
+
+              before(async () => {
+                const objectId = `${Math.round(Math.random() * 99999)}-3b`
+                const objectMock = {}
+
+                SpyMock
+                  .addDependencySpy(GenericRedisCache, 'GenericRedisCache.get', objectMock)
+
+                isAttrTrue = await GenericRedisCache
+                  .isAttrTrue(objectId, ATTR_NAME)
+              })
+
+              after(() => SpyMock.restoreAll())
+
+              it('should return `true`', () => {
+                expect(isAttrTrue).to.true
+              })
+            })
+
+            context('when `defaultValue` is `false`', () => {
+              let isAttrTrue
+
+              before(async () => {
+                const objectId = `${Math.round(Math.random() * 99999)}-3b`
+                const objectMock = {}
+
+                SpyMock
+                  .addDependencySpy(GenericRedisCache, 'GenericRedisCache.get', objectMock)
+
+                isAttrTrue = await GenericRedisCache
+                  .isAttrTrue(objectId, ATTR_NAME, false)
+              })
+
+              after(() => SpyMock.restoreAll())
+
+              it('should return `false`', () => {
+                expect(isAttrTrue).to.false
+              })
+            })
+          })
+        })
+
+        context('when there is no `object`', () => {
+          let isAttrTrue
+
+          before(async () => {
+            const objectId = `${Math.round(Math.random() * 99999)}-3b`
+
+            SpyMock
+              .addDependencySpy(GenericRedisCache, 'GenericRedisCache.get', null)
+
+            isAttrTrue = await GenericRedisCache
+              .isAttrTrue(objectId, ATTR_NAME)
+          })
+
+          after(() => SpyMock.restoreAll())
+
+          it('should return `null`', () => {
+            expect(isAttrTrue).to.not.exist
+          })
+        })
+      })
+
+      context('when `attrName` is `null`', () => {
+        const IS_ENABLED = false
+
+        let isAttrTrue
+
+        before(async () => {
+          const objectId = `${Math.round(Math.random() * 99999)}-3b`
+          const objectMock = {
+            [ATTR_NAME]: IS_ENABLED
+          }
+
+          SpyMock
+            .addDependencySpy(GenericRedisCache, 'GenericRedisCache.get', objectMock)
+
+          isAttrTrue = await GenericRedisCache
+            .isAttrTrue(objectId, null)
+        })
+
+        it('should return `null`', () => {
+          expect(isAttrTrue).to.not.exist
+        })
+      })
+    })
+
+    context('when `id` is an `Object`', () => {
+      context('when `attrName` is not `null`', () => {
+        context('when `attr` is not `null`', () => {
+          const IS_ENABLED = false
+
+          let isAttrTrue
+
+          before(async () => {
+            const objectMock = {
+              [ATTR_NAME]: IS_ENABLED
+            }
+
+            SpyMock
+              .addDependencySpy(GenericRedisCache, 'GenericRedisCache.get', objectMock)
+
+            isAttrTrue = await GenericRedisCache
+              .isAttrTrue(objectMock, ATTR_NAME)
+          })
+
+          after(() => SpyMock.restoreAll())
+
+          it('should return its value', () => {
+            expect(isAttrTrue).to.eql(IS_ENABLED)
+          })
+        })
+
+        context('when `attr` is `null`', () => {
+          let isAttrTrue
+
+          before(async () => {
+            const objectMock = {
+              [ATTR_NAME]: null
+            }
+
+            SpyMock
+              .addDependencySpy(GenericRedisCache, 'GenericRedisCache.get', objectMock)
+
+            isAttrTrue = await GenericRedisCache
+              .isAttrTrue(objectMock, ATTR_NAME)
+          })
+
+          after(() => SpyMock.restoreAll())
+
+          it('should return `true`', () => {
+            expect(isAttrTrue).to.true
+          })
+        })
+
+        context('when `attr` is `undefined`', () => {
+          let isAttrTrue
+
+          before(async () => {
+            const objectMock = {}
+
+            SpyMock
+              .addDependencySpy(GenericRedisCache, 'GenericRedisCache.get', objectMock)
+
+            isAttrTrue = await GenericRedisCache
+              .isAttrTrue(objectMock, ATTR_NAME)
+          })
+
+          after(() => SpyMock.restoreAll())
+
+          it('should return `true`', () => {
+            expect(isAttrTrue).to.true
+          })
+        })
+      })
+
+      context('when `attrName` is `null`', () => {
+        const IS_ENABLED = false
+
+        let isAttrTrue
+
+        before(async () => {
+          const objectMock = {
+            [ATTR_NAME]: IS_ENABLED
+          }
+
+          SpyMock
+            .addDependencySpy(GenericRedisCache, 'GenericRedisCache.get', objectMock)
+
+          isAttrTrue = await GenericRedisCache
+            .isAttrTrue(objectMock, null)
+        })
+
+        it('should return `null`', () => {
+          expect(isAttrTrue).to.not.exist
+        })
+      })
+    })
+
+    context('when `id` is `null`', () => {
+      let isAttrTrue
+
+      before(async () => {
+        isAttrTrue = await GenericRedisCache
+          .isAttrTrue(null)
+      })
+
+      it('should return `null`', () => {
+        expect(isAttrTrue).to.not.exist
       })
     })
   })

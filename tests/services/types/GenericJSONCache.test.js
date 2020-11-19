@@ -19,41 +19,99 @@ describe('GenericJSONCache', () => {
         await GenericJSONCacheMock.delete(JSONKeySingleID.getKeyName(VALUE))
       })
 
-      context('when `params` has multiple itens', () => {
-        let attrs, cachedValue
+      context('when `params` is an `Array`', () => {
+        context('when `params` has multiple itens', () => {
+          let attrs, cachedValue
 
-        before(async () => {
-          attrs = Object
-            .keys(CACHE_VALUE)
-            .filter(attrName => attrName.charAt(0) != '_')
-            .slice(1)
+          before(async () => {
+            attrs = Object
+              .keys(CACHE_VALUE)
+              .filter(attrName => attrName.charAt(0) != '_')
+              .slice(1)
 
-          cachedValue = await GenericJSONCache
-            .getCache(JSONKeySingleID.getKeyName(VALUE), attrs )
+            cachedValue = await GenericJSONCache
+              .getCache(JSONKeySingleID.getKeyName(VALUE), attrs)
+          })
+
+          it('should return the cached object with the specified `attrs`', () => {
+            const cachedValueTemp = {}
+
+            attrs
+              .forEach(attrName => cachedValueTemp[attrName] = CACHE_VALUE[attrName])
+
+            expect(cachedValue).to.shallowDeepEqual(cachedValueTemp)
+          })
         })
 
-        it('should return the cached object with the specified `attrs`', () => {
-          const cachedValueTemp = {}
+        context('when `params` has one item', () => {
+          let attrs, cachedValue
 
-          attrs
-            .forEach(attrName => cachedValueTemp[attrName] = CACHE_VALUE[attrName])
+          before(async () => {
+            attrs = [ `.${Object.keys(CACHE_VALUE)[0]}` ]
 
-          expect(cachedValue).to.shallowDeepEqual(cachedValueTemp)
+            cachedValue = await GenericJSONCache
+              .getCache(JSONKeySingleID.getKeyName(VALUE), attrs)
+          })
+
+          it('should return the `attr` value', () => {
+            expect(cachedValue).to.shallowDeepEqual(VALUE)
+          })
         })
       })
 
-      context('when `params` has one item', () => {
-        let attrs, cachedValue
+      context('when `params` is an `Object`', () => {
+        context('when `params.paths` has multiple itens', () => {
+          let paths, cachedValue
 
-        before(async () => {
-          attrs = [ Object.keys(CACHE_VALUE)[0] ]
+          before(async () => {
+            paths = Object
+              .keys(CACHE_VALUE)
+              .filter(attrName => attrName.charAt(0) != '_')
+              .slice(1)
 
-          cachedValue = await GenericJSONCache
-            .getCache(JSONKeySingleID.getKeyName(VALUE), attrs )
+            cachedValue = await GenericJSONCache
+              .getCache(JSONKeySingleID.getKeyName(VALUE), { paths })
+          })
+
+          it('should return the cached object with the specified `paths`', () => {
+            const cachedValueTemp = {}
+
+            paths
+              .forEach(attrName => cachedValueTemp[attrName] = CACHE_VALUE[attrName])
+
+            expect(cachedValue).to.shallowDeepEqual(cachedValueTemp)
+          })
         })
 
-        it('should return the cached object with the specified `attrs`', () => {
-          expect(cachedValue).to.shallowDeepEqual(VALUE)
+        context('when `params.paths` has one item', () => {
+          let paths, cachedValue
+
+          before(async () => {
+            paths = [ Object.keys(CACHE_VALUE)[0] ]
+
+            cachedValue = await GenericJSONCache
+              .getCache(JSONKeySingleID.getKeyName(VALUE), { paths })
+          })
+
+          it('should return `attr` value', () => {
+            const cachedValueTemp = paths
+              .map(attrName => CACHE_VALUE[attrName])[0]
+
+            expect(cachedValue).to.shallowDeepEqual(cachedValueTemp)
+          })
+        })
+
+        context('when `params.paths` has no item', () => {
+          let cachedValue
+
+          before(async () => {
+            cachedValue = await GenericJSONCache
+              .getCache(JSONKeySingleID.getKeyName(VALUE), { paths: [] })
+          })
+
+          it('should return the `object` with all attrs', () => {
+            expect(cachedValue).to.shallowDeepEqual(CACHE_VALUE)
+          })
         })
       })
 

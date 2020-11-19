@@ -3,25 +3,17 @@
 const GenericRedisCache = require('../../../lib/services/GenericRedisCache')
 const RedisKeyTypeEnum = require('../../../lib/enums/RedisKeyTypeEnum')
 
-const KEY_NAME = 'test:{?}:second:{?}'
-const TYPE = RedisKeyTypeEnum.JSON
-const IDS = [
-  { id: 'id', undefinedValue: 'undefinedValue1' },
-  { id: 'id2', undefinedValue: 'undefinedValue2' }
-]
+const GENERIC_REDIS_ATTRS = {
+  keyName : 'test:{?}:second:{?}',
+  type    : RedisKeyTypeEnum.JSON,
+  ids     : [
+    { id: 'id', idUndefined: 'undefinedValue1' },
+    { id: 'id2', idUndefined: 'undefinedValue2' }
+  ]
+}
 
 class JSONKeyMultiIDWithUndefined extends GenericRedisCache {
-  constructor() {
-    super(KEY_NAME, TYPE, IDS)
-  }
-
-  static get KEY_NAME()            { return KEY_NAME }
-  static get ID()                  { return IDS }
-  static get TYPE()                { return TYPE }
-
-  get KEY_NAME()            { return KEY_NAME }
-  get ID()                  { return IDS }
-  get TYPE()                { return TYPE }
+  static get GENERIC_REDIS_ATTRS()  { return GENERIC_REDIS_ATTRS }
 }
 
 module.exports = JSONKeyMultiIDWithUndefined

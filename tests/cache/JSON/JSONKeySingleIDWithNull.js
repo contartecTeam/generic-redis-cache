@@ -3,25 +3,17 @@
 const GenericRedisCache = require('../../../lib/services/GenericRedisCache')
 const RedisKeyTypeEnum = require('../../../lib/enums/RedisKeyTypeEnum')
 
-const KEY_NAME = 'test:{?}'
-const TYPE = RedisKeyTypeEnum.JSON
-const IDS = [{
-  id: 'id',
-  nullValue: 'nullValue'
-}]
+const GENERIC_REDIS_ATTRS = {
+  keyName : 'test:{?}',
+  type    : RedisKeyTypeEnum.JSON,
+  ids     : [{
+    id: 'id',
+    idNull: 'idNull'
+  }]
+}
 
 class JSONKeySingleIDWithNull extends GenericRedisCache {
-  constructor() {
-    super(KEY_NAME, TYPE, IDS)
-  }
-
-  static get KEY_NAME()            { return KEY_NAME }
-  static get ID()                  { return IDS }
-  static get TYPE()                { return TYPE }
-
-  get KEY_NAME()            { return KEY_NAME }
-  get ID()                  { return IDS }
-  get TYPE()                { return TYPE }
+  static get GENERIC_REDIS_ATTRS()  { return GENERIC_REDIS_ATTRS }
 }
 
 module.exports = JSONKeySingleIDWithNull

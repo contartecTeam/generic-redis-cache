@@ -17,8 +17,6 @@ chai.use(require('deep-equal-in-any-order'))
 
 global.sinon = require('sinon')
 
-require('sinon-as-promised')
-
 global.faker = require('faker')
 global.expect = chai.expect
 global.rewire = require('rewire')
