@@ -5,7 +5,7 @@ jobs:
     working_directory: /home/circleci/generic-redis-cache
 
     docker:
-      - image: circleci/node:10.14
+      - image: circleci/node:12
 
     steps:
       - checkout
@@ -19,7 +19,7 @@ jobs:
     working_directory: /home/circleci/generic-redis-cache
 
     docker:
-      - image: circleci/node:10.14
+      - image: circleci/node:12
 
     steps:
       - restore_cache:
@@ -30,7 +30,7 @@ jobs:
 
       - run:
           name    : Authenticating with github registry
-          command : npm config set '//npm.pkg.github.com/:_authToken' "${NPM_GITHUB_TOKEN}"
+          command : npm config set '//npm.pkg.github.com/:_authToken' "${GH_TOKEN}"
 
       - run:
           name    : Installing npm dependencies
@@ -45,7 +45,7 @@ jobs:
     working_directory: /home/circleci/generic-redis-cache
 
     docker:
-      - image: circleci/node:10.14
+      - image: circleci/node:12
 
       - image: redislabs/rejson:latest
 
@@ -84,7 +84,7 @@ jobs:
       working_directory: /home/circleci/generic-redis-cache
 
       docker:
-        - image: circleci/node:10.14
+        - image: circleci/node:12
 
       steps:
         - restore_cache:
@@ -101,7 +101,7 @@ jobs:
     working_directory: /home/circleci/generic-redis-cache
 
     docker:
-      - image: circleci/node:10.14
+      - image: circleci/node:12
 
     steps:
       - restore_cache:
@@ -114,7 +114,7 @@ jobs:
           name    : Authenticating with registry
           command : |
             echo "registry=https://npm.pkg.github.com/contartec-team" > .npmrc
-            echo "//npm.pkg.github.com/:_authToken=$NPM_GITHUB_TOKEN" >> .npmrc
+            echo "//npm.pkg.github.com/:_authToken=$GH_TOKEN" >> .npmrc
 
       - run:
           name    : Releasing and publishing version
@@ -128,6 +128,8 @@ workflows:
       - checkout_code
 
       - node_dependencies:
+          context:
+            - github
           requires:
             - checkout_code
 
@@ -144,10 +146,14 @@ workflows:
             - tests
 
       - npm_version:
+          context:
+            - github
           requires:
             - approval
 
       - npm_release:
+          context:
+            - github
           filters:
             branches:
               only: master
