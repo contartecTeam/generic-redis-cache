@@ -445,7 +445,7 @@
   </div>
   
 
-  <p>Contains a set of methods to handle the <code>redis</code> operations</p>
+  <p>Contains a set of methods to handle <code>redis</code> operations</p>
 
     <div class='pre p1 fill-light mt0'>new GenericRedisCache()</div>
   
@@ -2129,7 +2129,7 @@ returns
       <div class="clearfix small pointer toggle-sibling">
         <div class="py1 contain">
             <a class='icon pin-right py1 dark-link caret-right'>▸</a>
-            <span class='code strong strong truncate'>set(key, value, jsonPath, commands = redis)</span>
+            <span class='code strong strong truncate'>set(key, value = undefined, jsonPath, commands)</span>
         </div>
       </div>
       <div class="clearfix display-none toggle-target">
@@ -2139,7 +2139,7 @@ returns
 
   <p>Saves the <code>key</code> in cache</p>
 
-    <div class='pre p1 fill-light mt0'>set(key: (<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a> | <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a> | <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a>), value: any, jsonPath: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, commands: redis.Multi?): redis.Multi</div>
+    <div class='pre p1 fill-light mt0'>set(key: (<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a> | <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a> | <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a>), value: any?, jsonPath: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, commands: redis.Multi): redis.Multi</div>
   
   
 
@@ -2157,7 +2157,9 @@ returns
         <div class='space-bottom0'>
           <div>
             <span class='code bold'>key</span> <code class='quiet'>((<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a> | <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a> | <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a>))</code>
-	    the key to save on cache
+	    the cache key or its 
+<code>object</code>
+ value to save
 
           </div>
           
@@ -2165,10 +2167,17 @@ returns
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>value</span> <code class='quiet'>(any
+            <span class='code bold'>value</span> <code class='quiet'>(any?
             = <code>undefined</code>)</code>
 	    The 
 <code>value</code>
+ to save on cache or 
+<code>undefined</code>
+ to fetch from 
+<code>db</code>
+ or case 
+<code>key</code>
+ is the cache value
 
           </div>
           
@@ -2190,11 +2199,11 @@ returns
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>commands</span> <code class='quiet'>(redis.Multi?
+            <span class='code bold'>commands</span> <code class='quiet'>(redis.Multi
             = <code>redis</code>)</code>
 	    The 
 <code>redis</code>
- multi command object to chain(See 
+ multi command object to chain (See 
 <a href="https://github.com/NodeRedis/node_redis#clientmulticommands">https://github.com/NodeRedis/node_redis#clientmulticommands</a>
 )
 
@@ -2462,7 +2471,7 @@ returns
 
   
 
-  <p>Returns whether <code>key</code> is an <code>key</code> value or not</p>
+  <p>Returns whether <code>key</code> has the id attrs for this <code>cache</code></p>
 
     <div class='pre p1 fill-light mt0'>isKey(key: any): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></div>
   
