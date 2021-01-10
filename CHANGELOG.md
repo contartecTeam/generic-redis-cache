@@ -1,3 +1,10 @@
+## 1.2.3 (2021-01-10)
+
+
+### Bug Fixes
+
+* Corrigindo `.setValue` não salvando valores `false`
+
 ## 1.2.2 (2021-01-10)
 
 
