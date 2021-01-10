@@ -2,6 +2,7 @@
 
 [![CircleCI](https://circleci.com/gh/contartec/generic-model-bookshelf.svg?style=shield&circle-token=21e695f1398a24c2a7387f71cf5b33ebac7893e3)](https://circleci.com/gh/contartec-team/generic-redis-cache)
 [![Maintainability](https://api.codeclimate.com/v1/badges/771d5d19224905f02163/maintainability)](https://codeclimate.com/github/contartec-team/generic-redis-cache/maintainability)
+[![deepcode](https://www.deepcode.ai/api/gh/badge?key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwbGF0Zm9ybTEiOiJnaCIsIm93bmVyMSI6ImNvbnRhcnRlYy10ZWFtIiwicmVwbzEiOiJnZW5lcmljLXJlZGlzLWNhY2hlIiwiaW5jbHVkZUxpbnQiOmZhbHNlLCJhdXRob3JJZCI6MTczMjgsImlhdCI6MTYxMDI5Njk2NX0.TeWyHILphc-N5KmzGS8XIuayxMYFX0MYuHpARwEg7lw)](https://www.deepcode.ai/app/gh/contartec-team/generic-redis-cache/_/dashboard?utm_content=gh%2Fcontartec-team%2Fgeneric-redis-cache)
 [![Test Coverage](https://codecov.io/gh/contartec-team/generic-redis-cache/branch/master/graph/badge.svg)](https://codecov.io/gh/contartec-team/generic-redis-cache)
 
 

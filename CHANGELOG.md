@@ -1,3 +1,10 @@
+## 1.2.2 (2021-01-10)
+
+
+### Bug Fixes
+
+* Corrigindo `.set` não salvando valores `false`
+
 ## 1.2.1 (2020-12-09)
 
 
