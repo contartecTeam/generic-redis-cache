@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset='utf-8'>
-  <title>@contartec-team/generic-redis-cache 1.2.0 | Documentation</title>
+  <title>@contartec-team/generic-redis-cache 1.2.1 | Documentation</title>
   <meta name='description' content='Generic service for operations on redis keys'>
   <meta name='viewport' content='width=device-width,initial-scale=1'>
   <link href='assets/bass.css' rel='stylesheet'>
@@ -15,7 +15,7 @@
       <div id='split-left' class='overflow-auto fs0 height-viewport-100'>
         <div class='py1 px2'>
           <h3 class='mb0 no-anchor'>@contartec-team/generic-redis-cache</h3>
-          <div class='mb1'><code>1.2.0</code></div>
+          <div class='mb1'><code>1.2.1</code></div>
           <input
             placeholder='Filter'
             id='filter-input'
@@ -2411,9 +2411,9 @@ returns
 
   
 
-  <p>Return wheter the key is cached or not</p>
+  <p>Return whether the key is cached or not</p>
 
-    <div class='pre p1 fill-light mt0'>isCached(key: (<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a> | <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a> | <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a>))</div>
+    <div class='pre p1 fill-light mt0'>isCached(key: (<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a> | <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a> | <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a>)): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></div>
   
   
 
@@ -2441,6 +2441,14 @@ returns
 
   
 
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></code>:
+        Wether the key is cached or not
+
+      
+    
   
 
   
@@ -2711,7 +2719,7 @@ returns
 
   <p>Returns the keys not cached based on the list passed</p>
 
-    <div class='pre p1 fill-light mt0'>_getKeysNotCached(keys: any, objects: any)</div>
+    <div class='pre p1 fill-light mt0'>_getKeysNotCached(keys: any, objects: any): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></div>
   
   
 
@@ -2747,6 +2755,14 @@ returns
 
   
 
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></code>:
+        The list of keys not cached
+
+      
+    
   
 
   
