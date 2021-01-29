@@ -1,3 +1,10 @@
+## 1.2.5 (2021-01-29)
+
+
+### Code Refactoring
+
+* [`GenericRedisCache`] Refatorar `.get` para tratar chaves nulas
+
 ## 1.2.3 (2021-01-10)
 
 
