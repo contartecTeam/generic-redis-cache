@@ -5,6 +5,7 @@
 [![deepcode](https://www.deepcode.ai/api/gh/badge?key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwbGF0Zm9ybTEiOiJnaCIsIm93bmVyMSI6ImNvbnRhcnRlYy10ZWFtIiwicmVwbzEiOiJnZW5lcmljLXJlZGlzLWNhY2hlIiwiaW5jbHVkZUxpbnQiOmZhbHNlLCJhdXRob3JJZCI6MTczMjgsImlhdCI6MTYxMDI5Njk2NX0.TeWyHILphc-N5KmzGS8XIuayxMYFX0MYuHpARwEg7lw)](https://www.deepcode.ai/app/gh/contartec-team/generic-redis-cache/_/dashboard?utm_content=gh%2Fcontartec-team%2Fgeneric-redis-cache)
 [![Test Coverage](https://codecov.io/gh/contartec-team/generic-redis-cache/branch/master/graph/badge.svg)](https://codecov.io/gh/contartec-team/generic-redis-cache)
 
+A set of generic model methods to inherit
 
 ## Install
 
@@ -116,4 +117,4 @@ Dog
 
 ## Docs
 
-https://contartecteam.github.io/generic-redis-cache/
+https://contartec-team.github.io/generic-redis-cache/index.html
