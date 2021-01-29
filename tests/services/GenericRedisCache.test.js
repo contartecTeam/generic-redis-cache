@@ -23,7 +23,6 @@ const HASHKeySingleID = require('../cache/HASH/HASHKeySingleID')
 const STRINGKeySingleID = require('../cache/STRING/STRINGKeySingleID')
 
 const SpyMock = require('@contartec-team/spy-mock/lib/SpyMock')
-const { expect } = require('chai')
 
 describe('GenericRedisCache', () => {
   before(function*() {
@@ -2811,39 +2810,6 @@ describe('GenericRedisCache', () => {
 
       it('should return `null`', () => {
         expect(isAttrTrue).to.not.exist
-      })
-    })
-  })
-
-  describe('.isKeyValid', () => {
-    context('when `key` is not `null`', () => {
-      const KEY = 'la'
-
-      it('should return `true`', () => {
-        const isKeyValid = JSONKeySingleID
-          .isKeyValid(KEY)
-
-        expect(isKeyValid).to.true
-      })
-    })
-
-    context('when `key` is `null`', () => {
-      context('when `cache model` has `KeyId`', () => {
-        it('should return `false`', () => {
-          const isKeyValid = JSONKeySingleID
-            .isKeyValid()
-
-          expect(isKeyValid).to.false
-        })
-      })
-
-      context('when `cache model` has no `KeyId`', () => {
-        it('should return `true`', () => {
-          const isKeyValid = JSONKeyNoID
-            .isKeyValid()
-
-          expect(isKeyValid).to.true
-        })
       })
     })
   })
