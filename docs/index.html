@@ -1,8 +1,8 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
   <meta charset='utf-8'>
-  <title>@contartec-team/generic-redis-cache 1.2.3 | Documentation</title>
+  <title>@contartec-team/generic-redis-cache 1.2.5 | Documentation</title>
   <meta name='description' content='Generic service for operations on redis keys'>
   <meta name='viewport' content='width=device-width,initial-scale=1'>
   <link href='assets/bass.css' rel='stylesheet'>
@@ -15,11 +15,14 @@
       <div id='split-left' class='overflow-auto fs0 height-viewport-100'>
         <div class='py1 px2'>
           <h3 class='mb0 no-anchor'>@contartec-team/generic-redis-cache</h3>
-          <div class='mb1'><code>1.2.3</code></div>
+          <div class='mb1'><code>1.2.5</code></div>
           <input
             placeholder='Filter'
             id='filter-input'
             class='col12 block input'
+            spellcheck='false'
+            autocapitalize='off'
+            autocorrect='off'
             type='text' />
           <div id='toc'>
             <ul class='list-reset h5 py1-ul'>
@@ -96,9 +99,33 @@
                       </a></li>
                     
                       <li><a
+                        href='#genericrediscacheongetcache'
+                        class='regular pre-open'>
+                        .onGetCache
+                      </a></li>
+                    
+                      <li><a
+                        href='#genericrediscacheongetlistcache'
+                        class='regular pre-open'>
+                        .onGetListCache
+                      </a></li>
+                    
+                      <li><a
                         href='#genericrediscacheonsaving'
                         class='regular pre-open'>
                         .onSaving
+                      </a></li>
+                    
+                      <li><a
+                        href='#genericrediscacheonsave'
+                        class='regular pre-open'>
+                        .onSave
+                      </a></li>
+                    
+                      <li><a
+                        href='#genericrediscacheondelete'
+                        class='regular pre-open'>
+                        .onDelete
                       </a></li>
                     
                       <li><a
@@ -445,6 +472,8 @@
   
 
   
+
+  
 </section>
 
           
@@ -474,6 +503,8 @@
   
   
   
+  
+
   
 
   
@@ -568,6 +599,8 @@
   
 
   
+
+  
 </section>
 
       </div>
@@ -623,8 +656,7 @@
       
         <div class='space-bottom0'>
           <span class='code bold'>ids</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>&#x3C;KeyId>)</code>
-          : The list of 
-[
+          : The list of [
 <code>KeyIds</code>
 ]
 <a href="KeyId">KeyId</a>
@@ -653,6 +685,8 @@
         </div>
       
     </div>
+  
+
   
 
   
@@ -701,6 +735,8 @@
   
   
   
+  
+
   
 
   
@@ -772,6 +808,8 @@
   
 
   
+
+  
 </section>
 
       </div>
@@ -805,6 +843,8 @@
   
   
   
+  
+
   
 
   
@@ -893,6 +933,8 @@
   
 
   
+
+  
 </section>
 
       </div>
@@ -949,6 +991,8 @@
 
       
     
+  
+
   
 
   
@@ -1031,6 +1075,186 @@
   
 
   
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='genericrediscacheongetcache'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>onGetCache(object, key, params)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Post-Hook for [<code>getCache</code>]<a href="#genericrediscachegetcache">GenericRedisCache.getCache</a> operation</p>
+
+    <div class='pre p1 fill-light mt0'>onGetCache(object: any, key: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, params: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>): any</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>object</span> <code class='quiet'>(any)</code>
+	    The cache object
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>key</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+	    The cache key
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>params</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
+	    Additional params
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code>any</code>:
+        The cache value
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='genericrediscacheongetlistcache'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>onGetListCache(objects, keys, params)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Post-Hook for [<code>getCache</code>]<a href="#genericrediscachegetcache">GenericRedisCache.getCache</a> operation</p>
+
+    <div class='pre p1 fill-light mt0'>onGetListCache(objects: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>, keys: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>, params: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>): any</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>objects</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>)</code>
+	    The cache objects
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>keys</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>)</code>
+	    The cache keys
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>params</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
+	    Additional params
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code>any</code>:
+        The cache value
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
 </section>
 
       </div>
@@ -1048,7 +1272,7 @@
 
   
 
-  <p>Pre-Hook for <code>save</code> operation</p>
+  <p>Pre-Hook for <code>save</code> operation (@see <a href="#genericrediscacheset">GenericRedisCache.set</a>)</p>
 
     <div class='pre p1 fill-light mt0'>onSaving(key: any, value: any): any</div>
   
@@ -1100,6 +1324,194 @@
 
       
     
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='genericrediscacheonsave'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>onSave(key, value, oldCache, command)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Post-Hook for <code>save</code> operation</p>
+
+    <div class='pre p1 fill-light mt0'>onSave(key: any, value: any, oldCache: any, command: any): any</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>key</span> <code class='quiet'>(any)</code>
+	    The cache key
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>value</span> <code class='quiet'>(any)</code>
+	    The cache value
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>oldCache</span> <code class='quiet'>(any)</code>
+	    Old cache value
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>command</span> <code class='quiet'>(any)</code>
+	    Redis commands in case of multiple
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code>any</code>:
+        The value to be saved (or 
+<code>null</code>
+ to cancel the 
+<code>save</code>
+)
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='genericrediscacheondelete'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>onDelete(key, value)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Post-Hook for <code>delete</code> operation</p>
+
+    <div class='pre p1 fill-light mt0'>onDelete(key: any, value: any): any</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>key</span> <code class='quiet'>(any)</code>
+	    The cache key
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>value</span> <code class='quiet'>(any)</code>
+	    The deleted cache value
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code>any</code>:
+        The value to be saved (or 
+<code>null</code>
+ to cancel the 
+<code>save</code>
+)
+
+      
+    
+  
+
   
 
   
@@ -1184,6 +1596,8 @@
   
 
   
+
+  
 </section>
 
       </div>
@@ -1240,6 +1654,8 @@
 
       
     
+  
+
   
 
   
@@ -1323,19 +1739,21 @@
   
 
   
+
+  
     <div class='py1 quiet mt1 prose-big'>Example</div>
     
       
       <pre class='p1 overflow-auto round fill-light'>params
 {
-  <span class="hljs-attr">terminalsIds</span>: [<span class="hljs-string">'aa:bb:cc'</span>, <span class="hljs-string">'bb:cc:dd'</span>],
+  <span class="hljs-attr">terminalsIds</span>: [<span class="hljs-string">&#x27;aa:bb:cc&#x27;</span>, <span class="hljs-string">&#x27;bb:cc:dd&#x27;</span>],
   <span class="hljs-attr">trackerTypeIds</span>: [<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>]
 }
 
 returns
 [
-   { <span class="hljs-attr">terminal_id</span>: <span class="hljs-string">'aa:bb:cc'</span>, <span class="hljs-attr">tracker_type_id</span>: <span class="hljs-number">1</span>  },
-   { <span class="hljs-attr">terminal_id</span>: <span class="hljs-string">'aa:bb:cc'</span>, <span class="hljs-attr">tracker_type_id</span>: <span class="hljs-number">2</span>  },
+   { <span class="hljs-attr">terminal_id</span>: <span class="hljs-string">&#x27;aa:bb:cc&#x27;</span>, <span class="hljs-attr">tracker_type_id</span>: <span class="hljs-number">1</span>  },
+   { <span class="hljs-attr">terminal_id</span>: <span class="hljs-string">&#x27;aa:bb:cc&#x27;</span>, <span class="hljs-attr">tracker_type_id</span>: <span class="hljs-number">2</span>  },
    ...
 ]</pre>
     
@@ -1416,6 +1834,8 @@ returns
   
 
   
+
+  
 </section>
 
       </div>
@@ -1472,6 +1892,8 @@ returns
 
       
     
+  
+
   
 
   
@@ -1573,6 +1995,8 @@ returns
   
 
   
+
+  
 </section>
 
       </div>
@@ -1657,6 +2081,8 @@ returns
   
 
   
+
+  
 </section>
 
       </div>
@@ -1725,6 +2151,8 @@ returns
 
       
     
+  
+
   
 
   
@@ -1832,6 +2260,8 @@ returns
 
       
     
+  
+
   
 
   
@@ -1953,6 +2383,8 @@ returns
   
 
   
+
+  
 </section>
 
       </div>
@@ -2039,6 +2471,8 @@ returns
 
       
     
+  
+
   
 
   
@@ -2156,6 +2590,8 @@ returns
 
       
     
+  
+
   
 
   
@@ -2286,6 +2722,8 @@ returns
   
 
   
+
+  
     <div class='py1 quiet mt1 prose-big'>Throws</div>
     <ul>
       
@@ -2366,12 +2804,14 @@ returns
   
 
   
+
+  
     <div class='py1 quiet mt1 prose-big'>Example</div>
     
       
-      <pre class='p1 overflow-auto round fill-light'><span class="hljs-keyword">this</span>.setList([ { <span class="hljs-attr">key</span>:<span class="hljs-string">'128'</span>, <span class="hljs-attr">value</span>: <span class="hljs-string">'teste'</span> } ])
-<span class="hljs-keyword">this</span>.setList([ { <span class="hljs-attr">id</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">name</span>: <span class="hljs-string">'la'</span> }, { ... }, ... ])
-<span class="hljs-keyword">this</span>.setList([ <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span> ]) <span class="hljs-comment">// ids from `db`</span></pre>
+      <pre class='p1 overflow-auto round fill-light'><span class="hljs-built_in">this</span>.setList([ { <span class="hljs-attr">key</span>:<span class="hljs-string">&#x27;128&#x27;</span>, <span class="hljs-attr">value</span>: <span class="hljs-string">&#x27;teste&#x27;</span> } ])
+<span class="hljs-built_in">this</span>.setList([ { <span class="hljs-attr">id</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;la&#x27;</span> }, { ... }, ... ])
+<span class="hljs-built_in">this</span>.setList([ <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span> ]) <span class="hljs-comment">// ids from `db`</span></pre>
     
   
 
@@ -2438,6 +2878,8 @@ returns
 
       
     
+  
+
   
 
   
@@ -2519,6 +2961,8 @@ returns
   
 
   
+
+  
 </section>
 
       </div>
@@ -2581,6 +3025,8 @@ returns
 
       
     
+  
+
   
 
   
@@ -2692,6 +3138,8 @@ returns
   
 
   
+
+  
 </section>
 
       </div>
@@ -2763,6 +3211,8 @@ returns
   
 
   
+
+  
 </section>
 
       </div>
@@ -2812,13 +3262,15 @@ returns
   
 
   
+
+  
     <div class='py1 quiet mt1 prose-big'>Example</div>
     
       
       <pre class='p1 overflow-auto round fill-light'><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">RandomRedis</span> </span>{
-   <span class="hljs-keyword">static</span> <span class="hljs-keyword">get</span> GENERIC_REDIS_ATTRS() {
+   <span class="hljs-keyword">static</span> <span class="hljs-keyword">get</span> <span class="hljs-title">GENERIC_REDIS_ATTRS</span>() {
      <span class="hljs-keyword">return</span> {
-       <span class="hljs-attr">keyName</span> : <span class="hljs-string">'random'</span>,
+       <span class="hljs-attr">keyName</span> : <span class="hljs-string">&#x27;random&#x27;</span>,
        <span class="hljs-attr">type</span>    : RedisKeyTypeEnum.STRING
      }
    }
@@ -2828,9 +3280,9 @@ returns
 <span class="hljs-comment">// false</span>
 
  <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AnotherRandomRedis</span> </span>{
-   <span class="hljs-keyword">static</span> <span class="hljs-keyword">get</span> GENERIC_REDIS_ATTRS() {
+   <span class="hljs-keyword">static</span> <span class="hljs-keyword">get</span> <span class="hljs-title">GENERIC_REDIS_ATTRS</span>() {
      <span class="hljs-keyword">return</span> {
-       <span class="hljs-attr">keyName</span> : <span class="hljs-string">'random'</span>,
+       <span class="hljs-attr">keyName</span> : <span class="hljs-string">&#x27;random&#x27;</span>,
        <span class="hljs-attr">type</span>    : RedisKeyTypeEnum.STRING,
        <span class="hljs-attr">ids</span>     : [{
          id
@@ -2920,6 +3372,8 @@ returns
   
 
   
+
+  
 </section>
 
       </div>
@@ -2983,6 +3437,8 @@ returns
 
       
     
+  
+
   
 
   
@@ -3081,6 +3537,8 @@ returns
   
 
   
+
+  
 </section>
 
       </div>
@@ -3124,6 +3582,8 @@ returns
   
   
   
+  
+
   
 
   
@@ -3216,6 +3676,8 @@ returns
   
 
   
+
+  
 </section>
 
       </div>
@@ -3259,6 +3721,8 @@ returns
   
   
   
+  
+
   
 
   
@@ -3333,6 +3797,8 @@ returns
   
 
   
+
+  
 </section>
 
       </div>
@@ -3382,6 +3848,8 @@ returns
         </div>
       
     </div>
+  
+
   
 
   
@@ -3469,6 +3937,8 @@ returns
   
 
   
+
+  
 </section>
 
       </div>
@@ -3531,6 +4001,8 @@ returns
   
 
   
+
+  
     <div class='py1 quiet mt1 prose-big'>Example</div>
     
       
@@ -3542,17 +4014,17 @@ returns
    [path ...]
 
 paramsObject = {
-   options : [ 'NEWLINE', 'SPACE' ]
-   paths   : [ 'id', 'nam', 'nested.name' ]
+   options : [ &#x27;NEWLINE&#x27;, &#x27;SPACE&#x27; ]
+   paths   : [ &#x27;id&#x27;, &#x27;nam&#x27;, &#x27;nested.name&#x27; ]
 }
 
 paramsArray = [
- 'NEWLINE', 'SPACE',
- 'id', 'name', 'nested.name'
+ &#x27;NEWLINE&#x27;, &#x27;SPACE&#x27;,
+ &#x27;id&#x27;, &#x27;name&#x27;, &#x27;nested.name&#x27;
 ]
 
 GenericJSONCache.getJSONGetParams(params)
-// [ 'NEWLINE', 'SPACE', 'id', 'nam', 'nested.name' ]</span></pre>
+// [ &#x27;NEWLINE&#x27;, &#x27;SPACE&#x27;, &#x27;id&#x27;, &#x27;nam&#x27;, &#x27;nested.name&#x27; ]</span></pre>
     
   
 
@@ -3664,6 +4136,8 @@ GenericJSONCache.getJSONGetParams(params)
   
 
   
+
+  
 </section>
 
       </div>
@@ -3721,6 +4195,8 @@ GenericJSONCache.getJSONGetParams(params)
 
       
     
+  
+
   
 
   
@@ -3806,6 +4282,8 @@ GenericJSONCache.getJSONGetParams(params)
   
 
   
+
+  
 </section>
 
       </div>
@@ -3867,6 +4345,8 @@ GenericJSONCache.getJSONGetParams(params)
 
       
     
+  
+
   
 
   
@@ -3968,6 +4448,8 @@ GenericJSONCache.getJSONGetParams(params)
 
       
     
+  
+
   
 
   
@@ -4090,6 +4572,8 @@ GenericJSONCache.getJSONGetParams(params)
   
 
   
+
+  
 </section>
 
       </div>
@@ -4160,6 +4644,8 @@ GenericJSONCache.getJSONGetParams(params)
   
 
   
+
+  
 </section>
 
       </div>
@@ -4203,6 +4689,8 @@ GenericJSONCache.getJSONGetParams(params)
   
   
   
+  
+
   
 
   
@@ -4273,6 +4761,8 @@ GenericJSONCache.getJSONGetParams(params)
 
       
     
+  
+
   
 
   
