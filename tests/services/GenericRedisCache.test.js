@@ -143,11 +143,12 @@ describe('GenericRedisCache', () => {
           })
 
           context('and `key` has more than one attr', () => {
-            it('should return null', () => {
+            it('should return the `keyName`', () => {
               const objectKey = { id: 'teste', id2: 'teste2' }
-
               const keyName = JSONKeySingleID.getKeyName(objectKey)
-              expect(keyName).to.eql(null)
+              const compareKeyName = JSONKeySingleID.GENERIC_REDIS_ATTRS.keyName.replace('{?}', objectKey.id)
+
+              expect(keyName).to.eql(compareKeyName)
             })
           })
         })

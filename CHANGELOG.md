@@ -1,3 +1,10 @@
+## 1.3.0 (2021-04-22)
+
+
+### Features
+
+* [`GenericRedisCache`] Add `.onGetCache`
+
 ## 1.2.5 (2021-01-29)
 
 
