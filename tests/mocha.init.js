@@ -20,7 +20,7 @@ global.sinon = require('sinon')
 global.faker = require('faker')
 global.expect = chai.expect
 global.rewire = require('rewire')
-global.redis = bluebird.promisifyAll(require('./config/socket').redis)
+global.redis = bluebird.promisifyAll(require('./config/redis'))
 
 require('../lib/configs/redisInstanceService')(global.redis)
 

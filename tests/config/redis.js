@@ -2,13 +2,12 @@
 
 const bluebird = require('bluebird')
 const node_redis = require('redis')
-const redisJSON =  require('redis-rejson')
+const redisJSON = require('redis-rejson')
 redisJSON(node_redis)
 
 bluebird.promisifyAll(node_redis.RedisClient.prototype)
 bluebird.promisifyAll(node_redis.Multi.prototype)
 
-const redis =  node_redis.createClient(process.env.REDISCLOUD_URL || process.env.REDIS_URL)
+const redis = node_redis.createClient(process.env.REDISCLOUD_URL || process.env.REDIS_URL)
 
-module.exports.redis = redis
-module.exports.PREFIX = 'contartec:org:'
+module.exports = redis
