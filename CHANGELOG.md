@@ -1,3 +1,10 @@
+## 1.4.0 (2021-05-07)
+
+
+### Features
+
+* [`GenericRedisCache`] Refatorar `.getKeyName` para receber uma `function` no objeto `KeyId`
+
 ## 1.3.1 (2021-04-27)
 
 
