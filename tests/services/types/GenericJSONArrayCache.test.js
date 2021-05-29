@@ -117,6 +117,78 @@ describe('GenericJSONArrayCache', () => {
     })
   })
 
+  describe('.initArrayCache', () => {  
+    context('when the `keyName` is passed', () => {
+      const ID = 1
+      const keyName = JSONKeySingleID.getKeyName(ID)
+
+      context('and the `value` is passed', () => {
+        const CACHE_VALUE = { teste: ID, attr1: 'teste' }
+
+        let result
+
+        before(async () => {
+          result = await GenericJSONArrayCache
+            .initArrayCache(keyName, CACHE_VALUE)
+        })
+
+        after(async () => {
+          await GenericJSONCacheMock
+            .delete(keyName)
+        })
+
+        it('should return the list size', () => {
+          expect(result).to.eql(1)
+        })
+
+        it('should save the value on cache', async () => {
+          const cachedValue = await GenericJSONArrayCache
+            .getCache(keyName)
+
+          expect(cachedValue).to.eql([CACHE_VALUE])
+        })
+      })
+
+      context('and the `value` is not passed', () => {        
+        let result
+
+        before(async () => {
+          result = await GenericJSONArrayCache
+            .initArrayCache(keyName)
+        })
+
+        after(async () => {
+          await GenericJSONCacheMock
+            .delete(keyName)
+        })
+
+        it('should return the list size', () => {
+          expect(result).to.eql(0)
+        })
+
+        it('should save an empty list on cache', async () => {
+          const cachedValue = await GenericJSONCacheMock
+            .getCache(keyName)
+
+          expect(cachedValue).to.eql([])
+        })
+      })
+    })
+
+    context('when the `keyName` is not passed', () => {       
+      let result
+
+      before(async () => {
+        result = await GenericJSONArrayCache
+          .initArrayCache()
+      })
+
+      it('should return the list size', () => {
+        expect(result).to.eql(0)
+      })
+    })
+  })
+
   describe('._addCache', () => {
     const ID = 1
     const keyName = JSONKeySingleID.getKeyName(ID)
