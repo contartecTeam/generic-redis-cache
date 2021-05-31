@@ -298,4 +298,74 @@ describe('GenericJSONArrayCache', () => {
       })
     })
   })
+
+  describe('.isCached', () => {
+    context('when `keyName` is cached', () => {
+      context('when `keyName` is passed', () => {
+        const VALUE = 1
+        const CACHE_VALUE = { teste: VALUE, attr1: 'teste' }
+        const keyName = JSONKeySingleID.getKeyName(VALUE)
+
+        let isCached
+
+        before(async () => {
+          await GenericJSONArrayCache
+            .initArrayCache(keyName, CACHE_VALUE)
+          
+          isCached = await GenericJSONArrayCache
+            .isCached(keyName)
+        })
+
+        after(async () => {
+          await GenericJSONCacheMock
+            .delete(keyName)
+        })
+
+        it('should return `true`', () => {
+          expect(isCached).to.equal(true)
+        })
+      })
+
+      context('when `keyName` is not passed', () => {
+        const VALUE = 1
+        const CACHE_VALUE = { teste: VALUE, attr1: 'teste' }
+        const keyName = JSONKeySingleID.getKeyName(VALUE)
+
+        let isCached
+
+        before(async () => {
+          await GenericJSONArrayCache
+            .initArrayCache(keyName, CACHE_VALUE)
+          
+          isCached = await GenericJSONArrayCache
+            .isCached()
+        })
+
+        after(async () => {
+          await GenericJSONCacheMock
+            .delete(keyName)
+        })
+
+        it('should return `false`', () => {
+          expect(isCached).to.equal(false)
+        })
+      })
+    })
+
+    context('when `keyName` is not cached', () => {
+      const VALUE = 1
+      const keyName = JSONKeySingleID.getKeyName(VALUE)
+
+      let isCached
+
+      before(async () => {        
+        isCached = await GenericJSONArrayCache
+          .isCached(keyName)
+      })
+
+      it('should return false', async () => {
+        expect(isCached).to.equal(false)
+      })
+    })
+  })
 })
