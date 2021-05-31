@@ -9,6 +9,8 @@ const GenericJSONCacheMock = require('../mocks/GenericJSONCacheMock')
 const GenericHASHCache = require('../../lib/services/types/GenericHASHCache')
 const GenericSTRINGCache = require('../../lib/services/types/GenericSTRINGCache')
 
+const GenericJSONArrayCache = require('../../lib/services/types/GenericJSONArrayCache')
+
 const JSONKeySingleID = require('../cache/JSON/JSONKeySingleID')
 const JSONKeySingleIDWithUndefined = require('../cache/JSON/JSONKeySingleIDWithUndefined')
 const JSONKeySingleIDWithNull = require('../cache/JSON/JSONKeySingleIDWithNull')
@@ -17,6 +19,9 @@ const JSONKeyNoID = require('../cache/JSON/JSONKeyNoID')
 const JSONKeyMultiID = require('../cache/JSON/JSONKeyMultiID')
 const JSONKeyMultiIDWithUndefined = require('../cache/JSON/JSONKeyMultiIDWithUndefined')
 const JSONKeyMultiIDWithNull = require('../cache/JSON/JSONKeyMultiIDWithNull')
+
+const JSONArrayKeyMultiID = require('../cache/JSON_ARRAY/JSONArrayKeyMultiID')
+const JSONArrayKeySingleID = require('../cache/JSON_ARRAY/JSONArrayKeySingleID')
 
 const HASHKeySingleID = require('../cache/HASH/HASHKeySingleID')
 
@@ -854,6 +859,90 @@ describe('GenericRedisCache', () => {
         })
       })
     })
+
+    context('when the key is `JSON_ARRAY`', () => {
+      context('and the key has one `ID`', () => {
+        const VALUE = 1
+        const CACHE_VALUE = { teste: VALUE }
+
+        context('when there is value cached', () => {
+          before(async () => {
+            await GenericJSONArrayCache
+              .initArrayCache(JSONArrayKeySingleID.getKeyName(VALUE), CACHE_VALUE)
+          })
+
+          after(async () => {
+            await GenericJSONCacheMock
+              .delete(JSONArrayKeySingleID.getKeyName(VALUE))
+          })
+
+          context('and a `key` is passed', () => {
+            it('should return the cached array', async () => {
+              const result = await JSONArrayKeySingleID
+                .getCache(VALUE)
+
+              expect(result).to.eql([CACHE_VALUE])
+            })
+          })
+
+          context('and a `key` is not passed', () => {
+            it('should not return the cached array', async () => {
+              const result = await JSONArrayKeySingleID
+                .getCache()
+
+              expect(result).to.be.null
+            })
+          })
+        })
+
+        context('when there is no value cached', () => {
+          it('should return null', async () => {
+            const result = await JSONArrayKeySingleID
+              .getCache(VALUE)
+
+            expect(result).to.be.null
+          })
+        })
+      })
+
+      context('and the key has more than one `ID`', () => {
+        const VALUES = {
+          object_id: Math.floor((Math.random() * 50) + 1),
+          second_id: Math.floor((Math.random() * 50) + 1),
+          third_id: Math.floor((Math.random() * 50) + 1)
+        }
+
+        const CACHE_VALUE = { x: 1 }
+
+        context('when there value cached', () => {
+          before(async () => {
+            await GenericJSONArrayCache
+              .initArrayCache(JSONArrayKeyMultiID.getKeyName(VALUES), CACHE_VALUE)
+          })
+
+          after(async () => {
+            await GenericJSONCacheMock
+              .delete(JSONArrayKeyMultiID.getKeyName(VALUES))
+          })
+
+          it('should return the cached object', async () => {
+            const result = await JSONArrayKeyMultiID
+              .getCache(VALUES)
+
+            expect(result).to.eql([CACHE_VALUE])
+          })
+        })
+
+        context('when there is no value cached', () => {
+          it('should return null', async () => {
+            const result = await JSONArrayKeyMultiID
+              .getCache(VALUES)
+
+            expect(result).to.be.null
+          })
+        })
+      })
+    })
   })
 
   describe('.get', () => {
@@ -1123,6 +1212,72 @@ describe('GenericRedisCache', () => {
           })
 
           after(() => SpyMock.restoreAll())
+
+          it('should return the response', () => {
+            expect(redisResponse).to.not.null
+          })
+        })
+      })
+
+      context('when the key is `JSON_ARRAY`', () => {
+        const KEY_NAME = JSONArrayKeySingleID.getKeyName(VALUE)
+        const CACHE_VALUE = {
+          id: VALUE
+        }
+
+        let redisResponse
+
+        context('and `key` is passed', () => {
+          before(async () => {
+            redisResponse = await JSONArrayKeySingleID
+              .setCache(VALUE, CACHE_VALUE)
+          })
+
+          after(async () => {
+            await GenericJSONCacheMock
+              .delete(KEY_NAME)
+          })
+
+          it('should return the response', () => {
+            expect(redisResponse).to.not.null
+          })
+
+          it('should set the value to cache when executing the response', async () => {
+            await redisResponse.execAsync()
+
+            const cachedValue = await JSONArrayKeySingleID
+              .getCache(VALUE)
+
+            expect(cachedValue).to.eql([CACHE_VALUE])
+          })
+        })
+
+        context('and  a null `key` is passed', () => {
+          before(async () => {
+            redisResponse = await JSONArrayKeySingleID
+              .setCache(null, CACHE_VALUE)
+          })
+
+          after(async () => {
+            await GenericJSONCacheMock
+              .delete(JSONArrayKeySingleID.getKeyName(VALUE))
+          })
+
+          it('should return the response', () => {
+            expect(redisResponse).to.not.null
+          })
+        })
+
+        context('and an undefined `key` is passed', () => {
+          before(async () => {
+            redisResponse = await JSONArrayKeySingleID
+              .setCache(undefined, CACHE_VALUE)
+          })
+
+          after(async () => {
+            await GenericJSONCacheMock
+              .delete(JSONKeySingleID.getKeyName(VALUE))
+          })
 
           it('should return the response', () => {
             expect(redisResponse).to.not.null
@@ -1686,6 +1841,33 @@ describe('GenericRedisCache', () => {
           expect(cachedValues.length).to.eql(OBJECTS.length)
         })
       })
+
+      context('and the key is `JSON_ARRAY`', () => {
+        const ID_ATTRS = JSONArrayKeySingleID.getIdAttrs(OBJECTS)
+        let keyNames
+
+        before(async () => {
+          keyNames = await JSONArrayKeySingleID
+            .getKeyNames(ID_ATTRS)
+
+          for (let i = 0; i < OBJECTS.length; i++) {
+            await redis
+              .json_setAsync(keyNames[i], '.', JSON.stringify([OBJECTS[i]]))
+          }
+        })
+
+        after(async () => {
+          await GenericJSONCacheMock
+            .delete(keyNames)
+        })
+
+        it('should return the cached values', async () => {
+          const cachedValues = await JSONArrayKeySingleID
+            .getListCache(ID_ATTRS)
+
+          expect(cachedValues.length).to.eql(OBJECTS.length)
+        })
+      })
     })
 
     context('when there are no cached values', () => {
@@ -1708,6 +1890,15 @@ describe('GenericRedisCache', () => {
       context('and the key is `STRING`', () => {
         it('should return an empty array', async () => {
           const cachedValues = await STRINGKeySingleID.getListCache(['00000', '99999'])
+
+          expect(cachedValues).to.eql([])
+        })
+      })
+
+      context('and the key is `JSON_ARRAY`', () => {
+        it('should return an empty array', async () => {
+          const cachedValues = await JSONArrayKeySingleID
+            .getListCache(['00000', '99999'])
 
           expect(cachedValues).to.eql([])
         })
@@ -2403,6 +2594,50 @@ describe('GenericRedisCache', () => {
         })
       })
     })
+
+    context('when the key is `JSON_ARRAY`', () => {
+      context('and the are cached values', () => {
+        const OBJECTS = GenericRedisCacheMock.getObjectMocks()
+        const ID_ATTRS = JSONArrayKeySingleID.getIdAttrs(OBJECTS)
+
+        let keyNames
+
+        before(async () => {
+          keyNames = await JSONArrayKeySingleID
+            .getKeyNames(ID_ATTRS)
+
+          for (let i = 0; i < OBJECTS.length; i++) {
+            await redis
+              .json_setAsync(keyNames[i], '.', JSON.stringify([OBJECTS[i]]))
+          }
+        })
+
+        context('and `keys` is not passed', () => {
+          it('should return `0`', async () => {
+            const response = await JSONArrayKeySingleID
+              .delete()
+
+            expect(response).to.be.null
+          })
+        })
+
+        context('and `keys` is passed', () => {
+          it('should return the number of deletes keys', async () => {
+            const response = await JSONArrayKeySingleID
+              .delete(ID_ATTRS)
+
+            expect(response).to.eql(OBJECTS)
+          })
+
+          it('should delete the keys from cache', async () => {
+            const response = await GenericJSONArrayCache
+              .getListCache(keyNames)
+
+            expect(response).to.eql([])
+          })
+        })
+      })
+    })
   })
 
   describe('.isCached', () => {
@@ -2536,6 +2771,92 @@ describe('GenericRedisCache', () => {
           const result = await STRINGKeySingleID.isCached(VALUE)
 
           expect(result).to.eql(false)
+        })
+      })
+    })
+
+    context('when the key is `JSON_ARRAY`', () => {
+      context('and the key has one `ID`', () => {
+        const VALUE = 1
+        const CACHE_VALUE = { teste: VALUE }
+
+        context('when there is value cached', () => {
+          before(async () => {
+            await GenericJSONArrayCache
+              .initArrayCache(JSONArrayKeySingleID.getKeyName(VALUE), CACHE_VALUE)
+          })
+
+          after(async () => {
+            await GenericJSONCacheMock
+              .delete(JSONArrayKeySingleID.getKeyName(VALUE))
+          })
+
+          context('and a `key` is passed', () => {
+            it('should return `true`', async () => {
+              const result = await JSONArrayKeySingleID
+                .isCached(VALUE)
+
+              expect(result).to.eql(true)
+            })
+          })
+
+          context('and a `key` is not passed', () => {
+            it('should return `false`', async () => {
+              const result = await JSONArrayKeySingleID
+                .isCached()
+
+              expect(result).to.eql(false)
+            })
+          })
+
+        })
+
+        context('when there is no value cached', () => {
+          it('should return null', async () => {
+            const result = await JSONArrayKeySingleID
+              .isCached(VALUE)
+
+            expect(result).to.eql(false)
+          })
+        })
+      })
+
+      context('and the key has more than one `ID`', () => {
+        const VALUES = {
+          object_id: Math.floor((Math.random() * 50) + 1),
+          second_id: Math.floor((Math.random() * 50) + 1),
+          third_id: Math.floor((Math.random() * 50) + 1)
+        }
+
+        const CACHE_VALUE = { x: 1 }
+
+        context('when there value cached', () => {
+          before(async () => {
+            await GenericJSONArrayCache
+              .initArrayCache(JSONArrayKeyMultiID.getKeyName(VALUES), CACHE_VALUE)
+          })
+
+          after(async () => {
+            await GenericJSONCacheMock
+              .delete(JSONArrayKeyMultiID.getKeyName(VALUES))
+          })
+
+
+          it('should return `true`', async () => {
+            const result = await JSONArrayKeyMultiID
+              .isCached(VALUES)
+
+            expect(result).to.eql(true)
+          })
+        })
+
+        context('when there is no value cached', () => {
+          it('should return false', async () => {
+            const result = await JSONArrayKeyMultiID
+              .isCached(VALUES)
+
+            expect(result).to.eql(false)
+          })
         })
       })
     })
