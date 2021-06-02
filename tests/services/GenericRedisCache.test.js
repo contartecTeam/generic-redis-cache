@@ -2159,7 +2159,7 @@ describe('GenericRedisCache', () => {
         })
 
         context('and the values are arrays of `strings`', () => {
-          const VALUE_LENGTH = 4
+          const VALUE_LENGTH = 3
 
           before(async () => {
             keyNames = await STRINGKeySingleID.getKeyNames(ID_ATTRS)
