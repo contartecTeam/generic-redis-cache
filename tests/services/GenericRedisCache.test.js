@@ -1248,7 +1248,7 @@ describe('GenericRedisCache', () => {
             const cachedValue = await JSONArrayKeySingleID
               .getCache(VALUE)
 
-            expect(cachedValue).to.eql([CACHE_VALUE])
+            expect(cachedValue).to.eql(CACHE_VALUE)
           })
         })
 
@@ -1283,6 +1283,137 @@ describe('GenericRedisCache', () => {
             expect(redisResponse).to.not.null
           })
         })
+      })
+    })
+  })
+
+  describe('.addCache', () => {
+    const VALUE = 1
+    const CACHE_VALUE = { id: VALUE }
+
+    context('when the key is `JSON_ARRAY`', () => {
+      const KEY_NAME = JSONArrayKeySingleID.getKeyName(VALUE)
+
+      let redisResponse
+
+      context('and `key` is passed', () => {
+        context('and `position` is passed', () => {
+          const POSITION = 0
+
+          before(async () => {
+            const value = [{ id: 42 }]
+
+            await redis
+              .json_setAsync(KEY_NAME, '.', JSON.stringify(value))
+
+            redisResponse = await JSONArrayKeySingleID
+              .addCache(VALUE, CACHE_VALUE, POSITION)
+          })
+
+          after(async () => {
+            await GenericJSONCacheMock
+              .delete(KEY_NAME)
+          })
+
+          it('should return the response', async () => {
+            const response = await redisResponse.execAsync()
+
+            expect(response).to.not.null
+          })
+
+          it('should set the value to cache at the position passed', async () => {
+            await redisResponse.execAsync()
+
+            const cachedValue = await JSONArrayKeySingleID
+              .getCache(VALUE)
+
+            expect(cachedValue[POSITION]).to.eql(CACHE_VALUE)
+          })
+        })
+
+        context('and `position` is not passed', () => {
+          before(async () => {
+            const value = [{ id: 42 }]
+
+            await redis
+              .json_setAsync(KEY_NAME, '.', JSON.stringify(value))
+
+            redisResponse = await JSONArrayKeySingleID
+              .addCache(VALUE, CACHE_VALUE)
+          })
+
+          after(async () => {
+            await GenericJSONCacheMock
+              .delete(KEY_NAME)
+          })
+
+          it('should return the response', async () => {
+            const response = await redisResponse.execAsync()
+
+            expect(response).to.not.null
+          })
+
+          it('should set the value to cache after the last element', async () => {
+            await redisResponse.execAsync()
+
+            const cachedValue = await JSONArrayKeySingleID
+              .getCache(VALUE)
+
+            const last = cachedValue.length - 1
+
+            expect(cachedValue[last]).to.eql(CACHE_VALUE)
+          })
+        })
+      })
+
+      context('and  a null `key` is passed', () => {
+        before(async () => {
+          redisResponse = await JSONArrayKeySingleID
+            .addCache(null, CACHE_VALUE)
+        })
+
+        after(async () => {
+          await GenericJSONCacheMock
+            .delete(JSONArrayKeySingleID.getKeyName(VALUE))
+        })
+
+        it('should return the response', () => {
+          expect(redisResponse).to.not.null
+        })
+      })
+
+      context('and an undefined `key` is passed', () => {
+        before(async () => {
+          redisResponse = await JSONArrayKeySingleID
+            .addCache(undefined, CACHE_VALUE)
+        })
+
+        after(async () => {
+          await GenericJSONCacheMock
+            .delete(JSONArrayKeySingleID.getKeyName(VALUE))
+        })
+
+        it('should return the response', () => {
+          expect(redisResponse).to.not.null
+        })
+      })
+    })
+
+    context('when the key is not `JSON_ARRAY`', () => {
+      let redisResponse
+
+      before(async () => {
+        redisResponse = await JSONKeySingleID
+          .addCache(undefined, CACHE_VALUE)
+      })
+
+      after(async () => {
+        await GenericJSONCacheMock
+          .delete(JSONArrayKeySingleID.getKeyName(VALUE))
+      })
+
+      it('should return the response', () => {
+        expect(redisResponse).to.not.null
       })
     })
   })
