@@ -1315,15 +1315,11 @@ describe('GenericRedisCache', () => {
               .delete(KEY_NAME)
           })
 
-          it('should return the response', async () => {
-            const response = await redisResponse.execAsync()
-
-            expect(response).to.not.null
+          it('should return the new list size', () => {
+            expect(redisResponse).to.eql(2)
           })
 
           it('should set the value to cache at the position passed', async () => {
-            await redisResponse.execAsync()
-
             const cachedValue = await JSONArrayKeySingleID
               .getCache(VALUE)
 
@@ -1347,15 +1343,11 @@ describe('GenericRedisCache', () => {
               .delete(KEY_NAME)
           })
 
-          it('should return the response', async () => {
-            const response = await redisResponse.execAsync()
-
-            expect(response).to.not.null
+          it('should return the new list size', () => {
+            expect(redisResponse).to.eql(2)
           })
 
           it('should set the value to cache after the last element', async () => {
-            await redisResponse.execAsync()
-
             const cachedValue = await JSONArrayKeySingleID
               .getCache(VALUE)
 
@@ -1374,11 +1366,18 @@ describe('GenericRedisCache', () => {
 
         after(async () => {
           await GenericJSONCacheMock
-            .delete(JSONArrayKeySingleID.getKeyName(VALUE))
+            .delete(JSONArrayKeySingleID.getKeyName(null))
         })
 
-        it('should return the response', () => {
-          expect(redisResponse).to.not.null
+        it('should return the new list size', () => {
+          expect(redisResponse).to.eql(1)
+        })
+
+        it('should add the value to cache', async () => {
+          const cachedValue = await JSONArrayKeySingleID
+            .getCache(null)
+
+          expect(cachedValue).to.eql([CACHE_VALUE])
         })
       })
 
@@ -1390,11 +1389,18 @@ describe('GenericRedisCache', () => {
 
         after(async () => {
           await GenericJSONCacheMock
-            .delete(JSONArrayKeySingleID.getKeyName(VALUE))
+            .delete(JSONArrayKeySingleID.getKeyName(undefined))
         })
 
-        it('should return the response', () => {
-          expect(redisResponse).to.not.null
+        it('should return the new list size', () => {
+          expect(redisResponse).to.eql(1)
+        })
+
+        it('should add the value to cache', async () => {
+          const cachedValue = await JSONArrayKeySingleID
+            .getCache(undefined)
+
+          expect(cachedValue).to.eql([CACHE_VALUE])
         })
       })
     })
@@ -1413,7 +1419,7 @@ describe('GenericRedisCache', () => {
       })
 
       it('should return the response', () => {
-        expect(redisResponse).to.not.null
+        expect(redisResponse).to.be.null
       })
     })
   })
@@ -1503,9 +1509,10 @@ describe('GenericRedisCache', () => {
             })
 
             after(async () => {
-              await JSONKeyMultiID.delete(STRING_KEY)
-
               SpyMock.restoreAll()
+
+              await JSONKeySingleID
+                .delete(STRING_KEY)
             })
 
             it('shpuld return the cache value', () => {
@@ -1590,6 +1597,285 @@ describe('GenericRedisCache', () => {
 
       it('should not call `setCache`', () => {
         expect(spies.setCache).to.not.have.been.calledOnce
+      })
+    })
+  })
+
+  describe('.add', () => {
+    context('when `key` is not `null`', () => {
+      context('when `key` is an `Object`', () => {
+        const OBJECT_KEY = {
+          id: 1,
+          attr1: 'teste'
+        }
+
+        context('and `value` is passed', () => {
+          const VALUE = { teste: 1 }
+          const KEY_NAME = JSONArrayKeySingleID.getKeyName(OBJECT_KEY)
+
+          let spies, redisResponse
+
+          context('and `position` is passed', () => {
+            const POSITION = 0
+
+            before(async () => {
+              spies = {
+                onSave: SpyMock
+                  .addReturnSpy(JSONArrayKeySingleID, 'onSave')
+              }
+
+              const value = { teste : 42}
+
+              await redis
+                .json_setAsync(KEY_NAME, '.', JSON.stringify([value]))
+
+              redisResponse = await JSONArrayKeySingleID
+                .add(OBJECT_KEY, VALUE, POSITION)
+            })
+
+            after(async () => {
+              await GenericJSONCacheMock
+                .delete(KEY_NAME)
+              
+              SpyMock.restoreAll()
+            })
+
+            it('should call `onSave`', () => {
+              expect(spies.onSave).have.been.calledOnce
+            })
+
+            it('should return the new list size', () => {
+              expect(redisResponse).to.eql(2)
+            })
+
+            it('should set the `value` on cache at position', async () => {
+              const cacheValue = await JSONArrayKeySingleID
+                .getCache(OBJECT_KEY.id)
+
+              expect(cacheValue[POSITION]).to.eql(VALUE)
+            })
+          })
+
+          context('and `position` is not passed', () => {
+            before(async () => {
+              spies = {
+                onSave: SpyMock
+                  .addReturnSpy(JSONArrayKeySingleID, 'onSave')
+              }
+
+              const value = { teste : 42}
+
+              await redis
+                .json_setAsync(KEY_NAME, '.', JSON.stringify([value]))
+
+              redisResponse = await JSONArrayKeySingleID
+                .add(OBJECT_KEY, VALUE)
+            })
+
+            after(async () => {
+              await GenericJSONCacheMock
+                .delete(KEY_NAME)
+              
+              SpyMock.restoreAll()
+            })
+
+            it('should call `onSave`', () => {
+              expect(spies.onSave).have.been.calledOnce
+            })
+
+            it('should return the new list size', () => {
+              expect(redisResponse).to.eql(2)
+            })
+
+            it('should set the `value` on cache after the last element', async () => {
+              const cacheValue = await JSONArrayKeySingleID
+                .getCache(OBJECT_KEY.id)
+
+              const last = cacheValue.length - 1
+
+              expect(cacheValue[last]).to.eql(VALUE)
+            })
+          })
+        })
+
+        context('and `value` is `undefined`', () => {
+          let spies, redisResponse
+
+          context('and `key` has id attrs', () => {
+            before(async () => {
+              spies = {
+                onSave: SpyMock
+                  .addReturnSpy(JSONArrayKeySingleID, 'onSave')
+              }
+
+              redisResponse = await JSONArrayKeySingleID
+                .add(OBJECT_KEY)
+            })
+
+            after(async () => {
+              await GenericJSONCacheMock
+                .delete(JSONArrayKeySingleID.getKeyName(OBJECT_KEY))
+              
+              SpyMock.restoreAll()
+            })
+
+            it('should call `onSave`', () => {
+              expect(spies.onSave).have.been.calledOnce
+            })
+
+            it('should return the new list size', () => {
+              expect(redisResponse).to.eql(1)
+            })
+
+            it('should set the `key` on cache', async () => {
+              const cacheValue = await JSONArrayKeySingleID
+                .getCache(OBJECT_KEY.id)
+
+              expect(cacheValue).to.eql([OBJECT_KEY])
+            })
+          })
+
+          context('and `key` has no id attrs', () => {
+            before(async () => {
+              spies = {
+                addCache: SpyMock
+                  .addReturnSpy(JSONArrayKeySingleID, 'addCache'),
+
+                getIdAttr: SpyMock
+                  .addReturnSpy(JSONArrayKeySingleID, '_getIdAttr', null)
+              }
+
+              redisResponse = await JSONArrayKeySingleID
+                .add(OBJECT_KEY)
+            })
+
+            after(() => SpyMock.restoreAll())
+
+            it('should call `_getIdAttr`', () => {
+              expect(spies.getIdAttr).have.been.called
+            })
+
+            it('should not call `addCache`', () => {
+              expect(spies.addCache).not.have.been.calledOnce
+            })
+
+            it('should return `null`', () => {
+              expect(redisResponse).to.not.exist
+            })
+          })
+        })
+      })
+
+      context('when `key` is a `string`', () => {
+        context('when `value` is `undefined`', () => {
+          context('when `getDB` return is not `null`', () => {
+            const STRING_KEY = 'teste'
+            const OBJECT_DB = { id: STRING_KEY }
+
+            let redisResponse
+
+            before(async () => {
+              SpyMock
+                .addReturnSpy(JSONArrayKeySingleID, 'getDB', OBJECT_DB)
+
+              redisResponse = await JSONArrayKeySingleID
+                .add(STRING_KEY)
+            })
+
+            after(async () => {
+              await GenericJSONCacheMock
+                .delete(STRING_KEY)
+              
+              SpyMock.restoreAll()
+            })
+
+            it('should return the new list size', () => {
+              expect(redisResponse).to.eql(1)
+            })
+
+            it('should set the `key` on cache', async () => {
+              const cacheValue = await JSONArrayKeySingleID
+                .getCache(STRING_KEY)
+
+              expect(cacheValue).to.eql([OBJECT_DB])
+            })
+          })
+
+          context('when `getDB` return is `null`', () => {
+            const STRING_KEY = 'teste2'
+
+            let redisResponse
+
+            before(async () => {
+              SpyMock
+                .addReturnSpy(JSONArrayKeySingleID, 'getDB', null)
+
+              redisResponse = await JSONArrayKeySingleID
+                .add(STRING_KEY)
+            })
+
+            after(() => SpyMock.restoreAll())
+
+            it('shpuld return `null`', () => {
+              expect(redisResponse).to.not.exist
+            })
+
+            it('should not add the `key` on cache', async () => {
+              const cacheValue = await JSONArrayKeySingleID
+                .getCache(STRING_KEY)
+
+              expect(cacheValue).to.not.exist
+            })
+          })
+        })
+
+        context('when `value` is `null`', () => {
+          const STRING_KEY = 'teste3'
+          const VALUE = null
+
+          let redisResponse
+
+          before(async () => {
+            redisResponse = await JSONArrayKeySingleID
+              .add(STRING_KEY, VALUE)
+          })
+
+          after(async () => {
+            await JSONArrayKeySingleID
+              .delete(STRING_KEY)
+          })
+
+          it('should return `null`', () => {
+            expect(redisResponse).to.eql(VALUE)
+          })
+
+          it('should not add the `key` on cache', async () => {
+            const cacheValue = await JSONArrayKeySingleID
+              .getCache(STRING_KEY)
+
+            expect(cacheValue).not.to.exist
+          })
+        })
+      })
+    })
+
+    context('when `key` is `null`', () => {
+      let spies
+
+      before(() => {
+        spies = {
+          addCache: SpyMock
+            .addReturnSpy(JSONArrayKeySingleID, 'addCache')
+        }
+
+        JSONArrayKeySingleID
+          .add()
+      })
+
+      after(() => SpyMock.restoreAll())
+
+      it('should not call `addCache`', () => {
+        expect(spies.addCache).to.not.have.been.calledOnce
       })
     })
   })
