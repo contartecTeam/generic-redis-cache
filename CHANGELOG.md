@@ -1,3 +1,10 @@
+## 1.4.1 (2021-06-09)
+
+
+### Bug Fixes
+
+* [`GenericRedisCache`] `.delete` não remove valores `null`
+
 ## 1.4.0 (2021-05-07)
 
 
