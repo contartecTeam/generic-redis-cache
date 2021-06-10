@@ -1,5 +1,7 @@
 'use strict'
 
+const faker = require('faker')
+
 const GenericRedisCache = rewire('../lib/services/GenericRedisCache')
 
 const GenericRedisCacheMock = require('../mocks/GenericRedisCacheMock')
@@ -8,7 +10,6 @@ const GenericJSONCache = require('../../lib/services/types/GenericJSONCache')
 const GenericJSONCacheMock = require('../mocks/GenericJSONCacheMock')
 const GenericHASHCache = require('../../lib/services/types/GenericHASHCache')
 const GenericSTRINGCache = require('../../lib/services/types/GenericSTRINGCache')
-
 const GenericJSONArrayCache = require('../../lib/services/types/GenericJSONArrayCache')
 
 const JSONKeySingleID = require('../cache/JSON/JSONKeySingleID')
@@ -30,7 +31,7 @@ const STRINGKeySingleID = require('../cache/STRING/STRINGKeySingleID')
 const SpyMock = require('@contartec-team/spy-mock/lib/SpyMock')
 const { expect } = require('chai')
 
-describe('GenericRedisCache', () => {
+describe.only('GenericRedisCache', () => {
   before(function*() {
     yield clear_database()
   })
@@ -907,9 +908,9 @@ describe('GenericRedisCache', () => {
 
       context('and the key has more than one `ID`', () => {
         const VALUES = {
-          object_id: Math.floor((Math.random() * 50) + 1),
-          second_id: Math.floor((Math.random() * 50) + 1),
-          third_id: Math.floor((Math.random() * 50) + 1)
+          object_id: Math.floor(faker.datatype.number(50) + 1),
+          second_id: Math.floor(faker.datatype.number(50) + 1),
+          third_id: Math.floor(faker.datatype.number(50) + 1)
         }
 
         const CACHE_VALUE = { x: 1 }
@@ -1055,9 +1056,10 @@ describe('GenericRedisCache', () => {
           })
 
           after(async () => {
-            await GenericJSONCacheMock.delete(KEY_NAME)
-
             SpyMock.restoreAll()
+
+            await GenericJSONCacheMock
+              .delete(KEY_NAME)
           })
 
           it('should return the response', () => {
@@ -1095,9 +1097,10 @@ describe('GenericRedisCache', () => {
           })
 
           after(async () => {
-            await GenericJSONCacheMock.delete(JSONKeySingleID.getKeyName(VALUE))
-
             SpyMock.restoreAll()
+
+            await GenericJSONCacheMock
+              .delete(JSONKeySingleID.getKeyName(VALUE))
           })
 
           it('should return the response', () => {
@@ -1634,10 +1637,10 @@ describe('GenericRedisCache', () => {
             })
 
             after(async () => {
+              SpyMock.restoreAll()
+
               await GenericJSONCacheMock
                 .delete(KEY_NAME)
-              
-              SpyMock.restoreAll()
             })
 
             it('should call `onSave`', () => {
@@ -1970,9 +1973,10 @@ describe('GenericRedisCache', () => {
         })
 
         it('should save the objects to cache', async () => {
-          const cachedValues = await GenericJSONCache.getListCache(keyNames)
+          const cachedValue = await GenericJSONCache
+            .getListCache(keyNames)
 
-          expect(cachedValues.length).to.eql(OBJECTS.length)
+          expect(cachedValue.length).to.eql(OBJECTS.length)
         })
       })
     })
@@ -3240,9 +3244,9 @@ describe('GenericRedisCache', () => {
 
       context('and the key has more than one `ID`', () => {
         const VALUES = {
-          object_id: Math.floor((Math.random() * 50) + 1),
-          second_id: Math.floor((Math.random() * 50) + 1),
-          third_id: Math.floor((Math.random() * 50) + 1)
+          object_id: Math.floor(faker.datatype.number(50) + 1),
+          second_id: Math.floor(faker.datatype.number(50) + 1),
+          third_id: Math.floor(faker.datatype.number(50)+ 1)
         }
 
         const CACHE_VALUE = { x: 1 }
