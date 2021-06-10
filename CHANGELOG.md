@@ -1,3 +1,10 @@
+## 1.5.0 (2021-06-10)
+
+
+### Features
+
+* [`GenericJSONArrayCache`] Add classe base para `JSON array`
+
 ## 1.4.0 (2021-05-07)
 
 
