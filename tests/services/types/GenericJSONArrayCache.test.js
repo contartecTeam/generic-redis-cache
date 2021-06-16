@@ -21,7 +21,7 @@ describe('GenericJSONArrayCache', () => {
 
           before(async () => {
             await GenericJSONArrayCache
-              .initArrayCache(keyName)
+              .initArrayCache(keyName, { teste : 42 })
 
             spies = {
               _addCache : SpyMock
@@ -83,8 +83,8 @@ describe('GenericJSONArrayCache', () => {
 
         before(async () => {
           spies = {
-            isCached : SpyMock
-              .addReturnSpy(GenericJSONArrayCache, 'isCached')
+            initArrayCache : SpyMock
+              .addReturnSpy(GenericJSONArrayCache, 'initArrayCache', 0)
           }
 
           result = result = await GenericJSONArrayCache
@@ -97,8 +97,8 @@ describe('GenericJSONArrayCache', () => {
           expect(result).to.eql(0)
         })
 
-        it('should not call `isCached`', () => {
-          expect(spies.isCached).not.to.have.been.called
+        it('should not call `initArrayCache`', () => {
+          expect(spies.initArrayCache).to.have.been.called
         })
       })
     })
