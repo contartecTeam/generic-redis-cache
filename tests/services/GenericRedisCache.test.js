@@ -31,7 +31,7 @@ const STRINGKeySingleID = require('../cache/STRING/STRINGKeySingleID')
 const SpyMock = require('@contartec-team/spy-mock/lib/SpyMock')
 const { expect } = require('chai')
 
-describe.only('GenericRedisCache', () => {
+describe('GenericRedisCache', () => {
   before(function*() {
     yield clear_database()
   })
@@ -968,71 +968,148 @@ describe.only('GenericRedisCache', () => {
       })
     })
 
-    context('when threre is no cached value', () => {
-      let spies, response
+    context('when there is no cached value', () => {
+      context('and the key is `JSON_ARRAY`', () => {
+        let spies, response
 
-      const VALUE = 1
-      const OBJECT = {
-        id  : VALUE,
-        name: `Name: ${VALUE}`
-      }
-      const KEY_NAME = JSONKeySingleID.getKeyName(VALUE)
+        const VALUE = 1
+        const OBJECT = {
+          id  : VALUE,
+          name: `Name: ${VALUE}`
+        }
+        const KEY_NAME = JSONArrayKeySingleID.getKeyName(VALUE)
 
-      context('and `getDB` returns an object', () => {
-        before(async () => {
-          spies = {
-            getCache  :  SpyMock
-              .addReturnSpy(JSONKeySingleID, 'getCache', null),
+        context('and `getDB` returns an object', () => {
+          before(async () => {
+            spies = {
+              getCache  :  SpyMock
+                .addReturnSpy(JSONArrayKeySingleID, 'getCache', null),
 
-            getDB     : SpyMock
-              .addReturnSpy(JSONKeySingleID, 'getDB', OBJECT)
-          }
+              getDB     : SpyMock
+                .addReturnSpy(JSONArrayKeySingleID, 'getDB', OBJECT)
+            }
 
-          response = await JSONKeySingleID.get(VALUE)
+            response = await JSONArrayKeySingleID.get(VALUE)
+          })
+
+          after(async () => {
+            await GenericJSONCacheMock.delete(KEY_NAME)
+
+            SpyMock.restoreAll()
+          })
+
+          it('should call `getDB`', () => {
+            expect(spies.getDB).have.been.calledOnce
+          })
+
+          it('should return the object', () => {
+            expect(response).to.eql(OBJECT)
+          })
+
+          it('should save the object on cache', async () => {
+            const cachedObject = await JSONArrayKeySingleID.get(VALUE)
+
+            expect(cachedObject).to.eql(OBJECT)
+          })
         })
 
-        after(async () => {
-          await GenericJSONCacheMock.delete(KEY_NAME)
+        context('and `getDB` returns null', () => {
+          before(async () => {
+            spies = {
+              getCache  : SpyMock
+                .addReturnSpy(JSONArrayKeySingleID, 'getCache', null),
 
-          SpyMock.restoreAll()
-        })
+              getDB     : SpyMock
+                .addReturnSpy(JSONArrayKeySingleID, 'getDB', null),
+            }
 
-        it('should call `getDB`', () => {
-          expect(spies.getDB).have.been.calledOnce
-        })
+            response = await JSONArrayKeySingleID.get(VALUE)
+          })
 
-        it('should return the object', () => {
-          expect(response).to.eql(OBJECT)
-        })
+          after(() => SpyMock.restoreAll())
 
-        it('should save the object on cache', async () => {
-          const cachedObject = await JSONKeySingleID.get(VALUE)
+          it('should call `getDB`', () => {
+            expect(spies.getDB).have.been.calledOnce
+          })
 
-          expect(cachedObject).to.eql(OBJECT)
+          it('should return an empty array', () => {
+            expect(response).to.eql([])
+          })
+
+          it('should save an empty array on cache', async () => {
+            const cachedObject = await JSONArrayKeySingleID.get(VALUE)
+
+            expect(cachedObject).to.eql([])
+          })
         })
       })
 
-      context('and `getDB` returns null', () => {
-        before(async () => {
-          spies = {
-            getCache  : SpyMock
-              .addReturnSpy(JSONKeySingleID, 'getCache', null),
+      context('and the key is not `JSON_ARRAY`', () => {
+        let spies, response
 
-            getDB     : SpyMock
-              .addReturnSpy(JSONKeySingleID, 'getDB', null),
-          }
+        const VALUE = 1
+        const OBJECT = {
+          id  : VALUE,
+          name: `Name: ${VALUE}`
+        }
+        const KEY_NAME = JSONKeySingleID.getKeyName(VALUE)
 
-          response = await JSONKeySingleID.get(VALUE)
+        context('and `getDB` returns an object', () => {
+          before(async () => {
+            spies = {
+              getCache  :  SpyMock
+                .addReturnSpy(JSONKeySingleID, 'getCache', null),
+
+              getDB     : SpyMock
+                .addReturnSpy(JSONKeySingleID, 'getDB', OBJECT)
+            }
+
+            response = await JSONKeySingleID.get(VALUE)
+          })
+
+          after(async () => {
+            await GenericJSONCacheMock.delete(KEY_NAME)
+
+            SpyMock.restoreAll()
+          })
+
+          it('should call `getDB`', () => {
+            expect(spies.getDB).have.been.calledOnce
+          })
+
+          it('should return the object', () => {
+            expect(response).to.eql(OBJECT)
+          })
+
+          it('should save the object on cache', async () => {
+            const cachedObject = await JSONKeySingleID.get(VALUE)
+
+            expect(cachedObject).to.eql(OBJECT)
+          })
         })
 
-        after(() => SpyMock.restoreAll())
+        context('and `getDB` returns null', () => {
+          before(async () => {
+            spies = {
+              getCache  : SpyMock
+                .addReturnSpy(JSONKeySingleID, 'getCache', null),
 
-        it('should call `getDB`', () => {
-          expect(spies.getDB).have.been.calledOnce
-        })
+              getDB     : SpyMock
+                .addReturnSpy(JSONKeySingleID, 'getDB', null),
+            }
 
-        it('should return null', () => {
-          expect(response).to.be.null
+            response = await JSONKeySingleID.get(VALUE)
+          })
+
+          after(() => SpyMock.restoreAll())
+
+          it('should call `getDB`', () => {
+            expect(spies.getDB).have.been.calledOnce
+          })
+
+          it('should return null', () => {
+            expect(response).to.be.null
+          })
         })
       })
     })
@@ -1300,45 +1377,72 @@ describe.only('GenericRedisCache', () => {
       let redisResponse
 
       context('and `key` is passed', () => {
-        context('and `position` is passed', () => {
-          const POSITION = 0
+        context('and `value` is passed', () => {
+          context('and `position` is passed', () => {
+            const POSITION = 0
 
-          before(async () => {
-            const value = [{ id: 42 }]
+            before(async () => {
+              const value = [{ id: 42 }]
 
-            await redis
-              .json_setAsync(KEY_NAME, '.', JSON.stringify(value))
+              await redis
+                .json_setAsync(KEY_NAME, '.', JSON.stringify(value))
 
-            redisResponse = await JSONArrayKeySingleID
-              .addCache(VALUE, CACHE_VALUE, POSITION)
+              redisResponse = await JSONArrayKeySingleID
+                .addCache(VALUE, CACHE_VALUE, POSITION)
+            })
+
+            after(async () => {
+              await GenericJSONCacheMock
+                .delete(KEY_NAME)
+            })
+
+            it('should return the new list size', () => {
+              expect(redisResponse).to.eql(2)
+            })
+
+            it('should set the value to cache at the position passed', async () => {
+              const cachedValue = await JSONArrayKeySingleID
+                .getCache(VALUE)
+
+              expect(cachedValue[POSITION]).to.eql(CACHE_VALUE)
+            })
           })
 
-          after(async () => {
-            await GenericJSONCacheMock
-              .delete(KEY_NAME)
-          })
+          context('and `position` is not passed', () => {
+            before(async () => {
+              const value = [{ id: 42 }]
 
-          it('should return the new list size', () => {
-            expect(redisResponse).to.eql(2)
-          })
+              await redis
+                .json_setAsync(KEY_NAME, '.', JSON.stringify(value))
 
-          it('should set the value to cache at the position passed', async () => {
-            const cachedValue = await JSONArrayKeySingleID
-              .getCache(VALUE)
+              redisResponse = await JSONArrayKeySingleID
+                .addCache(VALUE, CACHE_VALUE)
+            })
 
-            expect(cachedValue[POSITION]).to.eql(CACHE_VALUE)
+            after(async () => {
+              await GenericJSONCacheMock
+                .delete(KEY_NAME)
+            })
+
+            it('should return the new list size', () => {
+              expect(redisResponse).to.eql(2)
+            })
+
+            it('should set the value to cache after the last element', async () => {
+              const cachedValue = await JSONArrayKeySingleID
+                .getCache(VALUE)
+
+              const last = cachedValue.length - 1
+
+              expect(cachedValue[last]).to.eql(CACHE_VALUE)
+            })
           })
         })
 
-        context('and `position` is not passed', () => {
+        context('and `value` is not passed', () => {
           before(async () => {
-            const value = [{ id: 42 }]
-
-            await redis
-              .json_setAsync(KEY_NAME, '.', JSON.stringify(value))
-
             redisResponse = await JSONArrayKeySingleID
-              .addCache(VALUE, CACHE_VALUE)
+              .addCache(VALUE)
           })
 
           after(async () => {
@@ -1347,16 +1451,14 @@ describe.only('GenericRedisCache', () => {
           })
 
           it('should return the new list size', () => {
-            expect(redisResponse).to.eql(2)
+            expect(redisResponse).to.eql(0)
           })
 
-          it('should set the value to cache after the last element', async () => {
+          it('should set an empty list', async () => {
             const cachedValue = await JSONArrayKeySingleID
               .getCache(VALUE)
 
-            const last = cachedValue.length - 1
-
-            expect(cachedValue[last]).to.eql(CACHE_VALUE)
+            expect(cachedValue).to.eql([])
           })
         })
       })
@@ -1819,8 +1921,8 @@ describe.only('GenericRedisCache', () => {
 
             after(() => SpyMock.restoreAll())
 
-            it('shpuld return `null`', () => {
-              expect(redisResponse).to.not.exist
+            it('should return an empty list', () => {
+              expect(redisResponse).to.eql([])
             })
 
             it('should not add the `key` on cache', async () => {
@@ -1848,8 +1950,8 @@ describe.only('GenericRedisCache', () => {
               .delete(STRING_KEY)
           })
 
-          it('should return `null`', () => {
-            expect(redisResponse).to.eql(VALUE)
+          it('should return an empty list', () => {
+            expect(redisResponse).to.eql([])
           })
 
           it('should not add the `key` on cache', async () => {
