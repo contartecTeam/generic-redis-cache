@@ -1023,7 +1023,8 @@ describe('GenericRedisCache', () => {
                 .addReturnSpy(JSONArrayKeySingleID, 'getDB', null),
             }
 
-            response = await JSONArrayKeySingleID.get(VALUE)
+            response = await JSONArrayKeySingleID
+              .get(VALUE)
           })
 
           after(() => SpyMock.restoreAll())
@@ -1032,14 +1033,15 @@ describe('GenericRedisCache', () => {
             expect(spies.getDB).have.been.calledOnce
           })
 
-          it('should return an empty array', () => {
-            expect(response).to.eql([])
+          it('should return `null`', () => {
+            expect(response).to.be.null
           })
 
           it('should save an empty array on cache', async () => {
-            const cachedObject = await JSONArrayKeySingleID.get(VALUE)
+            const cachedObject = await redis
+              .json_getAsync(JSONArrayKeySingleID.getKeyName(VALUE))
 
-            expect(cachedObject).to.eql([])
+            expect(cachedObject).to.eql('[]')
           })
         })
       })
@@ -1906,7 +1908,7 @@ describe('GenericRedisCache', () => {
             })
           })
 
-          context('when `getDB` return is `null`', () => {
+          context('when `getDB` returns `null`', () => {
             const STRING_KEY = 'teste2'
 
             let redisResponse
@@ -1921,15 +1923,15 @@ describe('GenericRedisCache', () => {
 
             after(() => SpyMock.restoreAll())
 
-            it('should return an empty list', () => {
-              expect(redisResponse).to.eql([])
+            it('should return the list size', () => {
+              expect(redisResponse).to.eql(0)
             })
 
-            it('should not add the `key` on cache', async () => {
+            it('should set an empty list on cache', async () => {
               const cacheValue = await JSONArrayKeySingleID
                 .getCache(STRING_KEY)
 
-              expect(cacheValue).to.not.exist
+              expect(cacheValue).to.eql([])
             })
           })
         })
@@ -1950,15 +1952,15 @@ describe('GenericRedisCache', () => {
               .delete(STRING_KEY)
           })
 
-          it('should return an empty list', () => {
-            expect(redisResponse).to.eql([])
+          it('should return the list size', () => {
+            expect(redisResponse).to.eql(0)
           })
 
-          it('should not add the `key` on cache', async () => {
+          it('should set an empty array on cache', async () => {
             const cacheValue = await JSONArrayKeySingleID
               .getCache(STRING_KEY)
 
-            expect(cacheValue).not.to.exist
+            expect(cacheValue).to.eql([])
           })
         })
       })
