@@ -3165,6 +3165,150 @@ describe('GenericRedisCache', () => {
     })
   })
 
+  describe('.removeItem', () => {
+    context('when the key is `JSON_ARRAY`', () => {
+      context('and there are cached values', () => {
+        const ID = 42
+        const VALUE = [1,2,3,4]
+        const KEY_NAME = JSONArrayKeySingleID
+          .getKeyName(ID)
+
+        context('and `key` is passed', () => {
+          context('and `params` is passed', () => {
+            let response
+
+            before(async () => {
+              await redis
+                .json_setAsync(KEY_NAME, '.', JSON.stringify(VALUE))
+                
+              const params = {
+                start : 1,
+                stop  : 4
+              }
+
+              response = await JSONArrayKeySingleID
+                .removeItem(ID, params)
+            })
+
+            after(async () => {
+              await GenericJSONArrayCache
+                .delete(KEY_NAME)
+            })
+
+            it('should return the new list size',() => {
+              expect(response).to.eql(3)
+            })
+
+            it('should set new list on cache', async () => {
+              const cachedValue = await GenericJSONArrayCache
+                .getCache(KEY_NAME)
+              
+              const newValue = VALUE.slice(1,4)  
+
+              expect(cachedValue).to.eql(newValue)
+            })
+          })
+
+          context('and `params` is not passed', () => {
+            let response
+
+            before(async () => {
+              await redis
+                .json_setAsync(KEY_NAME, '.', JSON.stringify(VALUE))
+                
+              response = await JSONArrayKeySingleID
+                .removeItem(ID)
+            })
+
+            after(async () => {
+              await GenericJSONArrayCache
+                .delete(KEY_NAME)
+            })
+
+            it('should return the new list size',() => {
+              const size = VALUE.length - 1
+
+              expect(response).to.eql(size)
+            })
+
+            it('should set new list on cache', async () => {
+              const cachedValue = await GenericJSONArrayCache
+                .getCache(KEY_NAME)
+              
+              const newValue = VALUE.slice(1,4)  
+
+              expect(cachedValue).to.eql(newValue)
+            })
+          })
+        })
+
+        context('and `key` is not passed', () => {
+          let response
+
+          before(async () => {           
+            response = await JSONArrayKeySingleID
+              .removeItem()
+          })
+
+          it('should return `null`', () => {
+            expect(response).to.be.null
+          })
+        })
+      })
+
+      context('and there are no cached values', () => {
+        const ID = 42
+
+        let response
+
+        before(async () => {
+          const params = {
+            start : 1,
+            stop  : 4
+          }
+
+          response = await JSONArrayKeySingleID
+            .removeItem(ID, params)
+        })
+
+        it('should return `null`',() => {
+          expect(response).to.be.null
+        })
+      })
+    })
+
+    context('when the key is not `JSON_ARRAY`', () => {
+      const ID = 42
+      const VALUE = { test: ID }
+      const KEY_NAME = JSONKeySingleID
+        .getKeyName(ID)
+
+      let response
+
+      before(async () => {
+        await redis
+          .json_setAsync(KEY_NAME, '.', JSON.stringify(VALUE))
+          
+        const params = {
+          start : 1,
+          stop  : 4
+        }
+
+        response = await JSONKeySingleID
+          .removeItem(ID, params)
+      })
+
+      after(async () => {
+        await GenericJSONArrayCache
+          .delete(KEY_NAME)
+      })
+
+      it('should return `null`',() => {
+        expect(response).to.be.null
+      })
+    })
+  })
+
   describe('.isCached', () => {
     context('when the key is `JSON`', () => {
       context('and the key has one `ID`', () => {
