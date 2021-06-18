@@ -2,125 +2,85 @@
 
 const GenericJSONArrayCache = require('../../../lib/services/types/GenericJSONArrayCache')
 const GenericJSONCacheMock = require('../../mocks/GenericJSONCacheMock')
-const JSONKeySingleID = require('../../cache/JSON/JSONKeySingleID')
+const JSONArrayKeySingleID = require('../../cache/JSON_ARRAY/JSONArrayKeySingleID')
 
 const SpyMock = require('@contartec-team/spy-mock/lib/SpyMock')
 
 describe('GenericJSONArrayCache', () => {
-  describe('.addCache', () => {
-    context('when a `keyName` is passed', () => {
-      const ID = 1
-      const keyName = JSONKeySingleID.getKeyName(ID)
+  describe('.isCached', () => {
+    context('when `keyName` is cached', () => {
+      context('when `keyName` is passed', () => {
+        const VALUE = 1
+        const CACHE_VALUE = { teste: VALUE, attr1: 'teste' }
+        const keyName = JSONArrayKeySingleID.getKeyName(VALUE)
 
-      context('and a `value` is passed', () => {
-        context('and the `keyName` is cached', () => {
-          const CACHE_VALUE = { teste: ID, attr1: 'teste' }
+        let isCached
+
+        before(async () => {
+          await GenericJSONArrayCache
+            .initArrayCache(keyName, CACHE_VALUE)
           
-          let result
-          let spies
-
-          before(async () => {
-            await GenericJSONArrayCache
-              .initArrayCache(keyName, { teste : 42 })
-
-            spies = {
-              _addCache : SpyMock
-                .addReturnSpy(GenericJSONArrayCache, '_addCache', 1)
-            }
-            
-            result = await GenericJSONArrayCache
-              .addCache(keyName, CACHE_VALUE)
-          })
-
-          after(async () => {
-            SpyMock
-              .restoreAll()
-
-            await GenericJSONCacheMock
-              .delete(keyName)
-          })
-
-          it('should return the list size', () => {
-            expect(result).to.eql(1)
-          })
-
-          it('should call `_addCache`', () => {
-            expect(spies._addCache).to.have.been.calledOnce
-          })
+          isCached = await GenericJSONArrayCache
+            .isCached(keyName)
         })
 
-        context('and the `keyName` is not cached', () => {
-          const CACHE_VALUE = { teste: ID, attr1: 'teste'}
+        after(async () => {
+          await GenericJSONCacheMock
+            .delete(keyName)
+        })
 
-          let result
-          let spies
-
-          before(async () => {
-            spies = {
-              initArrayCache : SpyMock
-                .addReturnSpy(GenericJSONArrayCache, 'initArrayCache', 1)
-            }
-
-            result = await GenericJSONArrayCache
-              .addCache(keyName, CACHE_VALUE)
-          })
-
-          after(() => SpyMock.restoreAll())
-
-          it('should return the list size', () => {
-            expect(result).to.eql(1)
-          })
-
-          it('should call `initArrayCache`', () => {
-            expect(spies.initArrayCache).have.been.calledOnce
-          })
+        it('should return `true`', () => {
+          expect(isCached).to.equal(true)
         })
       })
 
-      context('and a `value` is not passed', () => {
-        let result
-        let spies
+      context('when `keyName` is not passed', () => {
+        const VALUE = 1
+        const CACHE_VALUE = { teste: VALUE, attr1: 'teste' }
+        const keyName = JSONArrayKeySingleID.getKeyName(VALUE)
+
+        let isCached
 
         before(async () => {
-          spies = {
-            initArrayCache : SpyMock
-              .addReturnSpy(GenericJSONArrayCache, 'initArrayCache', 0)
-          }
-
-          result = result = await GenericJSONArrayCache
-            .addCache(keyName)
+          await GenericJSONArrayCache
+            .initArrayCache(keyName, CACHE_VALUE)
+          
+          isCached = await GenericJSONArrayCache
+            .isCached()
         })
 
-        after(() => SpyMock.restoreAll())
-
-        it('should return the list size', () => {
-          expect(result).to.eql(0)
+        after(async () => {
+          await GenericJSONCacheMock
+            .delete(keyName)
         })
 
-        it('should not call `initArrayCache`', () => {
-          expect(spies.initArrayCache).to.have.been.called
+        it('should return `false`', () => {
+          expect(isCached).to.equal(false)
         })
       })
     })
 
-    context('when a `keyName` is not passed', () => {
-      let result
+    context('when `keyName` is not cached', () => {
+      const VALUE = 1
+      const keyName = JSONArrayKeySingleID.getKeyName(VALUE)
 
-      before(async () => {
-        result = result = await GenericJSONArrayCache
-          .addCache(null)
+      let isCached
+
+      before(async () => {        
+        isCached = await GenericJSONArrayCache
+          .isCached(keyName)
       })
 
-      it('should return the list size', () => {
-        expect(result).to.eql(0)
-      }) 
+      it('should return false', async () => {
+        expect(isCached).to.equal(false)
+      })
     })
   })
 
   describe('.initArrayCache', () => {  
     context('when the `keyName` is passed', () => {
       const ID = 1
-      const keyName = JSONKeySingleID.getKeyName(ID)
+      const keyName = JSONArrayKeySingleID.getKeyName(ID)
 
       context('and the `value` is passed', () => {
         const CACHE_VALUE = { teste: ID, attr1: 'teste' }
@@ -191,7 +151,7 @@ describe('GenericJSONArrayCache', () => {
 
   describe('._addCache', () => {
     const ID = 1
-    const keyName = JSONKeySingleID.getKeyName(ID)
+    const keyName = JSONArrayKeySingleID.getKeyName(ID)
     
     context('when the `position` is passed', () => {
       context('and the `position` is in the array\'s range', () => {
@@ -299,72 +259,304 @@ describe('GenericJSONArrayCache', () => {
     })
   })
 
-  describe('.isCached', () => {
-    context('when `keyName` is cached', () => {
-      context('when `keyName` is passed', () => {
-        const VALUE = 1
-        const CACHE_VALUE = { teste: VALUE, attr1: 'teste' }
-        const keyName = JSONKeySingleID.getKeyName(VALUE)
+  describe('.addCache', () => {
+    context('when a `keyName` is passed', () => {
+      const ID = 1
+      const keyName = JSONArrayKeySingleID.getKeyName(ID)
 
-        let isCached
-
-        before(async () => {
-          await GenericJSONArrayCache
-            .initArrayCache(keyName, CACHE_VALUE)
+      context('and a `value` is passed', () => {
+        context('and the `keyName` is cached', () => {
+          const CACHE_VALUE = { teste: ID, attr1: 'teste' }
           
-          isCached = await GenericJSONArrayCache
-            .isCached(keyName)
+          let result
+          let spies
+
+          before(async () => {
+            await GenericJSONArrayCache
+              .initArrayCache(keyName, { teste : 42 })
+
+            spies = {
+              _addCache : SpyMock
+                .addReturnSpy(GenericJSONArrayCache, '_addCache', 1)
+            }
+            
+            result = await GenericJSONArrayCache
+              .addCache(keyName, CACHE_VALUE)
+          })
+
+          after(async () => {
+            SpyMock
+              .restoreAll()
+
+            await GenericJSONCacheMock
+              .delete(keyName)
+          })
+
+          it('should return the list size', () => {
+            expect(result).to.eql(1)
+          })
+
+          it('should call `_addCache`', () => {
+            expect(spies._addCache).to.have.been.calledOnce
+          })
         })
 
-        after(async () => {
-          await GenericJSONCacheMock
-            .delete(keyName)
-        })
+        context('and the `keyName` is not cached', () => {
+          const CACHE_VALUE = { teste: ID, attr1: 'teste'}
 
-        it('should return `true`', () => {
-          expect(isCached).to.equal(true)
+          let result
+          let spies
+
+          before(async () => {
+            spies = {
+              initArrayCache : SpyMock
+                .addReturnSpy(GenericJSONArrayCache, 'initArrayCache', 1)
+            }
+
+            result = await GenericJSONArrayCache
+              .addCache(keyName, CACHE_VALUE)
+          })
+
+          after(() => SpyMock.restoreAll())
+
+          it('should return the list size', () => {
+            expect(result).to.eql(1)
+          })
+
+          it('should call `initArrayCache`', () => {
+            expect(spies.initArrayCache).have.been.calledOnce
+          })
         })
       })
 
-      context('when `keyName` is not passed', () => {
-        const VALUE = 1
-        const CACHE_VALUE = { teste: VALUE, attr1: 'teste' }
-        const keyName = JSONKeySingleID.getKeyName(VALUE)
-
-        let isCached
+      context('and a `value` is not passed', () => {
+        let result
+        let spies
 
         before(async () => {
-          await GenericJSONArrayCache
-            .initArrayCache(keyName, CACHE_VALUE)
-          
-          isCached = await GenericJSONArrayCache
-            .isCached()
+          spies = {
+            initArrayCache : SpyMock
+              .addReturnSpy(GenericJSONArrayCache, 'initArrayCache', 0)
+          }
+
+          result = result = await GenericJSONArrayCache
+            .addCache(keyName)
         })
 
-        after(async () => {
-          await GenericJSONCacheMock
-            .delete(keyName)
+        after(() => SpyMock.restoreAll())
+
+        it('should return the list size', () => {
+          expect(result).to.eql(0)
         })
 
-        it('should return `false`', () => {
-          expect(isCached).to.equal(false)
+        it('should not call `initArrayCache`', () => {
+          expect(spies.initArrayCache).to.have.been.called
         })
       })
     })
 
-    context('when `keyName` is not cached', () => {
-      const VALUE = 1
-      const keyName = JSONKeySingleID.getKeyName(VALUE)
+    context('when a `keyName` is not passed', () => {
+      let result
 
-      let isCached
-
-      before(async () => {        
-        isCached = await GenericJSONArrayCache
-          .isCached(keyName)
+      before(async () => {
+        result = result = await GenericJSONArrayCache
+          .addCache(null)
       })
 
-      it('should return false', async () => {
-        expect(isCached).to.equal(false)
+      it('should return the list size', () => {
+        expect(result).to.eql(0)
+      }) 
+    })
+  })
+
+  describe('.removeItem', () => {   
+    context('when `key` is passed', () => {
+      const KEY = 1
+      const KEY_NAME = JSONArrayKeySingleID.getKeyName(KEY)
+      const VALUE = [1,2,3,4]
+
+      context('and `start` is passed', () => {
+        context('and `stop` is passed', () => {
+          context('and `start` <= `stop`', () => {
+            let response
+
+            before(async () => {
+              await redis
+                .json_setAsync(KEY_NAME, '.', JSON.stringify(VALUE))
+              
+              const params = {
+                start : 1,
+                stop  : 3
+              }
+
+              response = await GenericJSONArrayCache
+                .removeItem(KEY_NAME, params)
+            })
+    
+            after(async () => {
+              await GenericJSONCacheMock
+                .delete(KEY_NAME)
+            })
+    
+            it('should return the new list size', () => {
+              expect(response).to.eql(3)
+            })
+
+            it('should save the new list on cache', async () => {
+              const newValue = VALUE.slice(1,4)
+
+              const redisResponse = await JSONArrayKeySingleID
+                .getCache(KEY)
+
+              expect(redisResponse).to.eql(newValue)
+            })           
+          })
+        
+          context('and `start` > `stop`', () => {
+            let response
+
+            before(async () => {
+              await redis
+                .json_setAsync(KEY_NAME, '.', JSON.stringify(VALUE))
+              
+              const params = {
+                start : 3,
+                stop  : 1
+              }
+
+              response = await GenericJSONArrayCache
+                .removeItem(KEY_NAME, params)
+            })
+    
+            after(async () => {
+              await GenericJSONCacheMock
+                .delete(KEY_NAME)
+            })
+    
+            it('should return the new list size', () => {
+              expect(response).to.eql(0)
+            })
+
+            it('should save an empty list on cache', async () => {
+              const redisResponse = await JSONArrayKeySingleID
+                .getCache(KEY)
+
+              expect(redisResponse).to.eql([])
+            })  
+          })
+        })
+
+        context('and `stop` is not passed', () => {
+          const PARAMS = { start : 1 }
+          let response
+
+          before(async () => {
+            await redis
+              .json_setAsync(KEY_NAME, '.', JSON.stringify(VALUE))
+            
+            response = await GenericJSONArrayCache
+              .removeItem(KEY_NAME, PARAMS)
+          })
+  
+          after(async () => {
+            await GenericJSONCacheMock
+              .delete(KEY_NAME)
+          })
+  
+          it('should return the new list size', () => {
+            const size = VALUE.length - PARAMS.start
+
+            expect(response).to.eql(size)
+          })
+
+          it('should save the new list on cache', async () => {
+            const newValue = VALUE.slice(PARAMS.start,4)
+
+            const redisResponse = await JSONArrayKeySingleID
+              .getCache(KEY)
+
+            expect(redisResponse).to.eql(newValue)
+          })  
+        })
+      })
+
+      context('and `start` is not passed', () => {
+        context('and `stop` is passed', () => {
+          let response
+
+          before(async () => {
+            await redis
+              .json_setAsync(KEY_NAME, '.', JSON.stringify(VALUE))
+            
+            const params = { stop  : 3 }
+
+            response = await GenericJSONArrayCache
+              .removeItem(KEY_NAME, params)
+          })
+  
+          after(async () => {
+            await GenericJSONCacheMock
+              .delete(KEY_NAME)
+          })
+  
+          it('should return the new list size', () => {
+            expect(response).to.eql(3)
+          })
+
+          it('should save the new list on cache', async () => {
+            const newValue = VALUE.slice(1,4)
+
+            const redisResponse = await JSONArrayKeySingleID
+              .getCache(KEY)
+
+            expect(redisResponse).to.eql(newValue)
+          })
+        })
+
+        context('and `stop` is not passed', () => {
+          let response
+
+          before(async () => {
+            await redis
+              .json_setAsync(KEY_NAME, '.', JSON.stringify(VALUE))
+
+            response = await GenericJSONArrayCache
+              .removeItem(KEY_NAME)
+          })
+  
+          after(async () => {
+            await GenericJSONCacheMock
+              .delete(KEY_NAME)
+          })
+  
+          it('should return the new list size', () => {
+            const size = VALUE.length - 1
+
+            expect(response).to.eql(size)
+          })
+
+          it('should save the new list on cache', async () => {
+            const newValue = VALUE.slice(1,4)
+
+            const redisResponse = await JSONArrayKeySingleID
+              .getCache(KEY)
+
+            expect(redisResponse).to.eql(newValue)
+          })
+        })
+      })
+    })
+
+    context('when `key` is not passed', () => {
+      let response
+
+      before(async () => {
+        response = await GenericJSONArrayCache
+          .removeItem()
+      })
+
+      it('should return `null`', () => {
+        expect(response).to.be.null
       })
     })
   })
