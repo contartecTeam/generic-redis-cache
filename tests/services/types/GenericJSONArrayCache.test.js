@@ -1,7 +1,6 @@
 'use strict'
 
 const GenericJSONArrayCache = require('../../../lib/services/types/GenericJSONArrayCache')
-const GenericJSONCacheMock = require('../../mocks/GenericJSONCacheMock')
 const JSONArrayKeySingleID = require('../../cache/JSON_ARRAY/JSONArrayKeySingleID')
 
 const SpyMock = require('@contartec-team/spy-mock/lib/SpyMock')
@@ -25,7 +24,7 @@ describe('GenericJSONArrayCache', () => {
         })
 
         after(async () => {
-          await GenericJSONCacheMock
+          await GenericJSONArrayCache
             .delete(keyName)
         })
 
@@ -50,7 +49,7 @@ describe('GenericJSONArrayCache', () => {
         })
 
         after(async () => {
-          await GenericJSONCacheMock
+          await GenericJSONArrayCache
             .delete(keyName)
         })
 
@@ -93,7 +92,7 @@ describe('GenericJSONArrayCache', () => {
         })
 
         after(async () => {
-          await GenericJSONCacheMock
+          await GenericJSONArrayCache
             .delete(keyName)
         })
 
@@ -118,7 +117,7 @@ describe('GenericJSONArrayCache', () => {
         })
 
         after(async () => {
-          await GenericJSONCacheMock
+          await GenericJSONArrayCache
             .delete(keyName)
         })
 
@@ -127,7 +126,7 @@ describe('GenericJSONArrayCache', () => {
         })
 
         it('should save an empty list on cache', async () => {
-          const cachedValue = await GenericJSONCacheMock
+          const cachedValue = await GenericJSONArrayCache
             .getCache(keyName)
 
           expect(cachedValue).to.eql([])
@@ -171,7 +170,7 @@ describe('GenericJSONArrayCache', () => {
         })
 
         after(async () => {
-          await GenericJSONCacheMock
+          await GenericJSONArrayCache
             .delete(keyName)
         })
 
@@ -205,7 +204,7 @@ describe('GenericJSONArrayCache', () => {
         })
 
         after(async () => {
-          await GenericJSONCacheMock
+          await GenericJSONArrayCache
             .delete(keyName)
         })
 
@@ -214,7 +213,7 @@ describe('GenericJSONArrayCache', () => {
         })
 
         it('should save the value in the last position', async () => {
-          const cachedValue = await GenericJSONCacheMock
+          const cachedValue = await GenericJSONArrayCache
             .getCache(keyName)
 
           const last = cachedValue.length - 1
@@ -240,7 +239,7 @@ describe('GenericJSONArrayCache', () => {
       })
 
       after(async () => {
-        await GenericJSONCacheMock
+        await GenericJSONArrayCache
           .delete(keyName)
       })
 
@@ -249,7 +248,7 @@ describe('GenericJSONArrayCache', () => {
       })
 
       it('should save the value in the last position', async () => {
-        const cachedValue = await GenericJSONCacheMock
+        const cachedValue = await GenericJSONArrayCache
           .getCache(keyName)
 
         const last = cachedValue.length - 1
@@ -288,7 +287,7 @@ describe('GenericJSONArrayCache', () => {
             SpyMock
               .restoreAll()
 
-            await GenericJSONCacheMock
+            await GenericJSONArrayCache
               .delete(keyName)
           })
 
@@ -394,7 +393,7 @@ describe('GenericJSONArrayCache', () => {
             })
     
             after(async () => {
-              await GenericJSONCacheMock
+              await GenericJSONArrayCache
                 .delete(KEY_NAME)
             })
     
@@ -429,7 +428,7 @@ describe('GenericJSONArrayCache', () => {
             })
     
             after(async () => {
-              await GenericJSONCacheMock
+              await GenericJSONArrayCache
                 .delete(KEY_NAME)
             })
     
@@ -459,7 +458,7 @@ describe('GenericJSONArrayCache', () => {
           })
   
           after(async () => {
-            await GenericJSONCacheMock
+            await GenericJSONArrayCache
               .delete(KEY_NAME)
           })
   
@@ -495,7 +494,7 @@ describe('GenericJSONArrayCache', () => {
           })
   
           after(async () => {
-            await GenericJSONCacheMock
+            await GenericJSONArrayCache
               .delete(KEY_NAME)
           })
   
@@ -525,7 +524,7 @@ describe('GenericJSONArrayCache', () => {
           })
   
           after(async () => {
-            await GenericJSONCacheMock
+            await GenericJSONArrayCache
               .delete(KEY_NAME)
           })
   
