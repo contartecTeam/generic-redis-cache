@@ -732,8 +732,8 @@ describe('GenericRedisCache', () => {
   describe('.getCache', () => {
     context('when the key is `JSON`', () => {
       context('and the key has one `ID`', () => {
-        const VALUE = 1
-        const CACHE_VALUE = { teste: VALUE }
+        const VALUE = 2
+        const CACHE_VALUE = { test: VALUE }
 
         context('when there is value cached', () => {
           before(async () => {
@@ -863,7 +863,7 @@ describe('GenericRedisCache', () => {
 
     context('when the key is `JSON_ARRAY`', () => {
       context('and the key has one `ID`', () => {
-        const VALUE = 1
+        const VALUE = 3
         const CACHE_VALUE = { teste: VALUE }
 
         context('when there is value cached', () => {
