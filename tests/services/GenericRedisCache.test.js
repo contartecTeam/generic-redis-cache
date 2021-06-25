@@ -3165,7 +3165,7 @@ describe('GenericRedisCache', () => {
     })
   })
 
-  describe('.removeItem', () => {
+  describe('.slice', () => {
     context('when the key is `JSON_ARRAY`', () => {
       context('and there are cached values', () => {
         const ID = 42
@@ -3187,7 +3187,7 @@ describe('GenericRedisCache', () => {
               }
 
               response = await JSONArrayKeySingleID
-                .removeItem(ID, params)
+                .slice(ID, params)
             })
 
             after(async () => {
@@ -3217,7 +3217,7 @@ describe('GenericRedisCache', () => {
                 .json_setAsync(KEY_NAME, '.', JSON.stringify(VALUE))
                 
               response = await JSONArrayKeySingleID
-                .removeItem(ID)
+                .slice(ID)
             })
 
             after(async () => {
@@ -3247,7 +3247,7 @@ describe('GenericRedisCache', () => {
 
           before(async () => {           
             response = await JSONArrayKeySingleID
-              .removeItem()
+              .slice()
           })
 
           it('should return `null`', () => {
@@ -3268,7 +3268,7 @@ describe('GenericRedisCache', () => {
           }
 
           response = await JSONArrayKeySingleID
-            .removeItem(ID, params)
+            .slice(ID, params)
         })
 
         it('should return `null`',() => {
@@ -3295,7 +3295,7 @@ describe('GenericRedisCache', () => {
         }
 
         response = await JSONKeySingleID
-          .removeItem(ID, params)
+          .slice(ID, params)
       })
 
       after(async () => {
