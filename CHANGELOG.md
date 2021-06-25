@@ -1,3 +1,10 @@
+## 1.6.0 (2021-06-25)
+
+
+### Features
+
+* [`GenericJSONArrayCache`] Add `.removeItem`
+
 ## 1.5.0 (2021-06-10)
 
 
