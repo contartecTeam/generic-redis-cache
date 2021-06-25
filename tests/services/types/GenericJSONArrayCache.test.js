@@ -16,7 +16,7 @@ describe('GenericJSONArrayCache', () => {
         let isCached
 
         before(async () => {
-          await GenericJSONArrayCache
+          GenericJSONArrayCache
             .initArrayCache(keyName, CACHE_VALUE)
           
           isCached = await GenericJSONArrayCache
@@ -41,7 +41,7 @@ describe('GenericJSONArrayCache', () => {
         let isCached
 
         before(async () => {
-          await GenericJSONArrayCache
+          GenericJSONArrayCache
             .initArrayCache(keyName, CACHE_VALUE)
           
           isCached = await GenericJSONArrayCache
@@ -162,7 +162,7 @@ describe('GenericJSONArrayCache', () => {
         before(async () => {
           const value = { teste: 2 }
 
-          await GenericJSONArrayCache
+          GenericJSONArrayCache
             .initArrayCache(keyName, value)
           
           result = await GenericJSONArrayCache
@@ -196,7 +196,7 @@ describe('GenericJSONArrayCache', () => {
 
           const value = { teste: 2 }
 
-          await GenericJSONArrayCache
+          GenericJSONArrayCache
             .initArrayCache(keyName, value)
           
           result = await GenericJSONArrayCache
@@ -231,7 +231,7 @@ describe('GenericJSONArrayCache', () => {
       before(async () => {
         const value = { teste: 2 }
 
-        await GenericJSONArrayCache
+        GenericJSONArrayCache
           .initArrayCache(keyName, value)
         
         result = await GenericJSONArrayCache
@@ -251,9 +251,7 @@ describe('GenericJSONArrayCache', () => {
         const cachedValue = await GenericJSONArrayCache
           .getCache(keyName)
 
-        const last = cachedValue.length - 1
-
-        expect(cachedValue[last]).to.eql(CACHE_VALUE)
+        expect(cachedValue[cachedValue.length - 1]).to.eql(CACHE_VALUE)
       })
     })
   })
@@ -271,7 +269,7 @@ describe('GenericJSONArrayCache', () => {
           let spies
 
           before(async () => {
-            await GenericJSONArrayCache
+            GenericJSONArrayCache
               .initArrayCache(keyName, { teste : 42 })
 
             spies = {
@@ -338,7 +336,7 @@ describe('GenericJSONArrayCache', () => {
               .addReturnSpy(GenericJSONArrayCache, 'initArrayCache', 0)
           }
 
-          result = result = await GenericJSONArrayCache
+          result = await GenericJSONArrayCache
             .addCache(keyName)
         })
 
@@ -358,7 +356,7 @@ describe('GenericJSONArrayCache', () => {
       let result
 
       before(async () => {
-        result = result = await GenericJSONArrayCache
+        result = await GenericJSONArrayCache
           .addCache(null)
       })
 
