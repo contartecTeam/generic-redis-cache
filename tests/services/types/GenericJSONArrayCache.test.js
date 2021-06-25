@@ -368,7 +368,7 @@ describe('GenericJSONArrayCache', () => {
     })
   })
 
-  describe('.removeItem', () => {   
+  describe('.slice', () => {   
     context('when `key` is passed', () => {
       const KEY = 1
       const KEY_NAME = JSONArrayKeySingleID.getKeyName(KEY)
@@ -389,7 +389,7 @@ describe('GenericJSONArrayCache', () => {
               }
 
               response = await GenericJSONArrayCache
-                .removeItem(KEY_NAME, params)
+                .slice(KEY_NAME, params)
             })
     
             after(async () => {
@@ -424,7 +424,7 @@ describe('GenericJSONArrayCache', () => {
               }
 
               response = await GenericJSONArrayCache
-                .removeItem(KEY_NAME, params)
+                .slice(KEY_NAME, params)
             })
     
             after(async () => {
@@ -454,7 +454,7 @@ describe('GenericJSONArrayCache', () => {
               .json_setAsync(KEY_NAME, '.', JSON.stringify(VALUE))
             
             response = await GenericJSONArrayCache
-              .removeItem(KEY_NAME, PARAMS)
+              .slice(KEY_NAME, PARAMS)
           })
   
           after(async () => {
@@ -490,7 +490,7 @@ describe('GenericJSONArrayCache', () => {
             const params = { stop  : 3 }
 
             response = await GenericJSONArrayCache
-              .removeItem(KEY_NAME, params)
+              .slice(KEY_NAME, params)
           })
   
           after(async () => {
@@ -520,7 +520,7 @@ describe('GenericJSONArrayCache', () => {
               .json_setAsync(KEY_NAME, '.', JSON.stringify(VALUE))
 
             response = await GenericJSONArrayCache
-              .removeItem(KEY_NAME)
+              .slice(KEY_NAME)
           })
   
           after(async () => {
@@ -551,7 +551,7 @@ describe('GenericJSONArrayCache', () => {
 
       before(async () => {
         response = await GenericJSONArrayCache
-          .removeItem()
+          .slice()
       })
 
       it('should return `null`', () => {
