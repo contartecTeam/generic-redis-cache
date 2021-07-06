@@ -1020,14 +1020,18 @@ describe('GenericRedisCache', () => {
                 .addReturnSpy(JSONArrayKeySingleID, 'getCache', null),
 
               getDB     : SpyMock
-                .addReturnSpy(JSONArrayKeySingleID, 'getDB', null),
+                .addReturnSpy(JSONArrayKeySingleID, 'getDB', null)
             }
 
             response = await JSONArrayKeySingleID
               .get(VALUE)
           })
 
-          after(() => SpyMock.restoreAll())
+          after(async () => {
+            await GenericJSONCacheMock.delete(KEY_NAME)
+
+            SpyMock.restoreAll()
+          })
 
           it('should call `getDB`', () => {
             expect(spies.getDB).have.been.calledOnce
@@ -1042,6 +1046,38 @@ describe('GenericRedisCache', () => {
               .json_getAsync(JSONArrayKeySingleID.getKeyName(VALUE))
 
             expect(cachedObject).to.eql('[]')
+          })
+        })
+
+        context('and `getDB` returns null and `getCache` returns an empty list', () => {
+          before(async () => {
+            spies = {
+              getCache  : SpyMock
+                .addReturnSpy(JSONArrayKeySingleID, 'getCache', []),
+
+              getDB     : SpyMock
+                .addReturnSpy(JSONArrayKeySingleID, 'getDB', null),
+
+              add       : SpyMock
+                .addReturnSpy(JSONArrayKeySingleID, 'add'),
+            }
+
+            response = await JSONArrayKeySingleID
+              .get(VALUE)
+          })
+
+          after(() => SpyMock.restoreAll())
+
+          it('should call `getDB`', () => {
+            expect(spies.getDB).have.been.calledOnce
+          })
+
+          it('should not call `add`', () => {
+            expect(spies.add).to.not.have.been.called
+          })
+
+          it('should return an empty list', () => {
+            expect(response).to.eql([])
           })
         })
       })
