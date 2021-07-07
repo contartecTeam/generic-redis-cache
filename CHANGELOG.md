@@ -1,3 +1,10 @@
+## 1.6.1 (2021-07-07)
+
+
+### Bug Fixes
+
+* [`GenericRedisCache`] Corrigir `.get`
+
 ## 1.6.0 (2021-06-25)
 
 
